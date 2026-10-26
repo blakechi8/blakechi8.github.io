@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B18 版：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B19 版：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -19,9 +19,9 @@
       --danger: #D9645A; --danger-soft: #FBE7E4; --danger-text: #A33A31;
       --success: #4E9A80; --success-soft: #E7F3EE; --success-text: #2F6B57;
       --warn-soft: #FBF0E1; --warn-text: #8A5A20;
-      --c-work: #5FA98F; --c-life: #6D9DD1; --c-kids: #E3A65B; --c-know: #8C7FD0; --c-music: #D98A9B; --c-memo: #C9A15A;
+      --c-work: #5FA98F; --c-life: #6D9DD1; --c-kids: #E3A65B; --c-know: #8C7FD0; --c-music: #B48CC0; --c-memo: #C9A15A;
       --t-work: #3E7F69; --t-life: #2F5E94; --t-kids: #8A5A20; --t-know: #4E4396;
-      --b-work: #E7F3EE; --b-life: #EAF1FA; --b-kids: #FBF0E1; --b-know: #EFEDFA;
+      --b-work: #E7F3EE; --b-life: #EAF1FA; --b-kids: #FBF0E1; --b-know: #EFEDFA; --b-music: #F3ECF5; --t-music: #6E4A78; --b-memo: #F8F1E2; --t-memo: #7A5A1E;
       /* B15：標題列改淺色清新主題（預設薄荷綠，可在名字面板切換） */
       --header-bg: #B5DFD1; --header-text: #173F35; --header-sub: #3A6457; --header-soft: rgba(23,63,53,.11); --header-line: rgba(23,63,53,.2); --header-strong: #2F7A66;
       --p-work: #3F8F75; --p-life: #4479B8; --p-kids: #C27B2C;
@@ -37,9 +37,9 @@
         --danger: #E88A80; --danger-soft: #3A2220; --danger-text: #F2A79F;
         --success: #79C2A8; --success-soft: #1A3129; --success-text: #9ED6C1;
         --warn-soft: #362A18; --warn-text: #EAC48C;
-        --c-work: #6FB89E; --c-life: #82AEDD; --c-kids: #E6B271; --c-know: #A497DD; --c-music: #E09EAD; --c-memo: #D4B06E;
+        --c-work: #6FB89E; --c-life: #82AEDD; --c-kids: #E6B271; --c-know: #A497DD; --c-music: #C7A3D3; --c-memo: #D4B06E;
         --t-work: #8FD0B8; --t-life: #A4C6EC; --t-kids: #EAC48C; --t-know: #C3B9F0;
-        --b-work: #1A3129; --b-life: #1C2A3B; --b-kids: #362A18; --b-know: #29243F;
+        --b-work: #1A3129; --b-life: #1C2A3B; --b-kids: #362A18; --b-know: #29243F; --b-music: #2C2233; --t-music: #D9BEE6; --b-memo: #33291A; --t-memo: #E6C98E;
         --header-bg: #1D3330; --header-text: #D7EEE7; --header-sub: #9CC2B7; --header-soft: rgba(255,255,255,.10); --header-line: rgba(255,255,255,.18); --header-strong: #6FC2A8;
         --p-work: #3E8A71; --p-life: #4B7DB8; --p-kids: #B9782E;
         --sum-bg: #322817; --sum-text: #EDE0C8; --sum-head: #EDBB6E; --sum-line: #C99640;
@@ -303,12 +303,32 @@
     .action-btn.to-life:hover, .action-btn.to-know:hover { filter: brightness(.97); }
     .card-link { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; text-decoration: none; font-size: calc(13px * var(--fs)); }
     .card-link.dl { color: var(--success-text); }
-    .card-link.yt { color: var(--danger-text); }
+    .card-link.yt { color: var(--t-music); }
+    .singer-tag { background: var(--b-music); color: var(--t-music); }
     .confirm-row { margin-top: 12px; display: flex; justify-content: flex-end; }
     .life-extra-info { font-size: calc(13px * var(--fs)); color: var(--text-2); margin-top: 6px; line-height: 1.7; display: flex; flex-wrap: wrap; gap: 2px 14px; }
     .life-extra-info a { font-weight: 600; }
     .life-extra-info .muted { color: var(--text-3); cursor: pointer; }
     .meta-time { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 3px; }
+    /* B19：收錄頁的使用說明面板（取代原本一段文字） */
+    .guide { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .guide-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--g-bg); }
+    .guide-ico { width: calc(42px * var(--fs)); height: calc(42px * var(--fs)); border-radius: 12px; background: var(--g-c); color: #fff; display: flex; align-items: center; justify-content: center; font-size: calc(22px * var(--fs)); flex-shrink: 0; }
+    .guide-t { font-weight: 700; font-size: calc(16px * var(--fs)); color: var(--g-t); }
+    .guide-s { font-size: calc(12.5px * var(--fs)); color: var(--text-2); margin-top: 2px; }
+    .guide-row { display: flex; gap: 12px; padding: 12px 16px; border-top: 1px solid var(--border); align-items: flex-start; }
+    .guide-step { flex-shrink: 0; min-width: calc(48px * var(--fs)); height: calc(26px * var(--fs)); padding: 0 8px; border-radius: 13px; background: var(--g-bg); color: var(--g-t); font-size: calc(12.5px * var(--fs)); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 3px; }
+    .guide-d { flex: 1; min-width: 0; font-size: calc(14px * var(--fs)); color: var(--text); line-height: 1.6; }
+    .guide-d .muted { color: var(--text-3); font-size: calc(12.5px * var(--fs)); }
+    .g-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .g-chip { border: 1px solid var(--g-c); background: var(--surface); color: var(--g-t); border-radius: 15px; height: calc(30px * var(--fs)); padding: 0 12px; font-size: calc(13px * var(--fs)); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+    .g-chip:hover, .g-chip:active { background: var(--g-bg); }
+    .g-chip.solid { background: var(--g-c); color: #fff; border-color: var(--g-c); }
+    .guide.know { --g-c: var(--c-know); --g-bg: var(--b-know); --g-t: var(--t-know); }
+    .guide.life { --g-c: var(--c-life); --g-bg: var(--b-life); --g-t: var(--t-life); }
+    .guide.music { --g-c: var(--c-music); --g-bg: var(--b-music); --g-t: var(--t-music); }
+    .guide.memo { --g-c: var(--c-memo); --g-bg: var(--b-memo); --g-t: var(--t-memo); }
+    .guide.backup { --g-c: var(--c-life); --g-bg: var(--b-life); --g-t: var(--t-life); }
     .search-tip { text-align: center; color: var(--text-3); font-size: calc(13px * var(--fs)); margin-top: 20px; }
     .edit-input { width: 100%; padding: 10px 12px; border-radius: 12px; font-size: calc(16px * var(--fs)); line-height: 1.5; resize: vertical; min-height: 56px; max-height: 200px; overflow-y: auto; margin-top: 4px; }
     .edit-field { width: 100%; height: calc(40px * var(--fs)); padding: 0 10px; border-radius: 10px; font-size: calc(15px * var(--fs)); }
@@ -325,14 +345,14 @@
     .hw-date { font-size: calc(16px * var(--fs)); font-weight: 700; }
     .hw-tools { display: flex; gap: 6px; flex-wrap: wrap; }
     .hw-progress { height: 7px; background: var(--border); border-radius: 4px; margin-top: 10px; overflow: hidden; }
-    .hw-progress > div { height: 100%; width: 0; background: var(--primary); border-radius: 4px; transition: width .3s; }
+    .hw-progress > div { height: 100%; width: 0; background: var(--success); border-radius: 4px; transition: width .3s; }
     .hw-progress-text { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 4px; }
     .hw-card { align-items: center; }
     .hw-index { width: 20px; text-align: center; color: var(--text-3); font-size: calc(13px * var(--fs)); font-weight: 700; flex-shrink: 0; }
     .hw-name { flex: 1; min-width: 0; font-weight: 600; font-size: calc(15px * var(--fs)); word-break: break-word; }
     .hw-people { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
     .hw-btn { min-height: 34px; padding: 6px 13px; border-radius: 17px; background: var(--surface-2); border: 1px solid var(--border-strong); color: var(--text-2); font-weight: 600; font-size: calc(13px * var(--fs)); user-select: none; cursor: pointer; display: inline-flex; align-items: center; transition: .2s; }
-    .hw-btn.done { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .hw-btn.done { background: var(--success); border-color: var(--success); color: #fff; }   /* B19：完成改綠色 */
     .hw-btn.processing { opacity: .6; pointer-events: none; }
     .hw-btn.static { cursor: default; }
     .hw-rule-row { display: flex; align-items: center; gap: 8px; padding: 10px 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
@@ -482,7 +502,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B18）\n' +
+      st.innerText = '主程式沒有啟動（版本 B19）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -501,7 +521,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B18</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B19</div>
     </div>
   </div>
 
@@ -2357,19 +2377,19 @@
 
         if (mode === 'lifelog') {
           col1.className = 'column col-search';
-          header1.innerText = '輸入關鍵字搜尋，輸入「全部」顯示所有資料，或貼上網址收錄';
+          header1.innerText = '';
           targetInput.placeholder = '例：美食、全部，或貼上網址收錄';
         } else if (mode === 'knowledge') {
           col1.className = 'column col-search';
-          header1.innerText = '輸入關鍵字搜尋，輸入「全部」顯示所有資料，或貼上網址收錄';
+          header1.innerText = '';
           targetInput.placeholder = '例：管理、全部，或貼上網址收錄';
         } else if (mode === 'music') {
           col1.className = 'column col-search';
-          header1.innerText = '輸入「歌星」或「歌名」搜尋，輸入「歌星 歌名」收錄';
+          header1.innerText = '';
           targetInput.placeholder = '例：周杰倫 晴天（收錄）／找 晴天（搜尋）';
         } else if (mode === 'memos') {
           col1.className = 'column col-kids';
-          header1.innerText = '輸入關鍵字搜尋備忘錄，或以「備忘錄」開頭新增';
+          header1.innerText = '';
           targetInput.placeholder = '例：找 疫苗、全部；備忘錄 買衣服（新增）';
         } else if (mode === 'backup') {
           col1.className = 'column col-search';
@@ -2379,7 +2399,7 @@
           showActionButtons();
           return;
         }
-        document.getElementById('list-1').innerHTML = '';
+        document.getElementById('list-1').innerHTML = guideHtml(mode);   // B19：顯示使用說明面板
         showActionButtons();
         return;
       }
@@ -2682,6 +2702,51 @@
         if (r && r.ok) finish(r.summary, '✅ AI 摘要完成');
         else finish('', r && r.message ? r.message : '⚠️ 產生失敗');
       }).withFailureHandler(e => finish('', '⚠️ ' + e.message)).generateSummaryApp(id, type);
+    }
+
+    // ---------------- B19：收錄頁說明面板 ----------------
+    const GUIDES = {
+      knowledge: { cls: 'know', icon: 'ti-book', title: '知識庫', sub: '收藏好文章，AI 自動分類、寫摘要',
+        rows: [
+          { step: '搜尋', icon: 'ti-search', text: '輸入關鍵字，或點下面的分類', chips: [['全部', 'run', true], ['管理', 'run'], ['科技', 'run'], ['AI', 'run']] },
+          { step: '收錄', icon: 'ti-link', text: '直接貼上網址按「送出」', note: 'AI 會讀網頁、判斷分類；判斷錯了可按「移至生活誌」' },
+          { step: '摘要', icon: 'ti-sparkles', text: '卡片上按「產生 AI 摘要」', note: '舊資料也能補上 3 行重點' }
+        ] },
+      lifelog: { cls: 'life', icon: 'ti-map-pin', title: '生活誌', sub: '美食、景點、店家，一鍵打電話、導航',
+        rows: [
+          { step: '搜尋', icon: 'ti-search', text: '輸入關鍵字，或點下面的分類', chips: [['全部', 'run', true], ['美食', 'run'], ['旅遊', 'run'], ['早餐', 'run']] },
+          { step: '收錄', icon: 'ti-link', text: '貼上 Google 地圖或店家網址', note: '自動抓店名、電話、地址；點地址可選 Google／Apple 地圖導航' },
+          { step: '摘要', icon: 'ti-sparkles', text: '卡片上按「產生 AI 摘要」', note: '快速知道這家店的特色' }
+        ] },
+      music: { cls: 'music', icon: 'ti-music', title: '音樂輯', sub: '收藏想聽的歌，一鍵播放 YouTube',
+        rows: [
+          { step: '搜尋', icon: 'ti-search', text: '輸入「找」＋歌星或歌名', chips: [['找 周杰倫', 'run'], ['找 晴天', 'run']] },
+          { step: '收錄', icon: 'ti-plus', text: '輸入「歌星 歌名」按「送出」', chips: [['周杰倫 晴天', 'fill']], note: '會自動找 YouTube 官方版' }
+        ] },
+      memos: { cls: 'memo', icon: 'ti-notes', title: '備忘錄', sub: '家人共用的重要資訊（證件、尺寸、帳號提示…）',
+        rows: [
+          { step: '搜尋', icon: 'ti-search', text: '輸入「找」＋關鍵字，或顯示全部', chips: [['全部', 'run', true], ['找 疫苗', 'run']] },
+          { step: '新增', icon: 'ti-plus', text: '用「備忘錄」開頭', chips: [['備忘錄 ', 'fill']], note: '例：備忘錄 小孩制服尺寸 140' }
+        ] }
+    };
+    function guideHtml(mode) {
+      const g = GUIDES[mode];
+      if (!g) return '';
+      let h = `<div class="guide ${g.cls}"><div class="guide-head"><div class="guide-ico"><i class="ti ${g.icon}"></i></div><div><div class="guide-t">${g.title}</div><div class="guide-s">${g.sub}</div></div></div>`;
+      g.rows.forEach(r => {
+        h += `<div class="guide-row"><span class="guide-step"><i class="ti ${r.icon}"></i>${r.step}</span><div class="guide-d">${r.text}`;
+        if (r.chips) h += `<div class="g-chips">${r.chips.map(c => `<button class="g-chip${c[2] ? ' solid' : ''}" onclick="guideChip(${jsArg(c[0])}, '${c[1]}')">${esc(c[0].trim() || c[0])}${c[1] === 'fill' ? ' …' : ''}</button>`).join('')}</div>`;
+        if (r.note) h += `<div class="muted" style="margin-top:4px;">${r.note}</div>`;
+        h += `</div></div>`;
+      });
+      return h + `</div>`;
+    }
+    function guideChip(text, act) {
+      const ui = document.getElementById('user-input');
+      ui.value = text;
+      if (act === 'run') { sendMessage(); return; }
+      ui.focus();
+      try { ui.setSelectionRange(ui.value.length, ui.value.length); } catch (e) {}
     }
 
     // ---------------- 待辦篩選（全部 / 工作 / 生活 / 家庭） ----------------
@@ -3478,7 +3543,7 @@
           <div class="task-card" data-id="${esc(res.id)}" data-hash="${esc(dataHash)}">
             <div class="card-main">
               <div class="task-header">
-                <span class="task-category" style="background:var(--danger-soft); color:var(--danger-text);" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'music', this)"><i class="ti ti-microphone-2"></i> ${esc(res.singer)}</span>
+                <span class="task-category singer-tag" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'music', this)"><i class="ti ti-microphone-2"></i> ${esc(res.singer)}</span>
                 <div class="icon-group">
                   <button class="edit-icon" onclick="editItem(${idArg}, 'music', this)" title="編輯" aria-label="編輯"><i class="ti ti-pencil"></i></button>
                   <button class="delete-icon" onclick="deleteItem(${idArg}, this)" title="刪除" aria-label="刪除"><i class="ti ti-trash"></i></button>
