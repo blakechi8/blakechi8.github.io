@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B25 版：Google 地圖店家補抓電話地址、距離與電話地址圖示更醒目；B24：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B26 版：地址改台灣格式、標題列圖示靠緊、「今天」改名「今日重點」；B25：Google 地圖店家補抓電話地址、距離與電話地址圖示更醒目；B24：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -128,7 +128,12 @@
     .topbar .icon-btn:hover { background: var(--header-soft); color: var(--header-text); }
     .bell-dot { position: absolute; top: 7px; right: 7px; width: 9px; height: 9px; border-radius: 50%; background: #F08A7E; border: 2px solid var(--header-bg); display: none; }
     .bell-dot.on { display: block; }
-    .topbar-row { display: flex; align-items: center; gap: 8px; }
+    .topbar-row { display: flex; align-items: center; gap: 0; }
+    .topbar-row .title-wrap { margin-right: 4px; }
+    /* B26：右上圖示靠緊一點，讓左邊標題能放更多字 */
+    .topbar .icon-btn { width: calc(34px * var(--fs)); height: calc(38px * var(--fs)); border-radius: 10px; font-size: calc(20px * var(--fs)); }
+    .topbar .role-badge { margin-left: 4px; padding: 5px 10px; }
+    #header-sub { line-height: 1.35; }
     #header-main { font-size: calc(18px * var(--fs)); font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--header-text); }
     .role-badge { font-size: calc(13px * var(--fs)); padding: 5px 12px; border-radius: 16px; background: var(--badge-bg, var(--header-soft)); color: var(--badge-text, var(--header-text)); font-weight: 600; flex-shrink: 0; border: none; max-width: 8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 2px; }
     .role-badge:hover { background: var(--header-line); }
@@ -624,7 +629,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B25）\n' +
+      st.innerText = '主程式沒有啟動（版本 B26）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -643,7 +648,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B25</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B26</div>
     </div>
   </div>
 
@@ -1068,7 +1073,7 @@
       <header class="topbar">
         <div class="topbar-row">
           <div class="title-wrap"><h1 id="header-main">待辦事項</h1><div id="header-sub"></div></div>
-          <button class="icon-btn mobile-only" id="btn-today" data-nav="today" onclick="navGo('today')" title="今天（早報）" aria-label="今天"><i class="ti ti-sun"></i></button>
+          <button class="icon-btn mobile-only" id="btn-today" data-nav="today" onclick="navGo('today')" title="今日重點（早報）" aria-label="今日重點"><i class="ti ti-sun"></i></button>
           <button class="icon-btn" onclick="openSearch()" title="全站搜尋" aria-label="全站搜尋"><i class="ti ti-search"></i></button>
           <button class="icon-btn" onclick="openNotifications()" title="通知" aria-label="通知"><i class="ti ti-bell"></i><span class="bell-dot" id="bell-dot"></span></button>
           <button id="role-badge" class="role-badge" onclick="openUserSheet()" title="帳號、文字大小、登出">管理員</button>
@@ -1564,7 +1569,7 @@
 
     // ---------------- 導覽（側邊選單 / 底部分頁 / 更多） ----------------
     const MODE_TITLES = {
-      'today': '今天',
+      'today': '今日重點',
       'tasks': '待辦事項', 'overdue': '逾期盤點', 'completed': '近期完成',
       'knowledge': '知識庫', 'lifelog': '生活誌', 'music': '音樂輯',
       'housework': '家務事', 'memos': '備忘錄', 'backup': '備份區',
@@ -1572,14 +1577,14 @@
     };
     const NAV_GROUPS = {
       admin: [
-        { group: '總覽', items: [['today', 'ti-sun', '今天']] },
+        { group: '總覽', items: [['today', 'ti-sun', '今日重點']] },
         { group: '待辦', items: [['tasks', 'ti-checkbox', '未完成'], ['overdue', 'ti-alert-triangle', '逾期盤點'], ['completed', 'ti-history', '近期完成']] },
         { group: '收錄', items: [['knowledge', 'ti-book', '知識庫'], ['lifelog', 'ti-map-pin', '生活誌'], ['music', 'ti-music', '音樂輯']] },
         { group: '家庭', items: [['housework', 'ti-home', '家務事'], ['memos', 'ti-notes', '備忘錄']] },
         { group: '工具', items: [['backup', 'ti-cloud-upload', '備份區'], ['@db', 'ti-table', '記事資料庫'], ['@archive', 'ti-archive', '封存完成事項']] }
       ],
       kids: [
-        { group: '總覽', items: [['today', 'ti-sun', '今天']] },
+        { group: '總覽', items: [['today', 'ti-sun', '今日重點']] },
         { group: '家庭', items: [['kids-tasks', 'ti-heart-handshake', '家庭待辦'], ['housework', 'ti-home', '家務事'], ['kids-completed', 'ti-history', '家庭已完成']] },
         { group: '收錄', items: [['lifelog', 'ti-map-pin', '生活誌'], ['memos', 'ti-notes', '備忘錄']] }
       ]
@@ -1595,7 +1600,7 @@
         ['memos', 'ti-notes', '備忘錄', ''], ['music', 'ti-music', '音樂輯', ''], ['backup', 'ti-cloud-upload', '備份區', ''], ['@search', 'ti-search', '搜尋', ''],
         ['overdue', 'ti-alert-triangle', '逾期盤點', 'danger'], ['completed', 'ti-history', '近期完成', ''], ['@db', 'ti-table', '資料庫', ''], ['@archive', 'ti-archive', '封存完成', '']
       ],
-      kids: [['@search', 'ti-search', '搜尋', ''], ['@user', 'ti-text-size', '文字大小', 'muted'], ['today', 'ti-sun', '今天', '']]
+      kids: [['@search', 'ti-search', '搜尋', ''], ['@user', 'ti-text-size', '文字大小', 'muted'], ['today', 'ti-sun', '今日重點', '']]
     };
     const MORE_MODES_BY_ROLE = { admin: ['music', 'memos', 'backup', 'overdue', 'completed'], kids: [] };
 
@@ -2919,7 +2924,7 @@
       document.getElementById('notif-settings').innerHTML =
         row('task', '待辦提醒', '設定提醒時間的待辦。急件在節省模式下仍會送 LINE。') +
         row('housework', '家務提醒', '送到家人群組，一次會依群組人數扣多則。') +
-        `<div class="set-row"><div class="set-l">每日早報</div><div style="font-size:calc(13px * var(--fs)); color:var(--text-2);">每天 08:00 在「今天」頁與通知中心產生，只在網頁顯示，不使用 LINE 則數。</div></div>` +
+        `<div class="set-row"><div class="set-l">每日早報</div><div style="font-size:calc(13px * var(--fs)); color:var(--text-2);">每天 08:00 在「今日重點」頁與通知中心產生，只在網頁顯示，不使用 LINE 則數。</div></div>` +
         `<div class="set-row"><div class="set-l">家務提醒優先</div><label class="sw-row"><input type="checkbox" ${st.hwPriority ? 'checked' : ''} onchange="saveNotifSetting('hwPriority', this.checked)">LINE 用量達 85% 時，家務提醒仍送到群組</label></div>` +
         `<div class="set-row"><div class="set-l">重複待辦</div><label class="sw-row"><input type="checkbox" ${st.recurAuto !== false ? 'checked' : ''} onchange="saveNotifSetting('recurAuto', this.checked)">完成「🔁 重複」的待辦後，自動產生下一次（清單會一起帶過去並取消勾選）</label></div>` +
         `<div class="set-row"><div class="set-l">LINE 卡片樣式</div><div style="font-size:calc(12px * var(--fs)); color:var(--text-3);">待辦提醒與家務提醒都會用這個樣式</div>${lineCardPicker(st.cardStyle || 'classic')}
@@ -3281,7 +3286,7 @@
       tasks: ['ti-checkbox', '待辦'], knowledge: ['ti-book', '知識庫'], lifelog: ['ti-map-pin', '生活誌'], music: ['ti-music', '音樂輯'],
       housework: ['ti-home', '家務'], memos: ['ti-notes', '備忘錄'], backup: ['ti-cloud-upload', '備份區'], '@db': ['ti-table', '資料庫'],
       overdue: ['ti-alert-triangle', '逾期盤點', 'danger'], completed: ['ti-history', '近期完成'], '@archive': ['ti-archive', '封存完成'],
-      '@search': ['ti-search', '搜尋'], today: ['ti-sun', '今天'], 'kids-tasks': ['ti-heart-handshake', '待辦'], 'kids-completed': ['ti-history', '已完成'],
+      '@search': ['ti-search', '搜尋'], today: ['ti-sun', '今日重點'], 'kids-tasks': ['ti-heart-handshake', '待辦'], 'kids-completed': ['ti-history', '已完成'],
       '@user': ['ti-text-size', '文字大小', 'muted']
     };
     const NAV_DEFAULT_ORDER = {
@@ -4069,7 +4074,8 @@
         locHtml = `<span class="muted" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'lifelog', this)" title="點此補填地點"><i class="ti ti-map-pin lic mp"></i>地點：無</span>`;
       }
       // B25：電話或地址缺少時，可一鍵補抓（Google 地圖座標反查＋Google 搜尋）
-      const refetch = ((!phoneVal || phoneVal === '無') || (!locVal || locVal === '無')) ? `<button class="life-refetch" onclick="refetchLifeInfo(${idArg}, this)"><i class="ti ti-refresh"></i>補抓電話地址</button>` : '';
+      const refetch = ((!phoneVal || phoneVal === '無') || (!locVal || locVal === '無') || /[A-Za-z]{2,}/.test(String(locVal))) ?   // B26：英文寫法的地址也可重抓
+        `<button class="life-refetch" onclick="refetchLifeInfo(${idArg}, this)"><i class="ti ti-refresh"></i>補抓電話地址</button>` : '';
       return phoneHtml + locHtml + refetch;
     }
 
