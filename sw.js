@@ -1,5 +1,5 @@
 // App 外殼的 Service Worker：只快取外殼本身（不快取 GAS 資料，資料永遠即時）
-const CACHE = 'todo-app-v15';   // B26：新版畫面，更新快取版本
+const CACHE = 'todo-app-v16';   // B27：分享收錄，更新快取版本
 const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

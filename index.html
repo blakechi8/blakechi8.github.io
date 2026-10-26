@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B26 版：地址改台灣格式、標題列圖示靠緊、「今天」改名「今日重點」；B25：Google 地圖店家補抓電話地址、距離與電話地址圖示更醒目；B24：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B27 版：手機分享網址直接收錄（Share Target）；B26：地址改台灣格式、標題列圖示靠緊、「今天」改名「今日重點」；B25：Google 地圖店家補抓電話地址、距離與電話地址圖示更醒目；B24：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -462,6 +462,12 @@
     .lc-card .mt { color: #8A949E; font-size: 10px; margin-top: 3px; }
     .lc-card .bt { margin: 0 8px 8px; border-radius: 6px; color: #fff; text-align: center; font-weight: 700; padding: 4px 0; font-size: 10.5px; }
     .bk-box { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; font-size: calc(13px * var(--fs)); line-height: 1.7; color: var(--text-2); margin-top: 6px; }
+    /* B27：分享進來 */
+    .share-prev { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; margin-top: 4px; }
+    .share-t { font-weight: 700; font-size: calc(15px * var(--fs)); line-height: 1.45; word-break: break-word; }
+    .share-u { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 3px; word-break: break-all; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    #share-btns .btn { width: 100%; height: calc(50px * var(--fs)); justify-content: flex-start; padding: 0 16px; }
+    #share-btns .btn small { font-weight: 400; opacity: .8; margin-left: auto; font-size: calc(11.5px * var(--fs)); }
     .sz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
     .sz-grid .btn { width: 100%; background: var(--b-kids); color: var(--t-kids); border: 1px solid #EED3A8; height: calc(48px * var(--fs)); }
     .sz-mini { border: 1px solid #EED3A8; background: var(--b-kids); color: var(--t-kids); border-radius: 12px; height: calc(28px * var(--fs)); padding: 0 9px; font-size: calc(12px * var(--fs)); font-weight: 700; flex-shrink: 0; display: inline-flex; align-items: center; gap: 3px; }
@@ -629,7 +635,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B26）\n' +
+      st.innerText = '主程式沒有啟動（版本 B27）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -648,7 +654,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B26</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B27</div>
     </div>
   </div>
 
@@ -848,6 +854,17 @@
     </div>
   </div>
 
+
+  <!-- ===== B27：從其他 App 分享進來 ===== -->
+  <div id="share-sheet" class="modal">
+    <div class="sheet">
+      <div class="sheet-grip"></div>
+      <h3 class="sheet-title">📥 收到分享</h3>
+      <div class="share-prev"><div class="share-t" id="share-t"></div><div class="share-u" id="share-u"></div></div>
+      <div id="share-btns" style="display:flex; flex-direction:column; gap:8px; margin-top:12px;"></div>
+      <button class="btn btn-ghost" style="width:100%; margin-top:10px;" onclick="closeShareSheet()">取消</button>
+    </div>
+  </div>
 
   <!-- ===== B23：稍後提醒 ===== -->
   <div id="snooze-sheet" class="modal">
@@ -1494,6 +1511,11 @@
       if (API_MODE && isMobileDevice()) document.getElementById('login-key-link').style.display = 'inline-block';
       google.script.url.getLocation(function(location) {
         const p = (location && location.parameter) || {};
+        // B27：從手機「分享」進來的網址（Chrome 分享選單 → 待辦）
+        if (p.share_url || p.share_text || p.share_title) {
+          pendingShare = { title: String(p.share_title || ''), text: String(p.share_text || ''), url: String(p.share_url || '') };
+          if (history.replaceState) history.replaceState(null, '', window.location.pathname);
+        }
         // B11：裝置金鑰只給手機/平板使用；電腦一律要輸入密碼
         let key = isMobileDevice() ? String(p.key || '').trim() : '';
         if (API_MODE && isMobileDevice()) {
@@ -1744,6 +1766,7 @@
       initBoardSortable();
 
       switchMode('today');   // B14：打開 App 先看「今天」
+      if (pendingShare) setTimeout(openShareSheet, 300);   // B27：處理分享進來的網址
       loadQuickKw();         // B21
 
       updateDashboard();
@@ -1825,7 +1848,7 @@
         'cal-confirm-modal': closeCalConfirmModal, 'map-select-modal': closeMapModal, 'alarm-modal': closeAlarmModal,
         'hw-modal': closeHwModal, 'hw-manage-modal': closeHwManageModal, 'hw-reminder-modal': closeHwReminderModal,
         'card-menu': closeCardMenu, 'more-sheet': closeMoreSheet, 'font-sheet': closeFontSheet,
-        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto, 'kw-sheet': closeKw, 'cp-sheet': closeColorPicker, 'snooze-sheet': closeSnooze
+        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto, 'kw-sheet': closeKw, 'cp-sheet': closeColorPicker, 'snooze-sheet': closeSnooze, 'share-sheet': closeShareSheet
       };
       Object.keys(closers).forEach(id => {
         const el = document.getElementById(id);
@@ -3195,6 +3218,63 @@
           if (a !== b) clApplyServer(r.items);
         }).withFailureHandler(() => {}).getChecklistApp(id);
       }, 4000);
+    }
+
+
+    // ================================================================
+    //  B27：手機「分享」→ 待辦 App（Chrome 分享選單直接收錄網址）
+    // ================================================================
+    let pendingShare = null;
+    function shareUrlOf(sh) {
+      const all = [sh.url, sh.text, sh.title].join(' ');
+      const m = all.match(/https?:\/\/[^\s<>"'，。、）)]+/);
+      return m ? m[0] : '';
+    }
+    function openShareSheet() {
+      const sh = pendingShare;
+      if (!sh) return;
+      const url = shareUrlOf(sh);
+      const title = (sh.title || String(sh.text || '').replace(url, '').trim() || '').substring(0, 120);
+      document.getElementById('share-t').innerText = title || (url ? '（網頁）' : '');
+      document.getElementById('share-u').innerText = url || String(sh.text || '').substring(0, 200);
+      const kids = userRole === 'kids';
+      let h = '';
+      if (url) {
+        if (!kids) h += `<button class="btn" onclick="shareTo('auto')"><i class="ti ti-sparkles"></i>AI 自動判斷收錄<small>知識庫或生活誌</small></button>
+          <button class="btn tint-blue" style="background:var(--b-know); color:var(--t-know); border-color:#D5CEF2;" onclick="shareTo('knowledge')"><i class="ti ti-book"></i>存到知識庫<small>文章、新聞</small></button>`;
+        h += `<button class="btn tint-blue" onclick="shareTo('lifelog')"><i class="ti ti-map-pin"></i>存到生活誌<small>美食、景點、店家</small></button>`;
+      }
+      h += `<button class="btn tint-green" onclick="shareTo('task')"><i class="ti ti-checkbox"></i>建立待辦<small>${url ? '稍後再看這個網頁' : '用分享的文字'}</small></button>`;
+      document.getElementById('share-btns').innerHTML = h;
+      document.getElementById('share-sheet').style.display = 'flex';
+    }
+    function closeShareSheet() { document.getElementById('share-sheet').style.display = 'none'; pendingShare = null; }
+    function shareTo(where) {
+      const sh = pendingShare; if (!sh) return;
+      const url = shareUrlOf(sh);
+      const title = (sh.title || String(sh.text || '').replace(url, '').trim()).substring(0, 80);
+      closeShareSheet();
+      const ui = document.getElementById('user-input');
+      if (where === 'task') {
+        const target = userRole === 'kids' ? 'kids-tasks' : 'tasks';
+        if (!url) {   // 只有文字：放進輸入框讓使用者確認
+          switchMode(target);
+          ui.value = String(sh.text || sh.title).substring(0, 300); autoResizeInput(ui); ui.focus();
+          showToast('確認內容後按「送出」');
+          return;
+        }
+        showToast('⏳ 建立待辦中…');
+        google.script.run.withSuccessHandler(r => {
+          showToast(r && r.message ? r.message : '✅ 已建立');
+          if (r && r.ids && r.ids.length) { pendingFlashId = r.ids[0]; if (currentMode === target) fetchData(true); else switchMode(target); }
+        }).withFailureHandler(e => showToast('⚠️ ' + e.message))
+          .createTasksFromPhotoApp([{ title: '看：' + (title || '分享的網頁'), category: userRole === 'kids' ? '小孩' : '生活', remind: '', note: url }]);
+        return;
+      }
+      if (where === 'knowledge' || where === 'lifelog') switchMode(where);
+      else switchMode(userRole === 'kids' ? 'lifelog' : 'tasks');
+      ui.value = url;
+      sendMessage();
     }
 
     // ================================================================
