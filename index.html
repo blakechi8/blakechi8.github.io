@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B22 版：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B23 版：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -422,6 +422,18 @@
     .hw-head-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
     .hw-date { font-size: calc(16px * var(--fs)); font-weight: 700; }
     .hw-tools { display: flex; gap: 6px; flex-wrap: wrap; }
+    /* B23：家務工具按鈕柔和配色 */
+    .hw-tools .btn.hw-rem { background: var(--b-kids); color: var(--t-kids); border: 1px solid #EED3A8; }
+    .hw-tools .btn.hw-rule { background: var(--b-know); color: var(--t-know); border: 1px solid #D5CEF2; }
+    .hw-tools .btn.hw-add { background: var(--hw-done); color: var(--hw-done-text); }
+    .hw-tools .btn.hw-rem:hover, .hw-tools .btn.hw-rule:hover { filter: brightness(.97); }
+    /* B23：稍後提醒、離線 */
+    .sz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .sz-grid .btn { width: 100%; background: var(--b-kids); color: var(--t-kids); border: 1px solid #EED3A8; height: calc(48px * var(--fs)); }
+    .sz-mini { border: 1px solid #EED3A8; background: var(--b-kids); color: var(--t-kids); border-radius: 12px; height: calc(28px * var(--fs)); padding: 0 9px; font-size: calc(12px * var(--fs)); font-weight: 700; flex-shrink: 0; display: inline-flex; align-items: center; gap: 3px; }
+    .act[data-act="snooze"] { color: var(--p-kids); }
+    #offline-bar { display: none; background: #FFF3D4; color: #6E4E10; font-size: calc(12.5px * var(--fs)); font-weight: 600; padding: 6px 14px; text-align: center; border-bottom: 1px solid #F0DCA8; }
+    #offline-bar.on { display: block; }
     .hw-progress { height: 7px; background: var(--border); border-radius: 4px; margin-top: 10px; overflow: hidden; }
     .hw-progress > div { height: 100%; width: 0; background: var(--hw-done); border-radius: 4px; transition: width .3s; }
     .hw-progress-text { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 4px; }
@@ -583,7 +595,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B22）\n' +
+      st.innerText = '主程式沒有啟動（版本 B23）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -602,7 +614,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B22</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B23</div>
     </div>
   </div>
 
@@ -799,6 +811,24 @@
     </div>
   </div>
 
+
+  <!-- ===== B23：稍後提醒 ===== -->
+  <div id="snooze-sheet" class="modal">
+    <div class="sheet">
+      <div class="sheet-grip"></div>
+      <h3 class="sheet-title">⏰ 稍後提醒</h3>
+      <p class="sheet-sub" id="sz-title"></p>
+      <div class="sz-grid">
+        <button class="btn" onclick="doSnooze(10)">10 分鐘後</button>
+        <button class="btn" onclick="doSnooze(30)">30 分鐘後</button>
+        <button class="btn" onclick="doSnooze(60)">1 小時後</button>
+        <button class="btn" onclick="doSnooze(180)">3 小時後</button>
+        <button class="btn" onclick="doSnooze('tonight')">今晚 20:00</button>
+        <button class="btn" onclick="doSnooze('tomorrow')">明早 08:00</button>
+      </div>
+      <button class="btn btn-ghost" style="width:100%; margin-top:12px;" onclick="closeSnooze()">取消</button>
+    </div>
+  </div>
 
   <!-- ===== B22：調色盤（手機好選） ===== -->
   <div id="cp-sheet" class="modal" style="z-index:10010;">
@@ -1014,6 +1044,7 @@
           <button class="filter-chip" data-filter="kids" onclick="setTaskFilter('kids')">家庭</button>
         </div>
       </header>
+      <div id="offline-bar"></div>
 
       <div id="loading-board-msg">
         <div class="spinner"></div>
@@ -1395,6 +1426,7 @@
     }
 
     function logout(skipConfirm) {
+      if (skipConfirm !== 'keep') clearOfflineData();   // B23
       // B11：電腦上按登出立即鎖定（方便離開座位時一鍵隱藏）；手機仍會先確認
       if (!skipConfirm && isMobileDevice() && !confirm('確定要登出嗎？')) return;
       clearBoardContent();
@@ -1748,7 +1780,7 @@
         'cal-confirm-modal': closeCalConfirmModal, 'map-select-modal': closeMapModal, 'alarm-modal': closeAlarmModal,
         'hw-modal': closeHwModal, 'hw-manage-modal': closeHwManageModal, 'hw-reminder-modal': closeHwReminderModal,
         'card-menu': closeCardMenu, 'more-sheet': closeMoreSheet, 'font-sheet': closeFontSheet,
-        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto, 'kw-sheet': closeKw, 'cp-sheet': closeColorPicker
+        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto, 'kw-sheet': closeKw, 'cp-sheet': closeColorPicker, 'snooze-sheet': closeSnooze
       };
       Object.keys(closers).forEach(id => {
         const el = document.getElementById(id);
@@ -2494,9 +2526,9 @@
           <div class="hw-head-row">
             <div class="hw-date">${esc(data.date)} 今日家務</div>
             <div class="hw-tools">
-              <button class="btn btn-sm btn-ghost" onclick="openHwReminderModal()" title="設定提醒時間"><i class="ti ti-bell"></i>提醒</button>
-              <button class="btn btn-sm btn-ghost" onclick="openHwManageModal()" title="管理規則與刪除"><i class="ti ti-settings"></i>規則</button>
-              <button class="btn btn-sm" onclick="openHouseworkModal()"><i class="ti ti-plus"></i>新增</button>
+              <button class="btn btn-sm hw-rem" onclick="openHwReminderModal()" title="設定提醒時間"><i class="ti ti-bell"></i>提醒</button>
+              <button class="btn btn-sm hw-rule" onclick="openHwManageModal()" title="管理規則與刪除"><i class="ti ti-settings"></i>規則</button>
+              <button class="btn btn-sm hw-add" onclick="openHouseworkModal()"><i class="ti ti-plus"></i>新增</button>
             </div>
           </div>
           <div class="hw-progress"><div id="hw-progress-bar"></div></div>
@@ -2697,7 +2729,7 @@
       h += `<div id="today-rem"><div class="t-sec"><i class="ti ti-clock"></i>今天的提醒</div><div class="t-list">`;
       if (!ov.reminders.length) h += `<div class="t-empty">今天沒有排定的提醒</div>`;
       ov.reminders.forEach(r => {
-        h += `<div class="t-row ${r.past ? 'past' : ''}" onclick="goToItem('task', ${jsArg(r.id)})"><span class="t-time">${esc(r.time)}</span><span class="t-title">${r.urgent ? '<span class="urgent-badge">急件</span> ' : ''}${esc(r.title)}${r.recur ? ` <span class="recur-chip">🔁 ${esc(r.recur.replace(/,/g, '、'))}</span>` : ''}</span><span class="t-tag ${catKeyOf(r.category)}">${esc(catNameOf(r.category))}</span></div>`;
+        h += `<div class="t-row ${r.past ? 'past' : ''}" onclick="goToItem('task', ${jsArg(r.id)})"><span class="t-time">${esc(r.time)}</span><span class="t-title">${r.urgent ? '<span class="urgent-badge">急件</span> ' : ''}${esc(r.title)}${r.recur ? ` <span class="recur-chip">🔁 ${esc(r.recur.replace(/,/g, '、'))}</span>` : ''}</span><span class="t-tag ${catKeyOf(r.category)}">${esc(catNameOf(r.category))}</span>${r.past ? `<button class="sz-mini" onclick="event.stopPropagation(); openSnooze(${jsArg(r.id)}, ${jsArg(r.title)})"><i class="ti ti-clock-pause"></i>稍後</button>` : ''}</div>`;
       });
       h += `</div></div>`;
 
@@ -2799,9 +2831,12 @@
       if (q) {
         if (q.limit) {
           const used = q.used || 0, pct = Math.min(100, Math.round(used / q.limit * 100));
+          const nd = new Date(); const nextReset = new Date(nd.getFullYear(), nd.getMonth() + 1, 1);
+          const daysLeft = Math.ceil((nextReset - nd) / 86400000);
           qh = `<div class="quota"><div style="display:flex; justify-content:space-between; font-size:calc(13px * var(--fs));"><b>LINE 本月用量</b><span>${used} / ${q.limit} 則・剩 ${Math.max(0, q.limit - used)} 則</span></div>
             <div class="quota-bar"><div class="${pct >= Math.round(q.saverRatio * 100) ? 'hi' : ''}" style="width:${pct}%"></div></div>
-            <div style="font-size:calc(12px * var(--fs)); color:${q.saverOn ? 'var(--danger-text)' : 'var(--text-3)'}; margin-top:6px;">${q.saverOn ? `已達 ${Math.round(q.saverRatio * 100)}%：除了急件，提醒都改成只在網頁顯示` : `達 ${Math.round(q.saverRatio * 100)}% 後，除了急件都會改成只在網頁顯示`}</div></div>`;
+            <div style="font-size:calc(12px * var(--fs)); color:${q.saverOn ? 'var(--danger-text)' : 'var(--text-3)'}; margin-top:6px;">${q.saverOn ? `已達 ${Math.round(q.saverRatio * 100)}%：除了急件，提醒都改成只在網頁顯示` : `達 ${Math.round(q.saverRatio * 100)}% 後，除了急件都會改成只在網頁顯示`}</div>
+            <div style="font-size:calc(12px * var(--fs)); color:var(--text-2); margin-top:4px;">🔄 每月 1 日重新計算 ${q.limit} 則（下次：${nextReset.getMonth() + 1}/1，還有 ${daysLeft} 天）；沒用完的不會累積</div></div>`;
         } else qh = `<div class="quota" style="font-size:calc(13px * var(--fs)); color:var(--text-3);">暫時讀不到 LINE 本月用量</div>`;
       }
       document.getElementById('notif-quota').innerHTML = qh;
@@ -2809,11 +2844,13 @@
       const items = d.items || [];
       document.getElementById('notif-list').innerHTML = items.length ? items.map(x => {
         const isBrief = x.type === '早報';
+        const snzM = x.type === '待辦提醒' ? String(x.body || '').match(/#([A-Za-z]*\d+)\s*$/) : null;
+        const snzId = snzM && (userRole !== 'kids' || /^K/i.test(snzM[1])) ? snzM[1] : '';
         const badge = isBrief ? '<span class="ch-badge brief">早報</span>' : (x.channel.indexOf('LINE') >= 0 ? `<span class="ch-badge line">LINE${x.count ? '・' + x.count + ' 則' : ''}</span>` : '<span class="ch-badge">網頁</span>');
         const extra = (x.result && !/^(已顯示於網頁|LINE 已送出|已產生)$/.test(x.result)) ? `<span>${esc(x.result)}</span>` : '';
         return `<div class="n-row ${x.ts > seen ? 'unread' : ''}" ${isBrief ? `onclick="closeNotifications(); navGo('today');" style="cursor:pointer;"` : ''}><span class="n-dot"></span><div style="flex:1; min-width:0;">
           <div class="n-title">${esc(x.title)}</div>${x.body ? `<div class="n-body">${esc(x.body)}</div>` : ''}
-          <div class="n-meta"><span>${esc(x.time.substring(5, 16))}</span>${badge}<span>${esc(x.type)}</span>${extra}</div></div></div>`;
+          <div class="n-meta"><span>${esc(x.time.substring(5, 16))}</span>${badge}<span>${esc(x.type)}</span>${extra}</div></div>${snzId ? `<button class="sz-mini" onclick="event.stopPropagation(); openSnooze(${jsArg(snzId)}, ${jsArg(x.title)})"><i class="ti ti-clock-pause"></i>稍後</button>` : ''}</div>`;
       }).join('') : '<div class="t-empty">目前沒有通知</div>';
     }
     function renderNotifSettings() {
@@ -3021,6 +3058,48 @@
 
 
 
+
+    // ================================================================
+    //  B23：稍後提醒
+    // ================================================================
+    let snoozeId = '';
+    function openSnooze(id, title) {
+      closeCardMenu();
+      snoozeId = String(id);
+      let t = title;
+      if (!t) { const el = document.querySelector(`.task-card[data-id="${cssEsc(snoozeId)}"] .title-text`); t = el ? el.innerText.trim() : ''; }
+      document.getElementById('sz-title').innerText = (t ? t + '・' : '') + '#' + snoozeId;
+      document.getElementById('snooze-sheet').style.display = 'flex';
+    }
+    function closeSnooze() { document.getElementById('snooze-sheet').style.display = 'none'; }
+    function doSnooze(opt) {
+      const id = snoozeId;
+      closeSnooze();
+      showToast('⏳ 設定中…');
+      google.script.run.withSuccessHandler(r => {
+        showToast(r && r.message ? r.message : '✅ 已延後');
+        if (r && r.ok) { fetchData(true); if (document.getElementById('notif-sheet').style.display === 'flex') loadNotifications(false); }
+      }).withFailureHandler(e => showToast('⚠️ ' + (navigator.onLine ? e.message : '離線中，無法設定提醒'))).snoozeTaskApp(id, opt);
+    }
+
+    // ================================================================
+    //  B23：離線也能看（只在手機／平板保存，電腦不保存）
+    // ================================================================
+    function offlineKey(k) { return 'off_' + (userRole || 'x') + '_' + k; }
+    function saveOffline(k, d) { if (!isMobileDevice()) return; try { localStorage.setItem(offlineKey(k), JSON.stringify({ t: Date.now(), d: d })); } catch (e) {} }
+    function loadOffline(k) { if (!isMobileDevice()) return null; try { return JSON.parse(localStorage.getItem(offlineKey(k)) || 'null'); } catch (e) { return null; } }
+    function fmtTs(t) { const d = new Date(t); return `${d.getMonth() + 1}/${d.getDate()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }
+    function setOfflineBar(ts) {
+      const bar = document.getElementById('offline-bar');
+      if (!bar) return;
+      if (ts === false) { bar.classList.remove('on'); return; }
+      bar.innerText = ts ? `📴 目前離線：顯示 ${fmtTs(ts)} 的資料（只能查看，連上網路後自動更新）` : '📴 目前離線：只能查看已保存的資料';
+      bar.classList.add('on');
+    }
+    function clearOfflineData() { try { Object.keys(localStorage).filter(k => k.indexOf('off_') === 0).forEach(k => localStorage.removeItem(k)); } catch (e) {} }
+    window.addEventListener('online', () => { setOfflineBar(false); if (userRole && isAppVisible()) { fetchData(true); showToast('✅ 已重新連線'); } });
+    window.addEventListener('offline', () => { if (userRole) setOfflineBar(null); });
+
     // ================================================================
     //  B22：手機好選的調色盤
     // ================================================================
@@ -3186,7 +3265,13 @@
     let taskDragging = false;
     function fetchTasksWithExtras(fnName, renderFn, onFail) {
       let tasks = null, ex = null, done = false;
-      const finish = () => { if (done || tasks === null || ex === null) return; done = true; taskExtras = ex; renderFn(tasks); };
+      const finish = () => {
+        if (done || tasks === null || ex === null) return;
+        done = true; taskExtras = ex;
+        setOfflineBar(false);
+        saveOffline(fnName === 'getTasksForApp' ? 'tasks' : 'kids-tasks', tasks); saveOffline('extras', ex);   // B23：離線也能看
+        renderFn(tasks);
+      };
       google.script.run.withSuccessHandler(r => { tasks = r || []; finish(); }).withFailureHandler(onFail)[fnName]();
       google.script.run.withSuccessHandler(r => { ex = (r && typeof r === 'object') ? Object.assign({ pinned: {}, ranks: {}, lists: {}, templates: [] }, r) : taskExtras; finish(); })
         .withFailureHandler(() => { ex = taskExtras; finish(); }).getTaskExtrasApp(userRole);
@@ -3560,18 +3645,28 @@
       if (document.querySelector('.edit-input')) return;
       if (['lifelog', 'knowledge', 'music', 'memos', 'backup'].includes(currentMode)) return;
 
+      const OFF_RENDER = { today: renderToday, tasks: renderTasks, 'kids-tasks': renderKidsTasks, housework: renderHouseworkList };
       const onFail = function() {
         document.getElementById('loading-board-msg').style.display = 'none';
-        if (!isBackground) showToast("⚠️ 讀取失敗，稍後自動重試...");
+        // B23：連不上時改顯示上次保存的資料
+        const c = OFF_RENDER[currentMode] ? loadOffline(currentMode) : null;
+        if (c && c.d) {
+          if (currentMode === 'tasks' || currentMode === 'kids-tasks') { const ex = loadOffline('extras'); if (ex && ex.d) taskExtras = ex.d; }
+          OFF_RENDER[currentMode](c.d);
+          setOfflineBar(c.t);
+          return;
+        }
+        if (!isBackground) showToast(navigator.onLine ? "⚠️ 讀取失敗，稍後自動重試..." : "📴 目前離線，這一頁還沒有保存的資料");
       };
+      const keep = (k, fn) => d => { setOfflineBar(false); saveOffline(k, d); fn(d); };
 
-      if (currentMode === 'today') google.script.run.withSuccessHandler(renderToday).withFailureHandler(onFail).getTodayOverviewApp(userRole, userName);
+      if (currentMode === 'today') google.script.run.withSuccessHandler(keep('today', renderToday)).withFailureHandler(onFail).getTodayOverviewApp(userRole, userName);
       else if (currentMode === 'tasks') fetchTasksWithExtras('getTasksForApp', renderTasks, onFail);
       else if (currentMode === 'overdue') google.script.run.withSuccessHandler(renderTasks).withFailureHandler(onFail).getOverdueTasksApp();
       else if (currentMode === 'completed') google.script.run.withSuccessHandler(renderTasks).withFailureHandler(onFail).getCompletedTasksApp();
       else if (currentMode === 'kids-tasks') fetchTasksWithExtras('getKidsTasksApp', renderKidsTasks, onFail);
       else if (currentMode === 'kids-completed') google.script.run.withSuccessHandler(renderKidsTasks).withFailureHandler(onFail).getCompletedKidsTasksApp();
-      else if (currentMode === 'housework') google.script.run.withSuccessHandler(renderHouseworkList).withFailureHandler(onFail).getHouseworkTodayApp();
+      else if (currentMode === 'housework') google.script.run.withSuccessHandler(keep('housework', renderHouseworkList)).withFailureHandler(onFail).getHouseworkTodayApp();
 
       if (isBackground) updateDashboard();
     }
@@ -4082,6 +4177,7 @@
           <div class="card-actions">
             ${isCompletedView ? '' : `<button class="act edit-icon" data-act="pin" data-icon="${isPinned ? 'ti-pinned-off' : 'ti-pin'}" data-label="${isPinned ? '取消置頂' : '📌 置頂'}" title="${isPinned ? '取消置頂' : '置頂'}" onclick="togglePin(${idArg})"><i class="ti ${isPinned ? 'ti-pinned-off' : 'ti-pin'}"></i></button>
             <button class="act edit-icon" data-act="list" data-icon="ti-list-check" data-label="清單（子項目）" title="清單（子項目）" onclick="openChecklist(${idArg})"><i class="ti ti-list-check"></i></button>`}
+            ${!isCompletedView && remindM ? `<button class="act edit-icon" data-act="snooze" data-icon="ti-clock-pause" data-label="⏰ 稍後提醒" title="稍後提醒" onclick="openSnooze(${idArg})"><i class="ti ti-clock-pause"></i></button>` : ''}
             <button class="act edit-icon" data-act="calendar" data-icon="ti-calendar-plus" data-label="加入 / 同步行事曆" title="加入行事曆" onclick="addToCalendar(${idArg}, this)"><i class="ti ti-calendar-plus"></i></button>
             <button class="act edit-icon" data-act="alarm" data-icon="ti-alarm" data-label="設定提醒" title="快速設定提醒" onclick="setReminderPrompt(${idArg}, ${modeArg}, this)"><i class="ti ti-alarm"></i></button>
             <button class="act edit-icon" data-act="urgent" data-icon="ti-flame" data-label="切換急件" title="切換急件" style="color:${isTaskUrgent ? 'var(--danger)' : ''}" onclick="toggleCardUrgent(${idArg}, this)"><i class="ti ti-flame"></i></button>
@@ -4481,7 +4577,16 @@
           else if (currentMode === 'housework') google.script.run.withSuccessHandler(res => { renderSearchResults(res, false); updateSearchHeader(res); finishAction(); }).withFailureHandler(onErr).queryHouseworkLogApp(searchKeyword);
           else if (currentMode === 'knowledge') google.script.run.withSuccessHandler(res => { renderKnowledge(res, false); updateSearchHeader(res); finishAction(); }).withFailureHandler(onErr).getKnowledgeApp(searchKeyword);
           else if (currentMode === 'music') google.script.run.withSuccessHandler(res => { renderMusic(res, false); updateSearchHeader(res); finishAction(); }).withFailureHandler(onErr).getMusicApp(searchKeyword);
-          else if (currentMode === 'memos') google.script.run.withSuccessHandler(res => { renderMemos(res, false); updateSearchHeader(res); finishAction(); }).withFailureHandler(onErr).getKidsMemosApp(searchKeyword);
+          else if (currentMode === 'memos') google.script.run.withSuccessHandler(res => { setOfflineBar(false); if (!searchKeyword || searchKeyword === '全部') saveOffline('memos', res); renderMemos(res, false); updateSearchHeader(res); finishAction(); })
+            .withFailureHandler(err => {
+              const c = loadOffline('memos');   // B23：離線時從保存的備忘錄裡找
+              if (c && c.d) {
+                const kw = (searchKeyword === '全部' ? '' : searchKeyword).toLowerCase();
+                const res = c.d.filter(m => !kw || (String(m.name) + ' ' + String(m.category) + ' ' + String(m.id)).toLowerCase().includes(kw));
+                renderMemos(res, false); updateSearchHeader(res); setOfflineBar(c.t); finishAction(); return;
+              }
+              onErr(err);
+            }).getKidsMemosApp(searchKeyword);
           else if (currentMode === 'backup') google.script.run.withSuccessHandler(res => { renderBackupFiles(res, false); updateSearchHeader(res); finishAction(); }).withFailureHandler(onErr).getDriveFilesApp(searchKeyword);
           return;
         }
