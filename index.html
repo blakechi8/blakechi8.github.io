@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B21 版：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B22 版：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -239,6 +239,22 @@
     .cs-row { padding: 10px 0; border-top: 1px solid var(--border); }
     .topbar .icon-btn.active { background: var(--header-soft); }
     .theme-more { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .theme-cur { font-size: calc(12.5px * var(--fs)); color: var(--text-3); margin-top: 6px; }
+    /* B22：手機好選的調色盤 */
+    .cp-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 7px; margin-top: 12px; }
+    .cp-cell { aspect-ratio: 1; border-radius: 10px; border: 2px solid transparent; padding: 0; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+    .cp-cell.on { border-color: var(--text); box-shadow: inset 0 0 0 2px var(--surface); }
+    .cp-preview { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+    .cp-preview .chip { flex: 1; height: calc(44px * var(--fs)); border-radius: 12px; display: flex; align-items: center; padding: 0 14px; font-weight: 700; font-size: calc(15px * var(--fs)); border: 1px solid var(--border); }
+    .cp-adv { margin-top: 12px; font-size: calc(12.5px * var(--fs)); color: var(--text-3); display: flex; align-items: center; gap: 8px; }
+    .cp-adv input { width: 44px; height: 30px; padding: 0; border: none; background: none; }
+    /* B22：底部選單排序 */
+    .nav-ord-row { display: flex; align-items: center; gap: 10px; padding: 7px 2px; border-bottom: 1px solid var(--border); }
+    .nav-ord-row i.ic { font-size: calc(20px * var(--fs)); color: var(--text-2); width: 26px; text-align: center; }
+    .nav-ord-row .nm { flex: 1; font-size: calc(15px * var(--fs)); }
+    .nav-ord-row button { border: none; background: var(--surface-2); color: var(--text-2); width: 36px; height: 34px; border-radius: 10px; padding: 0; font-size: calc(16px * var(--fs)); }
+    .nav-ord-row.on .nm { font-weight: 700; color: var(--text); }
+    .nav-ord-split { font-size: calc(12px * var(--fs)); color: var(--primary); font-weight: 700; padding: 8px 2px 4px; border-bottom: 1px dashed var(--primary); }
     .tpl-chip.on { background: var(--c-kids); border-color: var(--c-kids); color: #fff; }
     .cl-del { color: #D9837A; }
     .kw-row { display: flex; align-items: center; gap: 8px; padding: 8px 2px; border-bottom: 1px solid var(--border); }
@@ -433,7 +449,7 @@
     #action-buttons { display: flex; gap: 0; align-items: center; }
     textarea.user-input::placeholder { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     textarea.user-input { flex: 1; min-width: 0; height: calc(42px * var(--fs)); max-height: calc(120px * var(--fs)); padding: 8px 16px; border-radius: 21px; resize: none; line-height: 1.45; overflow-y: hidden; }
-    .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--surface); border-top: 1px solid var(--border); padding: 3px 0 max(6px, env(safe-area-inset-bottom)); flex-shrink: 0; }
+    .tabbar { display: grid; grid-template-columns: repeat(var(--tab-n, 5), minmax(0, 1fr)); grid-auto-flow: column; background: var(--surface); border-top: 1px solid var(--border); padding: 3px 0 max(6px, env(safe-area-inset-bottom)); flex-shrink: 0; }
     .tab-item { border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-width: 0; font-size: calc(12px * var(--fs)); color: var(--text-3); padding: 5px 0; min-height: 50px; }
     .tab-item i { font-size: calc(23px * var(--fs)); }
     .tab-item.active { color: var(--primary); font-weight: 600; }
@@ -567,7 +583,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B21）\n' +
+      st.innerText = '主程式沒有啟動（版本 B22）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -586,7 +602,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B21</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B22</div>
     </div>
   </div>
 
@@ -784,6 +800,18 @@
   </div>
 
 
+  <!-- ===== B22：調色盤（手機好選） ===== -->
+  <div id="cp-sheet" class="modal" style="z-index:10010;">
+    <div class="sheet">
+      <div class="sheet-grip"></div>
+      <h3 class="sheet-title" id="cp-title">自訂顏色</h3>
+      <div class="cp-preview"><div class="chip" id="cp-chip">預覽</div></div>
+      <div class="cp-grid" id="cp-grid"></div>
+      <div class="cp-adv">更精細的顏色：<input type="color" id="cp-native" onchange="cpPick(this.value)"><span>（系統調色盤）</span></div>
+      <button class="btn btn-block" style="margin-top:14px; width:100%;" onclick="closeColorPicker()">完成</button>
+    </div>
+  </div>
+
   <!-- ===== B21：快速關鍵字 ===== -->
   <div id="kw-sheet" class="modal">
     <div class="sheet">
@@ -857,15 +885,14 @@
         <button class="fs-option" data-fs="1.3" onclick="setFontScale(1.3)"><span style="font-size:21px; font-weight:700;">字</span><span style="font-size:13px;">特大</span></button>
       </div>
       <div class="sec-label" style="margin-top:18px;">標題列顏色（只影響這台裝置）</div>
-      <div class="theme-row" id="theme-row">
-        <button class="theme-opt" data-theme="mint" onclick="setTheme('mint')"><span class="sw" style="background:#B5DFD1;"></span>薄荷綠</button>
-        <button class="theme-opt" data-theme="sky" onclick="setTheme('sky')"><span class="sw" style="background:#B6D3F1;"></span>天空藍</button>
-        <button class="theme-opt" data-theme="lavender" onclick="setTheme('lavender')"><span class="sw" style="background:#CEC5EF;"></span>薰衣草</button>
-        <button class="theme-opt" data-theme="latte" onclick="setTheme('latte')"><span class="sw" style="background:#E7D0B3;"></span>奶茶</button>
-        <button class="theme-opt" data-theme="navy" onclick="setTheme('navy')"><span class="sw" style="background:#34506F;"></span>霧藍</button>
-        <label class="theme-opt" data-theme="custom" title="自己挑顏色"><span class="sw sw-custom" id="custom-sw"><input type="color" id="custom-color" value="#9CCFC0" oninput="setCustomTheme(this.value)"></span>自訂</label>
-      </div>
       <div class="theme-more" id="theme-more"></div>
+      <div class="theme-cur" id="theme-cur"></div>
+      <div class="mobile-only">
+        <div class="sec-label" style="margin-top:18px;">底部選單順序（只影響這台裝置）</div>
+        <div class="theme-cur" style="margin-top:2px;">用 ↑↓ 調整；虛線以上顯示在底部，其餘放在「更多」</div>
+        <div id="nav-order" style="margin-top:6px;"></div>
+        <button class="btn btn-sm btn-ghost" style="margin-top:10px;" onclick="resetNavOrder()"><i class="ti ti-restore"></i>恢復預設順序</button>
+      </div>
       <div class="sec-label" style="margin-top:18px;">版面顏色（只影響這台裝置，可隨時恢復預設）</div>
       <div id="color-settings"></div>
       <div style="display:flex; gap:8px; margin-top:18px;">
@@ -1236,16 +1263,24 @@
       if (meta) meta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--header-bg').trim());
     }
     function initTheme() { let t = 'mint'; try { t = localStorage.getItem('header_theme') || 'mint'; } catch (e) {} applyTheme(t); try { applyColorOverrides(); } catch (e) {} }
-    function setTheme(t) { applyTheme(t); try { localStorage.setItem('header_theme', t); } catch (e) {} }
+    function setTheme(t) { try { localStorage.setItem('header_theme', t); } catch (e) {} applyTheme(t); }
     // B21：標題列也提供和版面顏色一樣多的預設色（淺色＋飽和色）
     const HEADER_PRESETS = [['#D7EFD9', '淺綠'], ['#06C755', 'LINE 綠'], ['#22B04F', '亮綠'], ['#5FB89A', '薄荷'], ['#D6E8F7', '淺藍'], ['#4A90D9', '天藍'], ['#6D9DD1', '霧藍'],
       ['#E4DDF6', '淺紫'], ['#8C7FD0', '薰衣草'], ['#F8DCE5', '淺粉'], ['#E79AB1', '粉紅'], ['#FBEBC0', '淺黃'], ['#E8B64C', '芥末黃'], ['#F7D9CB', '杏色'], ['#EE8C6F', '珊瑚'], ['#E3E7EC', '淺灰'], ['#8A9AAE', '灰藍']];
+    // B22：原本 5 個淺色主題直接併進同一組色票，最後一個彩虹＝自訂
+    const NAMED_THEMES = [['mint', '#B5DFD1', '薄荷綠'], ['sky', '#B6D3F1', '天空藍'], ['lavender', '#CEC5EF', '薰衣草'], ['latte', '#E7D0B3', '奶茶'], ['navy', '#34506F', '霧藍']];
     function renderThemeMore() {
       const box = document.getElementById('theme-more');
       if (!box) return;
       let cur = '', t = 'mint';
       try { t = localStorage.getItem('header_theme') || 'mint'; cur = (localStorage.getItem('header_custom') || '').toLowerCase(); } catch (e) {}
-      box.innerHTML = HEADER_PRESETS.map(([c, n]) => `<button class="cs-sw${t === 'custom' && cur === c.toLowerCase() ? ' on' : ''}" style="background:${c};" title="${n}" aria-label="${n}" onclick="setCustomTheme('${c}')"></button>`).join('');
+      const presetHit = HEADER_PRESETS.find(([c]) => c.toLowerCase() === cur);
+      box.innerHTML = NAMED_THEMES.map(([k, c, n]) => `<button class="cs-sw${t === k ? ' on' : ''}" style="background:${c};" title="${n}" aria-label="${n}" onclick="setTheme('${k}')"></button>`).join('')
+        + HEADER_PRESETS.map(([c, n]) => `<button class="cs-sw${t === 'custom' && cur === c.toLowerCase() ? ' on' : ''}" style="background:${c};" title="${n}" aria-label="${n}" onclick="setCustomTheme('${c}')"></button>`).join('')
+        + `<button class="cs-sw custom${t === 'custom' && !presetHit ? ' on' : ''}" title="自訂顏色" aria-label="自訂顏色" ${t === 'custom' && !presetHit && cur ? `style="background:${cur};"` : ''} onclick="openColorPicker('標題列顏色', '${cur || '#9CCFC0'}', setCustomTheme)"></button>`;
+      const named = NAMED_THEMES.find(x => x[0] === t);
+      const curName = named ? named[2] : (presetHit ? presetHit[1] : (cur ? '自訂 ' + cur.toUpperCase() : ''));
+      const lbl = document.getElementById('theme-cur'); if (lbl) lbl.innerText = curName ? '目前：' + curName : '';
     }
     function setCustomTheme(hex) { try { localStorage.setItem('header_custom', hex); } catch (e) {} setTheme('custom'); }
 
@@ -1268,7 +1303,7 @@
     }
     function openFontSheet() { applyFontScale(fontScale); document.getElementById('font-sheet').style.display = 'flex'; }
     function openUserSheet() {
-      try { renderColorSettings(); } catch (e) {}
+      try { renderColorSettings(); renderNavOrder(); renderThemeMore(); } catch (e) {}
       document.getElementById('user-sheet-name').innerText = userName || '使用者';
       document.getElementById('user-sheet-role').innerText = (userRole === 'kids' ? '家人帳號' : '管理員帳號') + (isMobileDevice() ? '・這台裝置會記住登入' : '・電腦閒置 10 分鐘自動鎖定');
       openFontSheet();
@@ -1503,16 +1538,13 @@
       });
       document.getElementById('side-nav').innerHTML = side;
 
-      document.getElementById('tab-bar').innerHTML = TAB_ITEMS[role].map(([key, icon, label]) =>
-        `<button class="tab-item" data-nav="${key}" onclick="navGo('${key}')"><i class="ti ${icon}"></i><span>${label}</span></button>`).join('');
-
-      document.getElementById('more-grid').innerHTML = MORE_ITEMS_BY_ROLE[role].map(([key, icon, label, cls]) =>
-        `<button class="more-item ${cls}" data-nav="${key}" onclick="navGo('${key}')"><span class="more-icon"><i class="ti ${icon}"></i></span>${label}</button>`).join('');
+      _slotsSeen = tabSlots();
+      buildTabAndMore();   // B22：底部選單依使用者自訂順序、只排一列
     }
 
     function setActiveNav(mode) {
       document.querySelectorAll('[data-nav]').forEach(el => el.classList.toggle('active', el.getAttribute('data-nav') === mode));
-      if (MORE_MODES_BY_ROLE[userRole === 'kids' ? 'kids' : 'admin'].includes(mode)) {
+      if (navMoreModes.includes(mode)) {
         const moreTab = document.querySelector('#tab-bar [data-nav="@more"]');
         if (moreTab) moreTab.classList.add('active');
       }
@@ -1716,7 +1748,7 @@
         'cal-confirm-modal': closeCalConfirmModal, 'map-select-modal': closeMapModal, 'alarm-modal': closeAlarmModal,
         'hw-modal': closeHwModal, 'hw-manage-modal': closeHwManageModal, 'hw-reminder-modal': closeHwReminderModal,
         'card-menu': closeCardMenu, 'more-sheet': closeMoreSheet, 'font-sheet': closeFontSheet,
-        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto, 'kw-sheet': closeKw
+        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto, 'kw-sheet': closeKw, 'cp-sheet': closeColorPicker
       };
       Object.keys(closers).forEach(id => {
         const el = document.getElementById(id);
@@ -2905,7 +2937,7 @@
         ] },
       memos: { cls: 'memo', icon: 'ti-notes', title: '備忘錄', sub: '家人共用的重要資訊（證件、尺寸、帳號提示…）',
         rows: [
-          { step: '搜尋', icon: 'ti-search', text: '輸入「找」＋關鍵字，或顯示全部', chips: [['全部', 'run', true], ['找 疫苗', 'run']] },
+          { step: '搜尋', icon: 'ti-search', text: '輸入「找」＋關鍵字，或點下面的關鍵字', kw: 'memos', fixed: [['全部', 'run', true]] },
           { step: '新增', icon: 'ti-plus', text: '用「備忘錄」開頭', chips: [['備忘錄 ', 'fill']], note: '例：備忘錄 小孩制服尺寸 140' }
         ] }
     };
@@ -2918,7 +2950,7 @@
         if (r.kw) {
           // B21：快速關鍵字（可編輯，所有裝置共用）
           const words = quickKwList(r.kw);
-          const chips = r.fixed.concat(words.map(w => [r.kw === 'music' ? '找 ' + w : w, 'run']));
+          const chips = r.fixed.concat(words.map(w => [(r.kw === 'music' || r.kw === 'memos') ? '找 ' + w : w, 'run']));
           h += `<div class="g-chips">${chips.map(c => `<button class="g-chip${c[2] ? ' solid' : ''}" onclick="guideChip(${jsArg(c[0])}, '${c[1]}')">${esc(c[0])}</button>`).join('')}<button class="g-chip edit" onclick="openKw('${r.kw}')"><i class="ti ti-pencil"></i>編輯</button></div>`;
         }
         if (r.chips) h += `<div class="g-chips">${r.chips.map(c => `<button class="g-chip${c[2] ? ' solid' : ''}" onclick="guideChip(${jsArg(c[0])}, '${c[1]}')">${esc(c[0].trim() || c[0])}${c[1] === 'fill' ? ' …' : ''}</button>`).join('')}</div>`;
@@ -2927,8 +2959,8 @@
       });
       return h + `</div>`;
     }
-    const QUICK_KW_DEFAULTS = { knowledge: ['管理', '科技', 'AI'], lifelog: ['美食', '旅遊', '早餐'], music: ['周杰倫', '晴天'] };
-    const QUICK_KW_NAMES = { knowledge: '知識庫', lifelog: '生活誌', music: '音樂輯' };
+    const QUICK_KW_DEFAULTS = { knowledge: ['管理', '科技', 'AI'], lifelog: ['美食', '旅遊', '早餐'], music: ['周杰倫', '晴天'], memos: ['疫苗', '尺寸', '證件'] };
+    const QUICK_KW_NAMES = { knowledge: '知識庫', lifelog: '生活誌', music: '音樂輯', memos: '備忘錄' };
     let quickKw = {};
     function quickKwList(mode) { return Array.isArray(quickKw[mode]) ? quickKw[mode] : QUICK_KW_DEFAULTS[mode] || []; }
     function loadQuickKw() {
@@ -2988,6 +3020,108 @@
     }
 
 
+
+    // ================================================================
+    //  B22：手機好選的調色盤
+    // ================================================================
+    function hslHex(h, s, l) {
+      s /= 100; l /= 100;
+      const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+      const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+      return rgbHex([f(0) * 255, f(8) * 255, f(4) * 255]);
+    }
+    const CP_COLORS = (() => {
+      const hues = [0, 25, 45, 95, 150, 200, 255, 320];           // 紅 橘 黃 綠 青 藍 紫 粉
+      const rows = [[70, 93], [65, 85], [60, 74], [55, 62], [50, 50], [55, 38]];   // 由淺到深
+      const out = [];
+      rows.forEach(([sat, lig]) => hues.forEach(h => out.push(hslHex(h, sat, lig))));
+      ['#FFFFFF', '#EEF1F4', '#D5DBE2', '#AAB4BF', '#7D8996', '#56616D', '#34404C', '#1F2A35'].forEach(c => out.push(c));
+      return out;
+    })();
+    let cpCallback = null, cpCurrent = '';
+    function openColorPicker(title, current, cb) {
+      cpCallback = cb; cpCurrent = String(current || '').toLowerCase();
+      document.getElementById('cp-title').innerText = '自訂顏色・' + title;
+      document.getElementById('cp-native').value = /^#[0-9a-f]{6}$/i.test(cpCurrent) ? cpCurrent : '#9ccfc0';
+      renderColorPicker();
+      document.getElementById('cp-sheet').style.display = 'flex';
+    }
+    function renderColorPicker() {
+      document.getElementById('cp-grid').innerHTML = CP_COLORS.map(c => `<button class="cp-cell${c.toLowerCase() === cpCurrent ? ' on' : ''}" style="background:${c};" aria-label="${c}" onclick="cpPick('${c}')"></button>`).join('');
+      const chip = document.getElementById('cp-chip');
+      if (/^#[0-9a-f]{6}$/i.test(cpCurrent)) {
+        chip.style.background = cpCurrent;
+        chip.style.color = lumHex(cpCurrent) > 0.6 ? '#22313D' : '#ffffff';
+        chip.innerText = '預覽 ' + cpCurrent.toUpperCase();
+      } else { chip.style.background = ''; chip.style.color = ''; chip.innerText = '點下面的顏色'; }
+    }
+    function cpPick(c) {
+      cpCurrent = String(c).toLowerCase();
+      renderColorPicker();
+      if (cpCallback) cpCallback(cpCurrent);   // 立即套用，看得到效果
+    }
+    function closeColorPicker() { document.getElementById('cp-sheet').style.display = 'none'; }
+
+    // ================================================================
+    //  B22：底部選單可自訂順序（每台裝置各自記住）
+    // ================================================================
+    const NAV_DEFS = {
+      tasks: ['ti-checkbox', '待辦'], knowledge: ['ti-book', '知識庫'], lifelog: ['ti-map-pin', '生活誌'], music: ['ti-music', '音樂輯'],
+      housework: ['ti-home', '家務'], memos: ['ti-notes', '備忘錄'], backup: ['ti-cloud-upload', '備份區'], '@db': ['ti-table', '資料庫'],
+      overdue: ['ti-alert-triangle', '逾期盤點', 'danger'], completed: ['ti-history', '近期完成'], '@archive': ['ti-archive', '封存完成'],
+      '@search': ['ti-search', '搜尋'], today: ['ti-sun', '今天'], 'kids-tasks': ['ti-heart-handshake', '待辦'], 'kids-completed': ['ti-history', '已完成'],
+      '@user': ['ti-text-size', '文字大小', 'muted']
+    };
+    const NAV_DEFAULT_ORDER = {
+      admin: ['tasks', 'knowledge', 'lifelog', 'music', 'housework', 'memos', 'backup', '@db', 'overdue', 'completed', '@archive', '@search', 'today'],
+      kids: ['kids-tasks', 'housework', 'lifelog', 'memos', 'kids-completed', '@search', '@user', 'today']
+    };
+    function navRole() { return userRole === 'kids' ? 'kids' : 'admin'; }
+    function getNavOrder() {
+      const role = navRole(), def = NAV_DEFAULT_ORDER[role];
+      let saved = [];
+      try { saved = JSON.parse(localStorage.getItem('nav_order_' + role) || '[]') || []; } catch (e) {}
+      const out = saved.filter(k => def.includes(k));
+      def.forEach(k => { if (!out.includes(k)) out.push(k); });
+      return out;
+    }
+    function tabSlots() { const w = window.innerWidth || 390; return w >= 720 ? 7 : (w >= 560 ? 6 : 5); }   // 含「更多」，保證只有一排
+    let navMoreModes = [];
+    function buildTabAndMore() {
+      const order = getNavOrder(), n = tabSlots();
+      let bar, more;
+      if (order.length <= n) { bar = order; more = []; }
+      else { bar = order.slice(0, n - 1).concat(['@more']); more = order.slice(n - 1); }
+      navMoreModes = more.filter(k => k[0] !== '@');
+      const tb = document.getElementById('tab-bar');
+      tb.style.setProperty('--tab-n', bar.length);
+      tb.innerHTML = bar.map(k => { const d = k === '@more' ? ['ti-dots', '更多'] : NAV_DEFS[k]; return `<button class="tab-item" data-nav="${k}" onclick="navGo('${k}')"><i class="ti ${d[0]}"></i><span>${d[1]}</span></button>`; }).join('');
+      document.getElementById('more-grid').innerHTML = more.map(k => { const d = NAV_DEFS[k]; return `<button class="more-item ${d[2] || ''}" data-nav="${k}" onclick="navGo('${k}')"><span class="more-icon"><i class="ti ${d[0]}"></i></span>${d[1]}</button>`; }).join('');
+      if (typeof currentMode !== 'undefined' && currentMode) setActiveNav(currentMode);
+    }
+    function renderNavOrder() {
+      const box = document.getElementById('nav-order');
+      if (!box) return;
+      const order = getNavOrder(), n = tabSlots(), cut = order.length <= n ? order.length : n - 1;
+      box.innerHTML = order.map((k, i) => {
+        const d = NAV_DEFS[k];
+        return (i === cut ? '<div class="nav-ord-split">↓ 以下放在「更多」</div>' : '') +
+          `<div class="nav-ord-row${i < cut ? ' on' : ''}"><i class="ti ${d[0]} ic"></i><span class="nm">${d[1]}</span>
+          <button onclick="moveNav(${i}, -1)" ${i === 0 ? 'disabled style="opacity:.3"' : ''} aria-label="往前"><i class="ti ti-arrow-up"></i></button>
+          <button onclick="moveNav(${i}, 1)" ${i === order.length - 1 ? 'disabled style="opacity:.3"' : ''} aria-label="往後"><i class="ti ti-arrow-down"></i></button></div>`;
+      }).join('');
+    }
+    function moveNav(i, d) {
+      const order = getNavOrder(), j = i + d;
+      if (j < 0 || j >= order.length) return;
+      const t = order[i]; order[i] = order[j]; order[j] = t;
+      try { localStorage.setItem('nav_order_' + navRole(), JSON.stringify(order)); } catch (e) {}
+      buildTabAndMore(); renderNavOrder();
+    }
+    function resetNavOrder() { try { localStorage.removeItem('nav_order_' + navRole()); } catch (e) {} buildTabAndMore(); renderNavOrder(); showToast('已恢復預設順序'); }
+    let _slotsSeen = 0;
+    window.addEventListener('resize', () => { const n = tabSlots(); if (n !== _slotsSeen && userRole) { _slotsSeen = n; try { buildTabAndMore(); } catch (e) {} } });
+
     // ================================================================
     //  B20：版面顏色自訂
     // ================================================================
@@ -3040,7 +3174,7 @@
         const sws = COLOR_PRESETS.map(([c, n]) => `<button class="cs-sw${c.toLowerCase() === String(cur).toLowerCase() ? ' on' : ''}" style="background:${c};" title="${n}" aria-label="${n}" onclick="setColorOverride('${k}', '${c}')"></button>`).join('');
         return `<div class="cs-row"><div class="cs-head"><span class="cs-cur" style="background:${cur || 'var(--header-soft)'};"></span>${cfg.label}${ov[k] ? '' : `<span style="font-weight:400; color:var(--text-3); font-size:calc(12px * var(--fs));">（預設${cfg.defLabel ? '：' + cfg.defLabel : ''}）</span>`}
           ${ov[k] ? `<button class="cs-reset" onclick="setColorOverride('${k}', '')"><i class="ti ti-restore"></i> 恢復預設</button>` : ''}</div>
-          <div class="cs-sws">${sws}<label class="cs-sw custom" title="自訂顏色"><input type="color" value="${cur || '#9CCFC0'}" onchange="setColorOverride('${k}', this.value)"></label></div></div>`;
+          <div class="cs-sws">${sws}<button class="cs-sw custom" title="自訂顏色" aria-label="自訂顏色" onclick="openColorPicker('${cfg.label}', '${cur || '#9CCFC0'}', c => setColorOverride('${k}', c))"></button></div></div>`;
       }).join('');
     }
 
