@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B17 版：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B18 版：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -167,6 +167,7 @@
     .col-search > .column-header, .col-housework > .column-header { font-weight: 400; cursor: default; }
     .column-header a { color: var(--primary); }
     .column-body { display: flex; flex-direction: column; gap: 8px; }
+    .column-body > * { flex-shrink: 0; }   /* B18：電腦版資料很多時卡片不會被壓扁 */
 
     /* ========== 5. 卡片 ========== */
     .task-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 12px 12px 15px; display: flex; gap: 10px; align-items: flex-start; position: relative; overflow: hidden; transition: max-height .35s ease, opacity .35s ease, padding .35s ease, margin .35s ease, border-color .2s; }
@@ -180,6 +181,12 @@
     /* B16：AI 摘要改成暖杏色便條（和藍色的網址/資訊、紫色的分類明顯區分） */
     .ai-sum { background: var(--sum-bg); color: var(--sum-text); border-left: 4px solid var(--sum-line); border-radius: 4px 10px 10px 4px; padding: 9px 12px; margin-top: 8px; font-size: calc(14px * var(--fs)); line-height: 1.7; }
     .ai-sum-h { font-weight: 700; color: var(--sum-head); margin-bottom: 3px; display: flex; align-items: center; gap: 4px; font-size: calc(13px * var(--fs)); }
+    .sum-li { display: flex; gap: 6px; }
+    .sum-li .b { flex-shrink: 0; width: 1em; text-align: center; }
+    .sum-li .t { flex: 1; min-width: 0; }
+    .ai-gen-btn.running { border: 1.5px solid var(--danger); color: var(--danger-text); background: var(--danger-soft); animation: sumPulse 1.6s ease-in-out infinite; }
+    .ai-gen-btn.running i { display: inline-block; animation: spin 1s linear infinite; }
+    @keyframes sumPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(217,100,90,.35); } 50% { box-shadow: 0 0 0 5px rgba(217,100,90,0); } }
     .ai-gen-btn { margin-top: 8px; border: 1px dashed var(--sum-line); background: var(--sum-bg); color: var(--sum-head); border-radius: 14px; padding: 5px 12px; font-size: calc(12.5px * var(--fs)); font-weight: 600; }
     .flash { animation: flashCard 1.6s ease 2; }
     @keyframes flashCard { 0%, 100% { box-shadow: none; } 50% { box-shadow: 0 0 0 3px var(--primary-soft), 0 0 0 5px var(--primary); } }
@@ -272,6 +279,16 @@
     .act, .edit-icon, .delete-icon { width: 32px; height: 32px; border: none; background: none; border-radius: 8px; color: var(--text-3); align-items: center; justify-content: center; font-size: calc(18px * var(--fs)); padding: 0; display: inline-flex; flex-shrink: 0; }
     .act:hover, .edit-icon:hover { background: var(--surface-2); color: var(--primary); }
     .delete-icon:hover { background: var(--danger-soft); color: var(--danger-text); }
+    /* B18：按鈕用低彩度的分類色，和卡片色條、標籤同一組顏色 */
+    .edit-icon { color: var(--success); }
+    .edit-icon:hover { background: var(--success-soft); color: var(--success-text); }
+    .delete-icon { color: var(--danger); }
+    .act[data-act="calendar"] { color: var(--p-life); }
+    .act[data-act="calendar"]:hover { background: var(--b-life); color: var(--t-life); }
+    .act[data-act="alarm"] { color: var(--p-kids); }
+    .act[data-act="alarm"]:hover { background: var(--b-kids); color: var(--t-kids); }
+    .act[data-act="urgent"] { color: #E39A7A; }
+    .act[data-act="urgent"]:hover { background: var(--danger-soft); color: var(--danger); }
     .card-actions .act { display: none; }
     .card-actions .kebab { display: inline-flex; }
     .task-header { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -281,6 +298,9 @@
     .id-tag { font-size: calc(11px * var(--fs)); color: var(--text-3); margin-left: 4px; }
     .action-btn { height: 28px; padding: 0 10px; border-radius: 14px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-2); font-size: calc(12px * var(--fs)); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
     .action-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .action-btn.to-life { background: var(--b-life); border-color: var(--c-life); color: var(--t-life); }
+    .action-btn.to-know { background: var(--b-know); border-color: var(--c-know); color: var(--t-know); }
+    .action-btn.to-life:hover, .action-btn.to-know:hover { filter: brightness(.97); }
     .card-link { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; text-decoration: none; font-size: calc(13px * var(--fs)); }
     .card-link.dl { color: var(--success-text); }
     .card-link.yt { color: var(--danger-text); }
@@ -444,7 +464,7 @@
     @media (min-width: 900px) and (hover: hover) {
       .task-card { flex-wrap: wrap; row-gap: 2px; }
       .card-actions { flex-basis: 100%; padding-left: 32px; margin: 2px 0 -6px -4px; }
-      .card-actions .act { display: inline-flex; opacity: .55; transition: opacity .15s; }
+      .card-actions .act { display: inline-flex; opacity: .8; transition: opacity .15s; }
       .task-card:hover .card-actions .act { opacity: 1; }
       .card-actions .kebab { display: none; }
     }
@@ -462,7 +482,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B17）\n' +
+      st.innerText = '主程式沒有啟動（版本 B18）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -481,7 +501,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B17</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B18</div>
     </div>
   </div>
 
@@ -2618,17 +2638,50 @@
     }
 
     // ---------------- AI 摘要 ----------------
+    // B18：摘要每一行若是「• 」開頭就做成條列，換行時自動和第一個字對齊
+    function summaryBodyHtml(summary) {
+      return String(summary).split('\n').map(line => {
+        const t = line.trim();
+        if (!t) return '';
+        const m = t.match(/^([•・·\-\*●○▪])\s*(.*)$/);
+        return m ? `<div class="sum-li"><span class="b">•</span><span class="t">${esc(m[2])}</span></div>` : `<div>${esc(t)}</div>`;
+      }).join('');
+    }
+    const summaryPending = {};   // 產生中的摘要：{ 編號: 開始時間 }（畫面重新整理也不會中斷讀秒）
+    function summaryRunningLabel(start) {
+      const sec = Math.max(0, Math.round((Date.now() - start) / 1000));
+      const t = sec >= 60 ? `${Math.floor(sec / 60)} 分 ${String(sec % 60).padStart(2, '0')} 秒` : `${sec} 秒`;
+      return `<i class="ti ti-loader-2"></i> AI 閱讀中… 已 ${t}`;
+    }
     function summaryHtml(id, type, summary) {
-      if (summary) return `<div class="ai-sum"><div class="ai-sum-h"><i class="ti ti-sparkles"></i>AI 摘要</div>${esc(summary).replace(/\n/g, '<br>')}</div>`;
+      if (summary) return `<div class="ai-sum"><div class="ai-sum-h"><i class="ti ti-sparkles"></i>AI 摘要</div>${summaryBodyHtml(summary)}</div>`;
       if (userRole !== 'admin') return '';
-      return `<button class="ai-gen-btn" onclick="genSummary(${jsArg(id)}, ${jsArg(type)}, this)"><i class="ti ti-sparkles"></i> 產生 AI 摘要</button>`;
+      const key = type + ':' + id;
+      if (summaryPending[key]) return `<button class="ai-gen-btn running" data-sum="${esc(key)}" data-start="${summaryPending[key]}" disabled>${summaryRunningLabel(summaryPending[key])}</button>`;
+      return `<button class="ai-gen-btn" data-sum="${esc(key)}" onclick="genSummary(${jsArg(id)}, ${jsArg(type)}, this)"><i class="ti ti-sparkles"></i> 產生 AI 摘要</button>`;
+    }
+    let summaryTicker = null;
+    function tickSummaryTimers() {
+      const btns = document.querySelectorAll('.ai-gen-btn.running');
+      btns.forEach(b => { b.innerHTML = summaryRunningLabel(parseInt(b.getAttribute('data-start'), 10)); });
+      if (!Object.keys(summaryPending).length && summaryTicker) { clearInterval(summaryTicker); summaryTicker = null; }
     }
     function genSummary(id, type, btn) {
-      btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> AI 閱讀中…';
+      const key = type + ':' + id;
+      if (summaryPending[key]) return;
+      summaryPending[key] = Date.now();
+      btn.outerHTML = summaryHtml(id, type, '');
+      if (!summaryTicker) summaryTicker = setInterval(tickSummaryTimers, 1000);
+      const finish = (summary, msg) => {
+        delete summaryPending[key];
+        document.querySelectorAll(`.ai-gen-btn[data-sum="${cssEsc(key)}"]`).forEach(b => { b.outerHTML = summaryHtml(id, type, summary || ''); });
+        if (msg) showToast(msg);
+        tickSummaryTimers();
+      };
       google.script.run.withSuccessHandler(r => {
-        if (r && r.ok) { btn.outerHTML = summaryHtml(id, type, r.summary); }
-        else { btn.disabled = false; btn.innerHTML = '<i class="ti ti-sparkles"></i> 產生 AI 摘要'; showToast(r && r.message ? r.message : '⚠️ 產生失敗'); }
-      }).withFailureHandler(e => { btn.disabled = false; btn.innerHTML = '<i class="ti ti-sparkles"></i> 產生 AI 摘要'; showToast('⚠️ ' + e.message); }).generateSummaryApp(id, type);
+        if (r && r.ok) finish(r.summary, '✅ AI 摘要完成');
+        else finish('', r && r.message ? r.message : '⚠️ 產生失敗');
+      }).withFailureHandler(e => finish('', '⚠️ ' + e.message)).generateSummaryApp(id, type);
     }
 
     // ---------------- 待辦篩選（全部 / 工作 / 生活 / 家庭） ----------------
@@ -3361,7 +3414,7 @@
               <div class="task-header">
                 <span class="task-category" title="點此修改主類與分類" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'knowledge', this)">${esc(res.mainCategory)} | ${esc(res.subCategory)}</span>
                 <div class="icon-group">
-                  <button class="action-btn" onclick="moveSheet(${idArg}, 'knowledge', 'lifelog', this)" title="判斷錯誤？移至生活誌"><i class="ti ti-arrows-exchange"></i>移至生活誌</button>
+                  <button class="action-btn to-life" onclick="moveSheet(${idArg}, 'knowledge', 'lifelog', this)" title="判斷錯誤？移至生活誌"><i class="ti ti-arrows-exchange"></i>移至生活誌</button>
                   <button class="edit-icon" onclick="editItem(${idArg}, 'knowledge', this)" title="修改分類與標題" aria-label="編輯"><i class="ti ti-pencil"></i></button>
                   <button class="delete-icon" onclick="deleteItem(${idArg}, this)" title="刪除" aria-label="刪除"><i class="ti ti-trash"></i></button>
                   <span class="id-tag">#${esc(res.id)}</span>
@@ -3395,7 +3448,7 @@
               <div class="task-header">
                 <span class="task-category" title="點此修改主類與分類" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'lifelog', this)">${esc(res.mainCategory)} | ${esc(res.subCategory)}</span>
                 <div class="icon-group">
-                  <button class="action-btn" onclick="moveSheet(${idArg}, 'lifelog', 'knowledge', this)" title="判斷錯誤？移至知識庫"><i class="ti ti-arrows-exchange"></i>移至知識庫</button>
+                  <button class="action-btn to-know" onclick="moveSheet(${idArg}, 'lifelog', 'knowledge', this)" title="判斷錯誤？移至知識庫"><i class="ti ti-arrows-exchange"></i>移至知識庫</button>
                   <button class="edit-icon" onclick="editItem(${idArg}, 'lifelog', this)" title="修改分類、電話、地點與標題" aria-label="編輯"><i class="ti ti-pencil"></i></button>
                   <button class="delete-icon" onclick="deleteItem(${idArg}, this)" title="刪除" aria-label="刪除"><i class="ti ti-trash"></i></button>
                   <span class="id-tag">#${esc(res.id)}</span>
@@ -3620,7 +3673,8 @@
 
           const updateSearchHeader = (res) => {
             let keywordText = searchKeyword === "" ? "全部" : `「${searchKeyword}」`;
-            document.getElementById('header-main').innerText = `搜尋 ${keywordText}・${(res || []).length} 筆`;
+            document.getElementById('header-main').innerText = MODE_TITLES[currentMode] || '搜尋結果';
+            document.getElementById('header-sub').innerText = `搜尋 ${keywordText}・共 ${(res || []).length} 筆`;   // B18：筆數放第二行，字放大也看得到
           };
           const onErr = err => { showToast(err.message); finishAction(false); };
 
@@ -3988,7 +4042,8 @@
         google.script.run.withSuccessHandler(res => {
           isShowingSearchResults = true;
           renderBackupFiles(res, true);
-          document.getElementById('header-main').innerText = `最新上傳的 ${(res || []).length} 個檔案`;
+          document.getElementById('header-main').innerText = MODE_TITLES[currentMode] || '備份區';
+          document.getElementById('header-sub').innerText = `最新上傳的 ${(res || []).length} 個檔案`;
         }).getDriveFilesApp("@latest:" + doneCount);
       }
     }
