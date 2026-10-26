@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B23 版：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B24 版：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -428,6 +428,28 @@
     .hw-tools .btn.hw-add { background: var(--hw-done); color: var(--hw-done-text); }
     .hw-tools .btn.hw-rem:hover, .hw-tools .btn.hw-rule:hover { filter: brightness(.97); }
     /* B23：稍後提醒、離線 */
+    /* B24：家務規則面板按鈕配色 */
+    .btn.tint-green { background: var(--b-work); color: var(--t-work); border: 1px solid #BFE0D2; }
+    .btn.tint-blue { background: var(--b-life); color: var(--t-life); border: 1px solid #C9DBF0; }
+    .action-btn.tint-amber { background: var(--b-kids); color: var(--t-kids); border-color: #EED3A8; }
+    .hw-status { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; margin-top: 4px; font-size: calc(13px * var(--fs)); line-height: 1.7; color: var(--text-2); }
+    .hw-status b { color: var(--text); }
+    .hw-status .ok { color: var(--success-text); font-weight: 700; }
+    .hw-status .bad { color: var(--danger-text); font-weight: 700; }
+    .sw-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: calc(13.5px * var(--fs)); }
+    .sw-row input { width: 20px; height: 20px; flex-shrink: 0; }
+    /* B24：LINE 卡片樣式預覽 */
+    .lc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .lc-opt { border: 2px solid var(--border); border-radius: 14px; padding: 8px; background: var(--surface); text-align: left; cursor: pointer; }
+    .lc-opt.on { border-color: #06C755; box-shadow: 0 0 0 3px rgba(6,199,85,.15); }
+    .lc-name { font-size: calc(12.5px * var(--fs)); font-weight: 700; margin-top: 6px; text-align: center; }
+    .lc-card { border-radius: 10px; overflow: hidden; background: #fff; border: 1px solid #E3E7EC; font-size: 11px; color: #26313D; }
+    .lc-card .hd { padding: 6px 8px; color: #fff; font-weight: 700; }
+    .lc-card .bd { padding: 7px 8px; }
+    .lc-card .tt { font-weight: 800; font-size: 12.5px; line-height: 1.35; }
+    .lc-card .mt { color: #8A949E; font-size: 10px; margin-top: 3px; }
+    .lc-card .bt { margin: 0 8px 8px; border-radius: 6px; color: #fff; text-align: center; font-weight: 700; padding: 4px 0; font-size: 10.5px; }
+    .bk-box { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; font-size: calc(13px * var(--fs)); line-height: 1.7; color: var(--text-2); margin-top: 6px; }
     .sz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
     .sz-grid .btn { width: 100%; background: var(--b-kids); color: var(--t-kids); border: 1px solid #EED3A8; height: calc(48px * var(--fs)); }
     .sz-mini { border: 1px solid #EED3A8; background: var(--b-kids); color: var(--t-kids); border-radius: 12px; height: calc(28px * var(--fs)); padding: 0 9px; font-size: calc(12px * var(--fs)); font-weight: 700; flex-shrink: 0; display: inline-flex; align-items: center; gap: 3px; }
@@ -595,7 +617,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B23）\n' +
+      st.innerText = '主程式沒有啟動（版本 B24）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -614,7 +636,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B23</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B24</div>
     </div>
   </div>
 
@@ -678,6 +700,7 @@
         <button class="pill" id="recur-weekend" onclick="selectRecur('weekend')">週末</button>
         <button class="pill" id="recur-weekly" onclick="selectRecur('weekly')">自訂</button>
       </div>
+      <div style="font-size:calc(12px * var(--fs)); color:var(--text-3); margin-top:6px;">🔁 設了重複的待辦，打勾完成後會自動產生下一次（可在 🔔 通知設定關閉）</div>
 
       <div id="alarm-date-row">
         <div class="sec-label">日期</div>
@@ -777,10 +800,10 @@
       <div class="sheet-grip"></div>
       <h3 class="sheet-title"><i class="ti ti-settings" style="color:var(--primary)"></i>管理家務規則</h3>
       <p class="sheet-sub">按住「☰」可拖曳排序，點「編輯」可修改排程。</p>
-      <button class="btn btn-block btn-ghost" style="margin:6px 0 10px;" onclick="resetToNewSchedules()"><i class="ti ti-refresh"></i>一鍵套用最新 10 項專屬排程</button>
+      <button class="btn btn-block tint-green" style="margin:6px 0 10px;" onclick="resetToNewSchedules()"><i class="ti ti-refresh"></i>一鍵套用最新 10 項專屬排程</button>
       <div id="hw-manage-list" style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; max-height:46vh;"></div>
       <div class="sheet-actions">
-        <button class="btn btn-ghost" onclick="closeHwManageModal()">關閉</button>
+        <button class="btn tint-blue" onclick="closeHwManageModal()">關閉</button>
         <button class="btn btn-danger" onclick="confirmDeleteHw()"><i class="ti ti-trash"></i>刪除勾選</button>
       </div>
     </div>
@@ -793,7 +816,9 @@
       <h3 class="sheet-title"><i class="ti ti-bell-ringing" style="color:var(--primary)"></i>家務自動提醒</h3>
       <p class="sheet-sub">系統每天在這些時間檢查，若有未完成的家務，會自動推播到 LINE 群組。</p>
       <div id="hw-reminder-list-container" style="display:flex; flex-direction:column; gap:10px; margin:12px 0; max-height:200px; overflow-y:auto;"></div>
-      <button class="btn btn-block btn-ghost btn-sm" onclick="addHwReminderTime()"><i class="ti ti-plus"></i>新增提醒時段</button>
+      <button class="btn btn-block btn-sm tint-green" onclick="addHwReminderTime()"><i class="ti ti-plus"></i>新增提醒時段</button>
+      <div class="hw-status" id="hw-status">讀取今天的提醒狀態…</div>
+      <label class="sw-row" id="hw-prio-row" style="display:none;"><input type="checkbox" id="hw-prio" onchange="saveNotifSetting('hwPriority', this.checked)">家務提醒優先：LINE 用量達 85%（節省模式）時仍送到群組</label>
       <div class="sheet-actions">
         <button class="btn btn-ghost" onclick="closeHwReminderModal()">取消</button>
         <button class="btn" onclick="saveHwReminder()">儲存設定</button>
@@ -917,6 +942,14 @@
       <div class="sec-label" style="margin-top:18px;">標題列顏色（只影響這台裝置）</div>
       <div class="theme-more" id="theme-more"></div>
       <div class="theme-cur" id="theme-cur"></div>
+      <div id="backup-sec" style="display:none;">
+        <div class="sec-label" style="margin-top:18px;">資料備份（每週日 03:00 自動備份到「記事備份區」，保留 8 份）</div>
+        <div class="bk-box" id="bk-box">讀取中…</div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button class="btn btn-sm tint-green" onclick="backupNow(this)"><i class="ti ti-cloud-upload"></i>立即備份</button>
+          <button class="btn btn-sm tint-blue" onclick="openBackupFolder()"><i class="ti ti-folder"></i>開啟備份資料夾</button>
+        </div>
+      </div>
       <div class="mobile-only">
         <div class="sec-label" style="margin-top:18px;">底部選單順序（只影響這台裝置）</div>
         <div class="theme-cur" style="margin-top:2px;">用 ↑↓ 調整；虛線以上顯示在底部，其餘放在「更多」</div>
@@ -1334,7 +1367,7 @@
     }
     function openFontSheet() { applyFontScale(fontScale); document.getElementById('font-sheet').style.display = 'flex'; }
     function openUserSheet() {
-      try { renderColorSettings(); renderNavOrder(); renderThemeMore(); } catch (e) {}
+      try { renderColorSettings(); renderNavOrder(); renderThemeMore(); loadBackupStatus(); } catch (e) {}
       document.getElementById('user-sheet-name').innerText = userName || '使用者';
       document.getElementById('user-sheet-role').innerText = (userRole === 'kids' ? '家人帳號' : '管理員帳號') + (isMobileDevice() ? '・這台裝置會記住登入' : '・電腦閒置 10 分鐘自動鎖定');
       openFontSheet();
@@ -2305,7 +2338,7 @@
                     <input type="checkbox" class="hw-delete-chk" value="${esc(r.id)}" style="width:18px; height:18px; flex-shrink:0;">
                     <div style="min-width:0;"><div class="hw-rule-name">${esc(r.name)}</div><div class="hw-rule-desc">${esc(r.desc)}</div></div>
                   </label>
-                  <button class="action-btn" onclick="editHouseworkRule(${jsArg(r.name)})"><i class="ti ti-pencil"></i>編輯</button>
+                  <button class="action-btn tint-amber" onclick="editHouseworkRule(${jsArg(r.name)})"><i class="ti ti-pencil"></i>編輯</button>
                 </div>`;
             });
           }
@@ -2498,12 +2531,31 @@
     }
     function openHwReminderModal() {
       document.getElementById('hw-reminder-modal').style.display = 'flex';
+      loadHwStatus();
       google.script.run.withSuccessHandler(res => {
         currentHwTimes = (res && res.times) ? res.times : [""];
         renderHwReminderList();
       }).withFailureHandler(() => { currentHwTimes = [""]; renderHwReminderList(); }).getHwReminderApp();
     }
     function closeHwReminderModal() { document.getElementById('hw-reminder-modal').style.display = 'none'; }
+    // B24：顯示今天每個時段到底有沒有送出、為什麼沒送
+    function loadHwStatus() {
+      const box = document.getElementById('hw-status');
+      box.innerText = '讀取今天的提醒狀態…';
+      document.getElementById('hw-prio-row').style.display = userRole === 'admin' ? 'flex' : 'none';
+      google.script.run.withSuccessHandler(st => {
+        if (!st) { box.innerText = ''; return; }
+        document.getElementById('hw-prio').checked = !!st.hwPriority;
+        const runOk = st.hasTrigger && st.lastRunAgoMin !== null && st.lastRunAgoMin <= 15;
+        let h = `<div>自動巡邏（每 5 分鐘）：${runOk ? `<span class="ok">正常</span>，上次 ${esc(st.lastRun)}` : (st.repaired ? '<span class="bad">原本沒有啟動，已自動補上</span>' : `<span class="bad">可能沒有在執行</span>${st.lastRun ? '（上次 ' + esc(st.lastRun) + '）' : ''}`)}</div>`;
+        const modeTxt = { both: 'LINE＋網頁', web: '只在網頁（不送 LINE）', off: '關閉' }[st.mode] || st.mode;
+        h += `<div>通知方式：<b>${modeTxt}</b>${st.mode === 'both' && st.quota && st.quota.limit ? `・LINE 本月 ${st.quota.used}/${st.quota.limit}` : ''}</div>`;
+        if (st.mode === 'both' && st.quota && st.quota.limit && st.quota.used / st.quota.limit >= st.quota.saverRatio && !st.hwPriority) h += `<div class="bad">⚠️ 已達節省模式，家務提醒目前只在網頁顯示（可勾選下方「家務提醒優先」）</div>`;
+        const times = (st.times || []).length ? st.times : [];
+        h += times.length ? times.map(t => { const r = st.today && st.today[t]; return `<div>今天 ${esc(t)}：${r ? `<b>${esc(r.result)}</b>（${esc(r.at)} 檢查）` : (st.now < t ? '還沒到' : '等待下一次巡邏（5 分鐘內）')}</div>`; }).join('') : '<div>尚未設定提醒時段</div>';
+        box.innerHTML = h;
+      }).withFailureHandler(() => { box.innerText = ''; }).getHwReminderStatusApp();
+    }
     function saveHwReminder() {
       syncHwTimesFromUI();
       let validTimes = currentHwTimes.filter(t => t !== "");
@@ -2860,13 +2912,32 @@
       document.getElementById('notif-settings').innerHTML =
         row('task', '待辦提醒', '設定提醒時間的待辦。急件在節省模式下仍會送 LINE。') +
         row('housework', '家務提醒', '送到家人群組，一次會依群組人數扣多則。') +
-        `<div class="set-row"><div class="set-l">每日早報</div><div style="font-size:calc(13px * var(--fs)); color:var(--text-2);">每天 08:00 在「今天」頁與通知中心產生，只在網頁顯示，不使用 LINE 則數。</div></div>`;
+        `<div class="set-row"><div class="set-l">每日早報</div><div style="font-size:calc(13px * var(--fs)); color:var(--text-2);">每天 08:00 在「今天」頁與通知中心產生，只在網頁顯示，不使用 LINE 則數。</div></div>` +
+        `<div class="set-row"><div class="set-l">家務提醒優先</div><label class="sw-row"><input type="checkbox" ${st.hwPriority ? 'checked' : ''} onchange="saveNotifSetting('hwPriority', this.checked)">LINE 用量達 85% 時，家務提醒仍送到群組</label></div>` +
+        `<div class="set-row"><div class="set-l">重複待辦</div><label class="sw-row"><input type="checkbox" ${st.recurAuto !== false ? 'checked' : ''} onchange="saveNotifSetting('recurAuto', this.checked)">完成「🔁 重複」的待辦後，自動產生下一次（清單會一起帶過去並取消勾選）</label></div>` +
+        `<div class="set-row"><div class="set-l">LINE 卡片樣式</div><div style="font-size:calc(12px * var(--fs)); color:var(--text-3);">待辦提醒與家務提醒都會用這個樣式</div>${lineCardPicker(st.cardStyle || 'classic')}
+          <button class="btn btn-sm tint-green" style="margin-top:10px;" onclick="testLineCard()"><i class="ti ti-send"></i>傳一則範例到我的 LINE（用 1 則）</button></div>`;
+    }
+    // B24：LINE 卡片樣式預覽（和實際 LINE 卡片同一個設計）
+    const LINE_CARD_STYLES = [
+      ['classic', '經典色塊', `<div class="lc-card"><div class="hd" style="background:#4479B8;">🏡 生活提醒</div><div class="bd"><div class="tt">繳電費 1,234 元</div><div class="mt">編號 #A12・10/30 09:00</div></div><div class="bt" style="background:#1DB446;">開啟記事小幫手</div></div>`],
+      ['clean', '簡約白卡', `<div class="lc-card" style="display:flex;"><div style="width:5px; background:#4479B8;"></div><div class="bd" style="flex:1;"><div style="color:#4479B8; font-weight:700; font-size:10px;">🏡 生活提醒</div><div class="tt">繳電費 1,234 元</div><div class="mt">⏰ 10/30 09:00　#A12</div><div style="color:#4479B8; font-weight:700; font-size:10.5px; margin-top:4px;">開啟記事小幫手 →</div></div></div>`],
+      ['big', '大字醒目', `<div class="lc-card" style="background:#FBF0E1;"><div class="bd"><div style="font-size:17px; font-weight:800; color:#C27B2C;">⏰ 09:00</div><div class="tt" style="font-size:13.5px;">帶健康檢查回條</div><div class="mt">🧸 家庭・#K03</div></div><div class="bt" style="background:#C27B2C;">打開看看</div></div>`],
+      ['line', 'LINE 綠', `<div class="lc-card"><div class="hd" style="background:#06C755; display:flex; justify-content:space-between;"><span>📝 記事小幫手</span><span style="font-weight:400;">💼 工作</span></div><div class="bd"><div class="tt">交季報</div><div class="mt">⏰ 10/30 09:00　　#W02</div></div><div class="bt" style="background:#06C755;">開啟記事小幫手</div></div>`]
+    ];
+    function lineCardPicker(cur) {
+      return `<div class="lc-grid">${LINE_CARD_STYLES.map(([k, n, html]) => `<button class="lc-opt${k === cur ? ' on' : ''}" onclick="saveNotifSetting('cardStyle', '${k}')">${html}<div class="lc-name">${k === cur ? '✓ ' : ''}${n}</div></button>`).join('')}</div>`;
+    }
+    function testLineCard() {
+      const st = (notifData && notifData.settings) || {};
+      showToast('⏳ 傳送中…');
+      google.script.run.withSuccessHandler(r => showToast(r && r.message ? r.message : '已傳送')).withFailureHandler(e => showToast('⚠️ ' + e.message)).testLineCardApp(st.cardStyle || 'classic', 'task');
     }
     function saveNotifSetting(key, val) {
       if (!notifData) notifData = { items: [] };
       notifData.settings = Object.assign({ task: 'both', housework: 'both' }, notifData.settings || {}, { [key]: val });
       renderNotifSettings();
-      google.script.run.withSuccessHandler(r => showToast(r && r.message ? r.message : '✅ 已儲存')).withFailureHandler(e => showToast('⚠️ 儲存失敗：' + e.message)).setNotifySettingsApp(notifData.settings);
+      google.script.run.withSuccessHandler(r => showToast(r && r.message ? r.message : '✅ 已儲存')).withFailureHandler(e => showToast('⚠️ 儲存失敗：' + e.message)).setNotifySettingsApp({ [key]: val });   // B24：只送出改動的那一項，避免蓋掉其他設定
     }
 
     // ---------------- 全站搜尋 ----------------
@@ -3058,6 +3129,61 @@
 
 
 
+
+
+    // ================================================================
+    //  B24：資料備份（管理員）
+    // ================================================================
+    let backupFolderUrl = '';
+    function loadBackupStatus() {
+      const sec = document.getElementById('backup-sec');
+      if (userRole !== 'admin') { sec.style.display = 'none'; return; }
+      sec.style.display = '';
+      google.script.run.withSuccessHandler(r => {
+        if (!r) return;
+        backupFolderUrl = r.folderUrl || '';
+        document.getElementById('bk-box').innerHTML = r.last ? `上次備份：<b>${esc(r.last.time)}</b>（${esc(r.last.how || '')}）<br>檔名：${esc(r.last.name)}` : '還沒有備份過；按「立即備份」先備份一次。';
+      }).withFailureHandler(() => { document.getElementById('bk-box').innerText = '需要更新 code.gs 才能使用'; }).getBackupStatusApp();
+    }
+    function backupNow(btn) {
+      btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> 備份中…';
+      google.script.run.withSuccessHandler(r => { btn.disabled = false; btn.innerHTML = '<i class="ti ti-cloud-upload"></i>立即備份'; showToast(r && r.message || '完成'); loadBackupStatus(); })
+        .withFailureHandler(e => { btn.disabled = false; btn.innerHTML = '<i class="ti ti-cloud-upload"></i>立即備份'; showToast('⚠️ ' + e.message); }).runBackupNowApp();
+    }
+    function openBackupFolder() { if (backupFolderUrl) window.open(backupFolderUrl, '_blank'); else showToast('⏳ 讀取中，請稍後再按'); }
+
+    // ================================================================
+    //  B24：清單即時同步（逐項送出＋開著時每 4 秒更新）
+    // ================================================================
+    let clPending = 0, clPollTimer = null;
+    function clApplyServer(items) {
+      if (!Array.isArray(items)) return;
+      clItems = items.map(x => ({ t: x.t, d: !!x.d }));
+      taskExtras.lists = taskExtras.lists || {};
+      if (clItems.length) taskExtras.lists[clTaskId] = clItems.map(x => ({ t: x.t, d: x.d })); else delete taskExtras.lists[clTaskId];
+      renderChecklist();
+    }
+    function clOp(op, payload) {
+      const id = clTaskId;
+      clPending++;
+      google.script.run.withSuccessHandler(r => {
+        clPending--;
+        if (r && r.ok && id === clTaskId && !clPending) clApplyServer(r.items);
+      }).withFailureHandler(e => { clPending--; showToast('⚠️ 清單沒有存到：' + (navigator.onLine ? e.message : '目前離線')); }).checklistOpApp(id, op, payload);
+    }
+    function clStartPoll() {
+      clearInterval(clPollTimer);
+      clPollTimer = setInterval(() => {
+        if (document.getElementById('cl-sheet').style.display !== 'flex') { clearInterval(clPollTimer); return; }
+        if (clPending || document.hidden) return;
+        const id = clTaskId;
+        google.script.run.withSuccessHandler(r => {
+          if (!r || !r.ok || id !== clTaskId || clPending) return;
+          const a = JSON.stringify(r.items.map(x => [x.t, !!x.d])), b = JSON.stringify(clItems.map(x => [x.t, !!x.d]));
+          if (a !== b) clApplyServer(r.items);
+        }).withFailureHandler(() => {}).getChecklistApp(id);
+      }, 4000);
+    }
 
     // ================================================================
     //  B23：稍後提醒
@@ -3340,6 +3466,7 @@
       document.getElementById('cl-input').value = '';
       renderChecklist();
       document.getElementById('cl-sheet').style.display = 'flex';
+      clStartPoll();   // B24：家人同時在勾選時，畫面自動更新
     }
     function renderChecklist() {
       const done = clItems.filter(x => x.d).length;
@@ -3351,17 +3478,13 @@
       const have = new Set(clItems.map(x => x.t));
       document.getElementById('cl-tpls').innerHTML = tpls.length ? tpls.map((t, i) => { const on = t.items.length && t.items.every(x => have.has(x)); return `<button class="tpl-chip${on ? ' on' : ''}" onclick="clApplyTpl(${i})">${on ? '✓ ' : ''}${esc(t.name)}・${t.items.length}</button>`; }).join('') : '<span style="color:var(--text-3); font-size:calc(13px * var(--fs));">（試算表「清單範本」分頁會自動建立）</span>';
     }
-    function clQueueSave() {
-      clearTimeout(clSaveTimer);
-      const id = clTaskId, items = clItems.map(x => ({ t: x.t, d: x.d }));
-      taskExtras.lists = taskExtras.lists || {};
-      if (items.length) taskExtras.lists[id] = items; else delete taskExtras.lists[id];
-      clSaveTimer = setTimeout(() => {
-        google.script.run.withFailureHandler(e => showToast('⚠️ 清單沒有存到：' + e.message)).setChecklistApp(id, items);
-      }, 600);
+    function clQueueSave() {   // B24：整批變更（套用範本、清空、復原）直接整份送出
+      clLocal();
+      clOp('set', { items: clItems.map(x => ({ t: x.t, d: x.d })) });
     }
-    function clToggle(i) { if (!clItems[i]) return; clItems[i].d = !clItems[i].d; renderChecklist(); clQueueSave(); }
-    function clDel(i) { if (!clItems[i]) return; clSnapshot(); const t = clItems[i].t; clItems.splice(i, 1); renderChecklist(); clQueueSave(); clUndoToast(`已刪除「${t}」`); }
+    function clToggle(i) { if (!clItems[i]) return; clItems[i].d = !clItems[i].d; renderChecklist(); clLocal(); clOp('toggle', { i: i, t: clItems[i].t, d: clItems[i].d }); }
+    function clLocal() { taskExtras.lists = taskExtras.lists || {}; if (clItems.length) taskExtras.lists[clTaskId] = clItems.map(x => ({ t: x.t, d: x.d })); else delete taskExtras.lists[clTaskId]; }
+    function clDel(i) { if (!clItems[i]) return; clSnapshot(); const t = clItems[i].t; clItems.splice(i, 1); renderChecklist(); clLocal(); clOp('del', { i: i, t: t }); clUndoToast(`已刪除「${t}」`); }
     function clSplit(text) { return String(text || '').split(/[\n、,，;；]+/).map(x => x.trim()).filter(Boolean); }
     function clAdd() {
       const inp = document.getElementById('cl-input');
@@ -3369,7 +3492,7 @@
       if (!parts.length) return;
       parts.forEach(t => clItems.push({ t: t.substring(0, 200), d: false }));
       inp.value = '';
-      renderChecklist(); clQueueSave();
+      renderChecklist(); clLocal(); clOp('add', { items: parts.map(t => t.substring(0, 200)) });
       const list = document.getElementById('cl-list'); list.scrollTop = list.scrollHeight;
       inp.focus();
     }
@@ -3417,7 +3540,7 @@
     }
     function closeChecklist() {
       document.getElementById('cl-sheet').style.display = 'none';
-      if (clSaveTimer) { clearTimeout(clSaveTimer); google.script.run.withFailureHandler(e => showToast('⚠️ 清單沒有存到：' + e.message)).setChecklistApp(clTaskId, clItems.map(x => ({ t: x.t, d: x.d }))); clSaveTimer = null; }
+      clearInterval(clPollTimer);
       rerenderLastTasks();
     }
 
