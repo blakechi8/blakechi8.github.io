@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B15 版：修正電腦卡在「連線中」、淺色清新標題列（5 色可選）、分類彩色按鈕（搭配 code.gs B15） -->
+  <!-- B16 版：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -23,8 +23,9 @@
       --t-work: #3E7F69; --t-life: #2F5E94; --t-kids: #8A5A20; --t-know: #4E4396;
       --b-work: #E7F3EE; --b-life: #EAF1FA; --b-kids: #FBF0E1; --b-know: #EFEDFA;
       /* B15：標題列改淺色清新主題（預設薄荷綠，可在名字面板切換） */
-      --header-bg: #DDF0EA; --header-text: #1F4A40; --header-sub: #4F7268; --header-soft: rgba(31,74,64,.09); --header-line: rgba(31,74,64,.16); --header-strong: #2F7A66;
+      --header-bg: #B5DFD1; --header-text: #173F35; --header-sub: #3A6457; --header-soft: rgba(23,63,53,.11); --header-line: rgba(23,63,53,.2); --header-strong: #2F7A66;
       --p-work: #3F8F75; --p-life: #4479B8; --p-kids: #C27B2C;
+      --sum-bg: #FFF6E3; --sum-text: #4A3A22; --sum-head: #A2651A; --sum-line: #E5AE4F;
       --radius: 12px; --shadow: 0 8px 28px rgba(20, 30, 50, .14);
       --toast-bg: #26313D;
     }
@@ -41,15 +42,16 @@
         --b-work: #1A3129; --b-life: #1C2A3B; --b-kids: #362A18; --b-know: #29243F;
         --header-bg: #1D3330; --header-text: #D7EEE7; --header-sub: #9CC2B7; --header-soft: rgba(255,255,255,.10); --header-line: rgba(255,255,255,.18); --header-strong: #6FC2A8;
         --p-work: #3E8A71; --p-life: #4B7DB8; --p-kids: #B9782E;
+        --sum-bg: #322817; --sum-text: #EDE0C8; --sum-head: #EDBB6E; --sum-line: #C99640;
         --shadow: 0 8px 28px rgba(0, 0, 0, .5); --toast-bg: #2b3442;
       }
     }
 
 
     /* 主題：天空藍 / 薰衣草 / 奶茶 / 霧藍（深色） */
-    :root[data-theme="sky"] { --header-bg: #DCEAF8; --header-text: #1E3D63; --header-sub: #4D6A8C; --header-soft: rgba(30,61,99,.09); --header-line: rgba(30,61,99,.16); --header-strong: #3F6FB5; }
-    :root[data-theme="lavender"] { --header-bg: #E8E4F7; --header-text: #362E6B; --header-sub: #625A92; --header-soft: rgba(54,46,107,.09); --header-line: rgba(54,46,107,.16); --header-strong: #6A5BC2; }
-    :root[data-theme="latte"] { --header-bg: #F3E8DA; --header-text: #553B22; --header-sub: #86684A; --header-soft: rgba(85,59,34,.09); --header-line: rgba(85,59,34,.16); --header-strong: #A86E34; }
+    :root[data-theme="sky"] { --header-bg: #B6D3F1; --header-text: #163659; --header-sub: #3A5B80; --header-soft: rgba(22,54,89,.11); --header-line: rgba(22,54,89,.2); --header-strong: #3F6FB5; }
+    :root[data-theme="lavender"] { --header-bg: #CEC5EF; --header-text: #2E2560; --header-sub: #544A88; --header-soft: rgba(46,37,96,.11); --header-line: rgba(46,37,96,.2); --header-strong: #6A5BC2; }
+    :root[data-theme="latte"] { --header-bg: #E7D0B3; --header-text: #4B331C; --header-sub: #765A3D; --header-soft: rgba(75,51,28,.11); --header-line: rgba(75,51,28,.2); --header-strong: #A86E34; }
     :root[data-theme="navy"] { --header-bg: #34506F; --header-text: #ffffff; --header-sub: rgba(255,255,255,.82); --header-soft: rgba(255,255,255,.16); --header-line: rgba(255,255,255,.35); --header-strong: #ffffff; }
     @media (prefers-color-scheme: dark) {
       :root[data-theme="sky"] { --header-bg: #1A2C42; --header-text: #D6E6F7; --header-sub: #97B3D3; --header-soft: rgba(255,255,255,.10); --header-line: rgba(255,255,255,.18); --header-strong: #82AEDD; }
@@ -112,7 +114,7 @@
     .nav-item i { font-size: calc(19px * var(--fs)); }
     .nav-item:hover { background: var(--surface-2); color: var(--text); }
     .nav-item.active { background: var(--header-bg); color: var(--header-text); font-weight: 600; }
-    :root[data-theme="navy"] .nav-item.active { background: var(--primary-soft); color: var(--primary-dark); }
+    :root[data-theme="custom-dark"] .nav-item.active, :root[data-theme="navy"] .nav-item.active { background: var(--primary-soft); color: var(--primary-dark); }
     .sidebar-foot { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
 
     .main { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100%; position: relative; }
@@ -142,7 +144,7 @@
     .filter-chip[data-filter="work"].active { background: var(--p-work); border-color: var(--p-work); color: #fff; }
     .filter-chip[data-filter="life"].active { background: var(--p-life); border-color: var(--p-life); color: #fff; }
     .filter-chip[data-filter="kids"].active { background: var(--p-kids); border-color: var(--p-kids); color: #fff; }
-    :root[data-theme="navy"] .filter-chip[data-filter="all"].active { background: #fff; border-color: #fff; color: var(--header-bg); }
+    :root[data-theme="custom-dark"] .filter-chip[data-filter="all"].active, :root[data-theme="navy"] .filter-chip[data-filter="all"].active { background: #fff; border-color: #fff; color: var(--header-bg); }
 
     #loading-board-msg { display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; color: var(--text-3); min-height: 180px; }
     .board { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 12px 12px 24px; display: flex; flex-direction: column; gap: 18px; -webkit-overflow-scrolling: touch; }
@@ -175,9 +177,10 @@
     .remind-line.overdue { color: var(--danger-text); }
     .remind-line.past { color: var(--text-3); font-weight: 500; }
     .recur-chip { background: var(--surface-2); color: var(--text-2); padding: 1px 7px; border-radius: 6px; font-size: calc(11px * var(--fs)); }
-    .ai-sum { background: var(--b-know); color: var(--t-know); border-radius: 10px; padding: 8px 10px; margin-top: 7px; font-size: calc(13px * var(--fs)); line-height: 1.65; }
-    .ai-sum-h { font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
-    .ai-gen-btn { margin-top: 7px; border: 1px dashed var(--c-know); background: transparent; color: var(--t-know); border-radius: 14px; padding: 4px 11px; font-size: calc(12px * var(--fs)); font-weight: 600; }
+    /* B16：AI 摘要改成暖杏色便條（和藍色的網址/資訊、紫色的分類明顯區分） */
+    .ai-sum { background: var(--sum-bg); color: var(--sum-text); border-left: 4px solid var(--sum-line); border-radius: 4px 10px 10px 4px; padding: 9px 12px; margin-top: 8px; font-size: calc(14px * var(--fs)); line-height: 1.7; }
+    .ai-sum-h { font-weight: 700; color: var(--sum-head); margin-bottom: 3px; display: flex; align-items: center; gap: 4px; font-size: calc(13px * var(--fs)); }
+    .ai-gen-btn { margin-top: 8px; border: 1px dashed var(--sum-line); background: var(--sum-bg); color: var(--sum-head); border-radius: 14px; padding: 5px 12px; font-size: calc(12.5px * var(--fs)); font-weight: 600; }
     .flash { animation: flashCard 1.6s ease 2; }
     @keyframes flashCard { 0%, 100% { box-shadow: none; } 50% { box-shadow: 0 0 0 3px var(--primary-soft), 0 0 0 5px var(--primary); } }
 
@@ -228,6 +231,9 @@
     .theme-opt .sw { width: calc(40px * var(--fs)); height: calc(40px * var(--fs)); border-radius: 50%; border: 2px solid var(--border); position: relative; }
     .theme-opt.active .sw { border-color: var(--text); box-shadow: 0 0 0 3px var(--surface) inset; }
     .theme-opt.active { color: var(--text); font-weight: 700; }
+    .theme-opt { cursor: pointer; }
+    .sw-custom { background: conic-gradient(#F4B6B6, #F3D9A4, #BFE3C2, #B5D3F1, #D3C5EF, #F4B6B6); overflow: hidden; }
+    .sw-custom input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: none; padding: 0; }
     .search-box { display: flex; gap: 8px; align-items: center; }
     .search-box .btn { flex-shrink: 0; white-space: nowrap; }
     .search-box input { flex: 1; min-width: 0; width: auto; height: calc(44px * var(--fs)); padding: 0 14px; border-radius: 22px; }
@@ -445,6 +451,22 @@
   </style>
 </head>
 <body>
+  <script>
+    /* B16：開機診斷（獨立的小程式；主程式就算出錯也會執行，15 秒沒啟動就把原因顯示在畫面上） */
+    window.__bootErrs = [];
+    window.addEventListener('error', function (e) { window.__bootErrs.push((e && e.message ? e.message : '錯誤') + (e && e.lineno ? '（第 ' + e.lineno + ' 行）' : '')); });
+    setTimeout(function () {
+      var ov = document.getElementById('login-overlay');
+      if (!ov || ov.className.indexOf('checking') < 0 || ov.style.display === 'none') return;
+      var st = document.getElementById('boot-status');
+      if (!st) return;
+      st.style.color = '#A33A31';
+      st.style.lineHeight = '1.6';
+      st.innerText = '主程式沒有啟動（版本 B16）\n' +
+        (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
+        '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
+    }, 15000);
+  </script>
 
   <!-- ===== 登入 ===== -->
   <div id="login-overlay" class="checking">
@@ -452,13 +474,14 @@
       <div class="login-logo"><i class="ti ti-checkbox"></i></div>
       <h2>待辦事項</h2>
       <p class="login-sub">家庭記事・網址 AI 收錄</p>
-      <div class="login-checking"><div class="spinner"></div><div style="font-size: calc(13px * var(--fs)); color:var(--text-3);">連線中…</div></div>
+      <div class="login-checking"><div class="spinner"></div><div id="boot-status" style="font-size: calc(13px * var(--fs)); color:var(--text-3);">連線中…</div></div>
       <div class="login-form">
         <input type="password" id="login-pwd" inputmode="numeric" autocomplete="current-password" placeholder="請輸入密碼" onkeypress="if(event.key === 'Enter') verifyLogin()">
         <button class="btn btn-block" id="login-btn" onclick="verifyLogin()" style="margin-top:14px;">登入</button>
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B16</div>
     </div>
   </div>
 
@@ -669,11 +692,12 @@
       </div>
       <div class="sec-label" style="margin-top:18px;">標題列顏色（只影響這台裝置）</div>
       <div class="theme-row" id="theme-row">
-        <button class="theme-opt" data-theme="mint" onclick="setTheme('mint')"><span class="sw" style="background:#DDF0EA;"></span>薄荷綠</button>
-        <button class="theme-opt" data-theme="sky" onclick="setTheme('sky')"><span class="sw" style="background:#DCEAF8;"></span>天空藍</button>
-        <button class="theme-opt" data-theme="lavender" onclick="setTheme('lavender')"><span class="sw" style="background:#E8E4F7;"></span>薰衣草</button>
-        <button class="theme-opt" data-theme="latte" onclick="setTheme('latte')"><span class="sw" style="background:#F3E8DA;"></span>奶茶</button>
+        <button class="theme-opt" data-theme="mint" onclick="setTheme('mint')"><span class="sw" style="background:#B5DFD1;"></span>薄荷綠</button>
+        <button class="theme-opt" data-theme="sky" onclick="setTheme('sky')"><span class="sw" style="background:#B6D3F1;"></span>天空藍</button>
+        <button class="theme-opt" data-theme="lavender" onclick="setTheme('lavender')"><span class="sw" style="background:#CEC5EF;"></span>薰衣草</button>
+        <button class="theme-opt" data-theme="latte" onclick="setTheme('latte')"><span class="sw" style="background:#E7D0B3;"></span>奶茶</button>
         <button class="theme-opt" data-theme="navy" onclick="setTheme('navy')"><span class="sw" style="background:#34506F;"></span>霧藍</button>
+        <label class="theme-opt" data-theme="custom" title="自己挑顏色"><span class="sw sw-custom" id="custom-sw"><input type="color" id="custom-color" value="#9CCFC0" oninput="setCustomTheme(this.value)"></span>自訂</label>
       </div>
       <div style="display:flex; gap:8px; margin-top:18px;">
         <button class="btn btn-danger-ghost" style="flex:1;" onclick="closeFontSheet(); logout();"><i class="ti ti-logout"></i>登出</button>
@@ -856,6 +880,7 @@
     // ▼▼▼ 放到 GitHub 前，請把這行換成您的「網頁應用程式網址」（結尾是 /exec）▼▼▼
     const API_URL = 'https://script.google.com/macros/s/AKfycbyqWf1hw_3YKlwALjq9Y-5v2Y1Bu0bb7ijBtmFZRwafd3AvRZt8zQ-Uz6Qj3wBAabFZ/exec';
     // ▲▲▲ 只需要改這一行（放在 Google Apps Script 裡時不會用到）▲▲▲
+    window.__mainScriptLoaded = true;
     const IS_GAS = !!(window.google && window.google.script && window.google.script.run);
     const API_MODE = !IS_GAS;
     if (API_MODE) installApiShim();
@@ -1002,17 +1027,44 @@
     // ---------------- 文字大小（B11）：手機預設「大」，電腦預設「標準」 ----------------
     let fontScale = 1;
     // B15：標題列主題（每台裝置各自記住）
-    const THEMES = ['mint', 'sky', 'lavender', 'latte', 'navy'];
+    const THEMES = ['mint', 'sky', 'lavender', 'latte', 'navy', 'custom'];
+    const CUSTOM_VARS = ['--header-bg', '--header-text', '--header-sub', '--header-soft', '--header-line', '--header-strong'];
+    // B16：自訂顏色 → 自動決定文字用深色或白色（保持好讀）
+    function customThemeVars(hex) {
+      const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
+      if (!m) return null;
+      const n = parseInt(m[1], 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+      const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      const mix = (k) => '#' + [r, g, b].map(c => Math.round(c * k).toString(16).padStart(2, '0')).join('');
+      const light = lum > 0.6;
+      return light
+        ? { '--header-bg': '#' + m[1], '--header-text': mix(0.28), '--header-sub': mix(0.45), '--header-soft': 'rgba(0,0,0,.08)', '--header-line': 'rgba(0,0,0,.16)', '--header-strong': mix(0.55) }
+        : { '--header-bg': '#' + m[1], '--header-text': '#ffffff', '--header-sub': 'rgba(255,255,255,.85)', '--header-soft': 'rgba(255,255,255,.18)', '--header-line': 'rgba(255,255,255,.35)', '--header-strong': '#ffffff' };
+    }
     function applyTheme(t) {
       if (!THEMES.includes(t)) t = 'mint';
-      if (t === 'mint') document.documentElement.removeAttribute('data-theme');
-      else document.documentElement.setAttribute('data-theme', t);
+      const root = document.documentElement;
+      CUSTOM_VARS.forEach(v => root.style.removeProperty(v));
+      if (t === 'custom') {
+        let c = ''; try { c = localStorage.getItem('header_custom') || ''; } catch (e) {}
+        const vars = customThemeVars(c);
+        if (!vars) t = 'mint';
+        else {
+          Object.keys(vars).forEach(k => root.style.setProperty(k, vars[k]));
+          root.setAttribute('data-theme', vars['--header-text'] === '#ffffff' ? 'custom-dark' : 'custom');
+          const inp = document.getElementById('custom-color'); if (inp) inp.value = c;
+          const sw = document.getElementById('custom-sw'); if (sw) sw.style.background = c;
+        }
+      }
+      if (t === 'mint') root.removeAttribute('data-theme');
+      else if (t !== 'custom') root.setAttribute('data-theme', t);
       document.querySelectorAll('.theme-opt').forEach(b => b.classList.toggle('active', b.getAttribute('data-theme') === t));
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--header-bg').trim());
     }
     function initTheme() { let t = 'mint'; try { t = localStorage.getItem('header_theme') || 'mint'; } catch (e) {} applyTheme(t); }
     function setTheme(t) { applyTheme(t); try { localStorage.setItem('header_theme', t); } catch (e) {} }
+    function setCustomTheme(hex) { try { localStorage.setItem('header_custom', hex); } catch (e) {} setTheme('custom'); }
 
     function initFontScale() {
       let saved = null;
