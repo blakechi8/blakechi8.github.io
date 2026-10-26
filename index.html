@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B27 版：手機分享網址直接收錄（Share Target）；B26：地址改台灣格式、標題列圖示靠緊、「今天」改名「今日重點」；B25：Google 地圖店家補抓電話地址、距離與電話地址圖示更醒目；B24：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B28 版：收錄頁排序、標題與來源拆分、網址背景收錄（可同時做別的事）；B27：手機分享網址直接收錄（Share Target）；B26：地址改台灣格式、標題列圖示靠緊、「今天」改名「今日重點」；B25：Google 地圖店家補抓電話地址、距離與電話地址圖示更醒目；B24：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -468,6 +468,24 @@
     .share-u { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 3px; word-break: break-all; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     #share-btns .btn { width: 100%; height: calc(50px * var(--fs)); justify-content: flex-start; padding: 0 16px; }
     #share-btns .btn small { font-weight: 400; opacity: .8; margin-left: auto; font-size: calc(11.5px * var(--fs)); }
+    /* B28：排序列、背景收錄 */
+    #sort-bar { display: none; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 0 2px 10px; flex-shrink: 0; align-items: center; }
+    #sort-bar.on { display: flex; }
+    #sort-bar::-webkit-scrollbar { display: none; }
+    #sort-bar .lbl { font-size: calc(12px * var(--fs)); color: var(--text-3); flex-shrink: 0; }
+    .sort-chip { flex-shrink: 0; height: calc(30px * var(--fs)); padding: 0 12px; border-radius: 15px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-2); font-size: calc(12.5px * var(--fs)); font-weight: 600; }
+    .sort-chip.on { background: var(--text); border-color: var(--text); color: var(--surface); }
+    #job-dock { display: none; position: fixed; right: 12px; bottom: calc(150px + env(safe-area-inset-bottom)); z-index: 9500; background: var(--surface); border: 1.5px solid var(--c-know); color: var(--t-know); border-radius: 22px; padding: 8px 14px; box-shadow: var(--shadow); font-size: calc(13px * var(--fs)); font-weight: 700; align-items: center; gap: 6px; cursor: pointer; }
+    #job-dock.on { display: inline-flex; }
+    #job-dock.done { border-color: var(--hw-done); color: var(--success-text); }
+    #job-dock i.spin { display: inline-block; animation: spin 1s linear infinite; }
+    .job-row { display: flex; gap: 10px; align-items: center; padding: 10px 2px; border-bottom: 1px solid var(--border); }
+    .job-row .jt { flex: 1; min-width: 0; }
+    .job-row .ju { font-size: calc(13px * var(--fs)); font-weight: 600; word-break: break-all; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .job-row .js { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 2px; }
+    .job-row .js.ok { color: var(--success-text); font-weight: 700; }
+    .job-row .js.bad { color: var(--danger-text); font-weight: 700; }
+    .job-row button { flex-shrink: 0; }
     .sz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
     .sz-grid .btn { width: 100%; background: var(--b-kids); color: var(--t-kids); border: 1px solid #EED3A8; height: calc(48px * var(--fs)); }
     .sz-mini { border: 1px solid #EED3A8; background: var(--b-kids); color: var(--t-kids); border-radius: 12px; height: calc(28px * var(--fs)); padding: 0 9px; font-size: calc(12px * var(--fs)); font-weight: 700; flex-shrink: 0; display: inline-flex; align-items: center; gap: 3px; }
@@ -610,6 +628,7 @@
       .input-area { padding: 10px 16px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
       #toast { bottom: 88px; }
       .upload-mini-widget { bottom: 80px; }
+      #job-dock { bottom: 90px; }
       .modal { align-items: center; padding: 20px; }
       .sheet { border-radius: 18px; max-width: 440px; padding: 22px; }
       .sheet-grip { display: none; }
@@ -635,7 +654,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B27）\n' +
+      st.innerText = '主程式沒有啟動（版本 B28）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -654,7 +673,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B27</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B28</div>
     </div>
   </div>
 
@@ -854,6 +873,18 @@
     </div>
   </div>
 
+
+  <!-- ===== B28：背景收錄中的網址 ===== -->
+  <div id="job-dock" onclick="openJobSheet()"></div>
+  <div id="job-sheet" class="modal">
+    <div class="sheet">
+      <div class="sheet-grip"></div>
+      <h3 class="sheet-title">🔄 背景收錄</h3>
+      <p class="sheet-sub">網址在背景辨識，您可以繼續輸入待辦、搜尋或再貼其他網址。關掉 App 也會繼續完成。</p>
+      <div id="job-list"></div>
+      <button class="btn btn-ghost" style="width:100%; margin-top:12px;" onclick="closeJobSheet()">關閉</button>
+    </div>
+  </div>
 
   <!-- ===== B27：從其他 App 分享進來 ===== -->
   <div id="share-sheet" class="modal">
@@ -1130,6 +1161,7 @@
         </div>
         <div class="column col-life" id="col-1">
           <div class="column-header" id="header-1">生活事項</div>
+          <div id="sort-bar"></div>
           <div class="column-body" id="list-1"></div>
         </div>
       </div>
@@ -1848,7 +1880,7 @@
         'cal-confirm-modal': closeCalConfirmModal, 'map-select-modal': closeMapModal, 'alarm-modal': closeAlarmModal,
         'hw-modal': closeHwModal, 'hw-manage-modal': closeHwManageModal, 'hw-reminder-modal': closeHwReminderModal,
         'card-menu': closeCardMenu, 'more-sheet': closeMoreSheet, 'font-sheet': closeFontSheet,
-        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto, 'kw-sheet': closeKw, 'cp-sheet': closeColorPicker, 'snooze-sheet': closeSnooze, 'share-sheet': closeShareSheet
+        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto, 'kw-sheet': closeKw, 'cp-sheet': closeColorPicker, 'snooze-sheet': closeSnooze, 'share-sheet': closeShareSheet, 'job-sheet': closeJobSheet
       };
       Object.keys(closers).forEach(id => {
         const el = document.getElementById(id);
@@ -2652,6 +2684,7 @@
     //  分頁切換
     // ================================================================
     function switchMode(mode) {
+      { const sb = document.getElementById('sort-bar'); if (sb) sb.classList.remove('on'); nearbySortKey = ''; }   // B28
       if (isUploadingFiles && document.getElementById('upload-progress-modal').style.display === 'flex') minimizeUploadModal();
 
       currentMode = mode;
@@ -3220,6 +3253,130 @@
       }, 4000);
     }
 
+
+
+    // ================================================================
+    //  B28：知識庫／生活誌／備忘錄排序（每台裝置記住）
+    // ================================================================
+    const SORT_OPTS = {
+      knowledge: [['new', '最新登錄'], ['old', '最早登錄'], ['pub', '發布日期'], ['title', '標題']],
+      lifelog: [['new', '最新登錄'], ['old', '最早登錄'], ['dist', '距離'], ['title', '店名']],
+      memos: [['new', '最新登錄'], ['old', '最早登錄'], ['cat', '分類']]
+    };
+    const sortLastItems = {};
+    function tsOf(v) { const t = Date.parse(String(v || '').replace(/-/g, '/').replace(/[年月]/g, '/').replace('日', '')); return isNaN(t) ? 0 : t; }
+    function getSortKey(mode) { let k = ''; try { k = localStorage.getItem('sort_' + mode) || ''; } catch (e) {} return k || 'new'; }
+    function applyListSort(mode, items, isLatest) {
+      items = (items || []).slice();
+      const bar = document.getElementById('sort-bar');
+      if (isLatest || items.length < 2) { if (bar) bar.classList.remove('on'); return items; }
+      sortLastItems[mode] = items;
+      const hasDist = items.some(x => x.distance != null);
+      let key = (hasDist && mode === 'lifelog') ? (nearbySortKey || 'dist') : getSortKey(mode);
+      const by = {
+        new: (a, b) => tsOf(b.time) - tsOf(a.time),
+        old: (a, b) => tsOf(a.time) - tsOf(b.time),
+        pub: (a, b) => (tsOf(b.publishDate) - tsOf(a.publishDate)) || (tsOf(b.time) - tsOf(a.time)),
+        title: (a, b) => String(a.title || a.name || '').localeCompare(String(b.title || b.name || ''), 'zh-Hant'),
+        cat: (a, b) => String(a.category || '').localeCompare(String(b.category || ''), 'zh-Hant') || (tsOf(b.time) - tsOf(a.time)),
+        dist: (a, b) => (a.distance == null ? 1e9 : a.distance) - (b.distance == null ? 1e9 : b.distance)
+      }[key] || ((a, b) => tsOf(b.time) - tsOf(a.time));
+      items.sort(by);
+      if (bar) {
+        const opts = SORT_OPTS[mode].filter(o => o[0] !== 'dist' || hasDist);
+        bar.innerHTML = '<span class="lbl">排序</span>' + opts.map(([k, n]) => `<button class="sort-chip${k === key ? ' on' : ''}" onclick="setListSort('${mode}', '${k}')">${n}</button>`).join('');
+        bar.classList.add('on');
+      }
+      return items;
+    }
+    let nearbySortKey = '';
+    function setListSort(mode, key) {
+      const items = sortLastItems[mode] || [];
+      if (mode === 'lifelog' && items.some(x => x.distance != null)) nearbySortKey = key;   // 附近的店：只影響這次結果
+      else { try { localStorage.setItem('sort_' + mode, key); } catch (e) {} }
+      if (mode === 'knowledge') renderKnowledge(items, false);
+      else if (mode === 'lifelog') renderLifeLog(items, false);
+      else if (mode === 'memos') renderMemos(items, false);
+      document.getElementById('board-container').scrollTop = 0;
+    }
+
+    // ================================================================
+    //  B28：網址在背景收錄（可以同時做別的事、同時送多個網址）
+    // ================================================================
+    const urlJobs = [];
+    let jobTicker = null;
+    function startUrlJob(text, mode) {
+      const running = urlJobs.filter(j => j.state === 'run').length;
+      if (running >= 5) { showToast('⚠️ 已有 5 個網址在收錄中，請等一下再送'); return false; }
+      const url = (String(text).match(/https?:\/\/\S+/) || [text])[0];
+      const job = { id: Date.now().toString() + Math.floor(Math.random() * 1000), text: text, url: url, mode: mode, start: Date.now(), state: 'run', msg: '' };
+      urlJobs.unshift(job);
+      renderJobs();
+      if (!jobTicker) jobTicker = setInterval(renderJobs, 1000);
+      showToast('🔄 已開始在背景收錄，可以繼續做別的事');
+      google.script.run.withSuccessHandler(res => finishUrlJob(job, String(res == null ? '' : res), true))
+        .withFailureHandler(e => finishUrlJob(job, '⚠️ ' + (e && e.message || '連線失敗'), false))
+        .processAppMessage(text, job.id, mode);
+      return true;
+    }
+    function jobTarget(msg) { return msg.includes('【知識庫】') ? 'knowledge' : (msg.includes('【生活誌】') ? 'lifelog' : ''); }
+    function finishUrlJob(job, msg, ok) {
+      if (job.state === 'cancel') return;
+      job.state = ok && !/^⚠️|失敗|錯誤/.test(msg) ? 'ok' : 'bad';
+      job.msg = msg; job.end = Date.now();
+      job.target = jobTarget(msg);
+      renderJobs();
+      updateDashboard();
+      const busy = !!document.querySelector('.edit-input') || document.getElementById('user-input').value.trim() !== '';
+      if (job.target && currentMode === job.target && !busy) showLatestResult(job.target);
+      else if (job.target) showToast(msg.split('\n')[0], { actionLabel: '查看', duration: 7000, onAction: () => showLatestResult(job.target) });
+      else { showToast(msg.split('\n')[0]); if (TASK_MODES.includes(currentMode) || currentMode === 'today') fetchData(true); }
+      setTimeout(() => { const i = urlJobs.indexOf(job); if (i >= 0 && job.state !== 'run') { urlJobs.splice(i, 1); renderJobs(); } }, 90000);
+    }
+    function showLatestResult(target) {
+      if (currentMode !== target) switchMode(target);
+      isShowingSearchResults = true;
+      const isK = target === 'knowledge';
+      document.getElementById('header-1').innerText = isK ? '最新擷取結果（可點鉛筆修改分類/標題，或移至生活誌）' : '最新擷取結果（可點鉛筆修改分類/電話/地點/標題，或移至知識庫）';
+      document.getElementById('list-1').innerHTML = '<div class="search-tip">⏳ 正在載入最新擷取結果...</div>';
+      if (isK) google.script.run.withSuccessHandler(res => renderKnowledge(res, true)).getKnowledgeApp('@latest');
+      else google.script.run.withSuccessHandler(res => renderLifeLog(res, true)).getLifeLogApp('@latest');
+      closeJobSheet();
+    }
+    function cancelUrlJob(id) {
+      const job = urlJobs.find(j => j.id === id);
+      if (!job || job.state !== 'run') return;
+      job.state = 'cancel'; job.msg = '🛑 已中止'; job.end = Date.now();
+      google.script.run.cancelRequestApp(job.id);
+      renderJobs();
+    }
+    function fmtSec(ms) { const s = Math.max(0, Math.round(ms / 1000)); return s >= 60 ? `${Math.floor(s / 60)} 分 ${pad2(s % 60)} 秒` : `${s} 秒`; }
+    function renderJobs() {
+      const dock = document.getElementById('job-dock');
+      const run = urlJobs.filter(j => j.state === 'run');
+      if (!urlJobs.length) { dock.className = ''; clearInterval(jobTicker); jobTicker = null; closeJobSheet(); return; }
+      if (run.length) {
+        const oldest = Math.min.apply(null, run.map(j => j.start));
+        dock.className = 'on';
+        dock.innerHTML = `<i class="ti ti-loader-2 spin"></i>收錄中 ${run.length} 個・${fmtSec(Date.now() - oldest)}`;
+      } else {
+        dock.className = 'on done';
+        dock.innerHTML = `<i class="ti ti-circle-check"></i>收錄完成 ${urlJobs.filter(j => j.state === 'ok').length} 個`;
+        clearInterval(jobTicker); jobTicker = null;
+      }
+      if (document.getElementById('job-sheet').style.display === 'flex') renderJobList();
+    }
+    function renderJobList() {
+      document.getElementById('job-list').innerHTML = urlJobs.map(j => {
+        const st = j.state === 'run' ? `<div class="js">⏳ 辨識中・已 ${fmtSec(Date.now() - j.start)}（最多約 4 分鐘）</div>`
+          : `<div class="js ${j.state === 'ok' ? 'ok' : 'bad'}">${esc(j.msg.split('\n')[0])}</div>`;
+        const btn = j.state === 'run' ? `<button class="btn btn-sm btn-danger-ghost" onclick="cancelUrlJob('${j.id}')">中止</button>`
+          : (j.target ? `<button class="btn btn-sm tint-blue" onclick="showLatestResult('${j.target}')">查看</button>` : '');
+        return `<div class="job-row"><div class="jt"><div class="ju">${esc(j.url)}</div>${st}</div>${btn}</div>`;
+      }).join('') || '<div class="t-empty">目前沒有收錄工作</div>';
+    }
+    function openJobSheet() { renderJobList(); document.getElementById('job-sheet').style.display = 'flex'; }
+    function closeJobSheet() { const el = document.getElementById('job-sheet'); if (el) el.style.display = 'none'; }
 
     // ================================================================
     //  B27：手機「分享」→ 待辦 App（Chrome 分享選單直接收錄網址）
@@ -4498,6 +4655,7 @@
 
     function renderMemos(items, isLatest = false) {
       if (currentMode !== 'memos') return;
+      items = applyListSort('memos', items, isLatest);   // B28：排序
       let html1 = '';
       (items || []).forEach(res => {
         const idArg = jsArg(res.id);
@@ -4525,6 +4683,7 @@
 
     function renderKnowledge(items, isLatest = false) {
       if (currentMode !== 'knowledge') return;
+      items = applyListSort('knowledge', items, isLatest);   // B28：排序
       let html1 = '';
       (items || []).forEach(res => {
         const idArg = jsArg(res.id);
@@ -4557,6 +4716,7 @@
 
     function renderLifeLog(items, isLatest = false) {
       if (currentMode !== 'lifelog') return;
+      items = applyListSort('lifelog', items, isLatest);   // B28：排序
       let html1 = '';
       (items || []).forEach(res => {
         const idArg = jsArg(res.id);
@@ -4779,6 +4939,12 @@
           }
         }
 
+        // B28：網址改成在背景收錄，不會鎖住輸入框
+        if (!isSearch && !isMigrateCmd && /https?:\/\/\S+/.test(text) && !/^(小孩|完成|已完成|還原|刪除|已讀|取消完成|歌曲|備忘錄)/.test(text)) {
+          if (startUrlJob(text, currentMode)) { input.value = ''; input.style.height = ''; showActionButtons(); }
+          return;
+        }
+
         window.currentRequestId = Date.now().toString();
         input.disabled = true;
         btn.classList.add('processing');
@@ -4788,6 +4954,7 @@
 
         if (isSearch) {
           isShowingSearchResults = true;
+          document.getElementById('sort-bar').classList.remove('on');
           document.getElementById('list-1').innerHTML = (currentMode === 'backup' ? getBackupDropzoneHtml() : '') + '<div class="search-tip">搜尋中... 🔍</div>';
           document.getElementById('col-1').style.display = 'flex';
           const emptyMsg = document.getElementById('empty-board-msg');
