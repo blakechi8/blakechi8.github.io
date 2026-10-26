@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B12 版：同一份檔案可放在 Google 網頁應用程式與 GitHub（搭配 code.gs B12） -->
+  <!-- B13 版：同一份檔案可放在 Google 網頁應用程式與 GitHub（搭配 code.gs B12）；修正平板電腦版模式被當成電腦 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
@@ -861,8 +861,13 @@
     function isIOSDevice() {
       return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
     }
+    // 🐞B13：Android 平板的 Chrome 預設「電腦版網站」，瀏覽器識別字串看起來跟 Linux 電腦一樣，
+    //       原本會被當成電腦 → 不使用裝置金鑰、要求輸入密碼。改為同時判斷「主要操作是不是觸控」。
+    function isTouchPrimaryDevice() {
+      try { return navigator.maxTouchPoints > 0 && window.matchMedia('(pointer: coarse)').matches && !window.matchMedia('(pointer: fine)').matches; } catch (e) { return false; }
+    }
     function isMobileDevice() {
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || isIOSDevice();
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || isIOSDevice() || isTouchPrimaryDevice();
     }
 
     // ---------------- 登入 / 權限 ----------------
