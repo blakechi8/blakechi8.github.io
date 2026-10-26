@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B16 版：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B17 版：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -462,7 +462,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B16）\n' +
+      st.innerText = '主程式沒有啟動（版本 B17）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -481,7 +481,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B16</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B17</div>
     </div>
   </div>
 
@@ -2410,7 +2410,7 @@
       const p = dateStr.split('/'); return `${parseInt(p[1], 10)}/${parseInt(p[2], 10)}`;
     }
     function remindLineHtml(dateStr, hm, isDoneView) {
-      const when = new Date(dateStr.replace(/\//g, '-') + 'T' + hm + ':00');
+      const when = new Date(dateStr.split('/').join('-') + 'T' + hm + ':00');   // B17：改用 split，避免 Google 網頁版誤刪
       const past = when < new Date();
       const cls = isDoneView ? 'past' : (past ? 'overdue' : '');
       const label = (past && !isDoneView ? '已逾期・' : '') + dayLabel(dateStr) + ' ' + hm;
