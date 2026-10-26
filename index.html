@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B24 版：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B25 版：Google 地圖店家補抓電話地址、距離與電話地址圖示更醒目；B24：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -295,7 +295,8 @@
     .cl-add input { flex: 1; min-width: 0; height: calc(42px * var(--fs)); padding: 0 12px; }
     .tpl-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .tpl-chip { border: 1px solid var(--c-kids); background: var(--b-kids); color: var(--t-kids); border-radius: 15px; height: calc(32px * var(--fs)); padding: 0 12px; font-size: calc(13px * var(--fs)); font-weight: 600; }
-    .dist-badge { display: inline-flex; align-items: center; gap: 3px; margin-top: 6px; padding: 3px 9px; border-radius: 12px; background: var(--b-ll); color: var(--t-ll); font-size: calc(12.5px * var(--fs)); font-weight: 700; }
+    .dist-badge { display: inline-flex; align-items: center; gap: 4px; margin-top: 7px; padding: 4px 11px; border-radius: 14px; background: #F0773E; color: #fff; font-size: calc(13px * var(--fs)); font-weight: 800; box-shadow: 0 2px 6px rgba(240,119,62,.3); }   /* B25：距離更醒目 */
+    .dist-badge i { font-size: 1.15em; }
     .ph-thumb { width: 100%; max-height: 180px; object-fit: contain; border-radius: 10px; background: var(--surface-2); }
     .ph-status { margin: 10px 0; font-size: calc(14px * var(--fs)); font-weight: 600; color: var(--danger-text); display: flex; align-items: center; gap: 6px; }
     .ph-status i { display: inline-block; animation: spin 1s linear infinite; }
@@ -387,6 +388,12 @@
     .life-extra-info { font-size: calc(13px * var(--fs)); color: var(--text-2); margin-top: 6px; line-height: 1.7; display: flex; flex-wrap: wrap; gap: 2px 14px; }
     .life-extra-info a { font-weight: 600; }
     .life-extra-info .muted { color: var(--text-3); cursor: pointer; }
+    /* B25：電話、地址圖示更醒目 */
+    .life-extra-info .lic { display: inline-flex; align-items: center; justify-content: center; width: calc(22px * var(--fs)); height: calc(22px * var(--fs)); border-radius: 50%; color: #fff; font-size: calc(13px * var(--fs)); margin-right: 3px; vertical-align: -4px; }
+    .life-extra-info .lic.ph { background: #22B04F; }
+    .life-extra-info .lic.mp { background: #E5533D; }
+    .life-extra-info .muted .lic { background: #B8C0C8; }
+    .life-refetch { border: 1px dashed #F0A57E; background: #FFF3EC; color: #B2532A; border-radius: 13px; height: calc(28px * var(--fs)); padding: 0 10px; font-size: calc(12px * var(--fs)); font-weight: 700; display: inline-flex; align-items: center; gap: 3px; }
     .meta-time { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 3px; }
     /* B19：收錄頁的使用說明面板（取代原本一段文字） */
     .guide { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
@@ -617,7 +624,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B24）\n' +
+      st.innerText = '主程式沒有啟動（版本 B25）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -636,7 +643,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B24</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B25</div>
     </div>
   </div>
 
@@ -3561,7 +3568,7 @@
           if (!res || !res.ok) { list.innerHTML = `<div class="search-tip">${esc(res && res.message || '⚠️ 查詢失敗')}</div>`; return; }
           renderLifeLog(res.items, false);
           document.getElementById('header-main').innerText = '生活誌';
-          document.getElementById('header-sub').innerText = `📍 附近的店・依距離排序・${res.items.length} 間`;
+          document.getElementById('header-sub').innerText = `📍 附近 ${res.items.length} 間・由近到遠`;
           const notes = [];
           if (res.pending) notes.push(`還有 ${res.pending} 間正在換算座標，稍後再按一次會更完整`);
           if (res.noLocation) notes.push(`${res.noLocation} 間沒有地址，無法排序`);
@@ -4037,22 +4044,33 @@
       });
     }
 
+    function refetchLifeInfo(id, btn) {
+      btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> 查詢中（約 10～40 秒）…';
+      google.script.run.withSuccessHandler(r => {
+        showToast(r && r.message ? r.message : '完成');
+        const box = btn.closest('.life-extra-info');
+        if (r && r.ok && box) { box.setAttribute('data-phone', r.phone); box.setAttribute('data-location', r.location); box.innerHTML = buildLifeExtraHtml(id, r.phone, r.location); }
+        else { btn.disabled = false; btn.innerHTML = '<i class="ti ti-refresh"></i>補抓電話地址'; }
+      }).withFailureHandler(e => { btn.disabled = false; btn.innerHTML = '<i class="ti ti-refresh"></i>補抓電話地址'; showToast('⚠️ ' + e.message); }).refreshLifeInfoApp(id);
+    }
     function buildLifeExtraHtml(id, phoneVal, locVal) {
       const idArg = jsArg(id);
       let phoneHtml = '';
       if (phoneVal && phoneVal !== '無') {
         let cleanTel = String(phoneVal).replace(/[^\d+\-#*,;]/g, '');
-        phoneHtml = `<span><i class="ti ti-phone"></i> <a href="tel:${esc(cleanTel)}" target="_top" title="撥打電話">${esc(phoneVal)}</a></span>`;
+        phoneHtml = `<span><i class="ti ti-phone lic ph"></i><a href="tel:${esc(cleanTel)}" target="_top" title="撥打電話">${esc(phoneVal)}</a></span>`;
       } else {
-        phoneHtml = `<span class="muted" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'lifelog', this)" title="點此補填電話"><i class="ti ti-phone"></i> 電話：無</span>`;
+        phoneHtml = `<span class="muted" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'lifelog', this)" title="點此補填電話"><i class="ti ti-phone lic ph"></i>電話：無</span>`;
       }
       let locHtml = '';
       if (locVal && locVal !== '無') {
-        locHtml = `<span><i class="ti ti-map-pin"></i> <a href="javascript:void(0)" onclick="openMapModal(${jsArg(locVal)})" title="選擇導航方式">${esc(locVal)}</a></span>`;
+        locHtml = `<span><i class="ti ti-map-pin lic mp"></i><a href="javascript:void(0)" onclick="openMapModal(${jsArg(locVal)})" title="選擇導航方式">${esc(locVal)}</a></span>`;
       } else {
-        locHtml = `<span class="muted" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'lifelog', this)" title="點此補填地點"><i class="ti ti-map-pin"></i> 地點：無</span>`;
+        locHtml = `<span class="muted" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'lifelog', this)" title="點此補填地點"><i class="ti ti-map-pin lic mp"></i>地點：無</span>`;
       }
-      return phoneHtml + locHtml;
+      // B25：電話或地址缺少時，可一鍵補抓（Google 地圖座標反查＋Google 搜尋）
+      const refetch = ((!phoneVal || phoneVal === '無') || (!locVal || locVal === '無')) ? `<button class="life-refetch" onclick="refetchLifeInfo(${idArg}, this)"><i class="ti ti-refresh"></i>補抓電話地址</button>` : '';
+      return phoneHtml + locHtml + refetch;
     }
 
     function saveItem(id, type, inputElement) {
