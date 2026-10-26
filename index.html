@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B20 版：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
+  <!-- B21 版：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
@@ -130,7 +130,7 @@
     .bell-dot.on { display: block; }
     .topbar-row { display: flex; align-items: center; gap: 8px; }
     #header-main { font-size: calc(18px * var(--fs)); font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--header-text); }
-    .role-badge { font-size: calc(13px * var(--fs)); padding: 5px 12px; border-radius: 16px; background: var(--header-soft); color: var(--header-text); font-weight: 600; flex-shrink: 0; border: none; max-width: 8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 2px; }
+    .role-badge { font-size: calc(13px * var(--fs)); padding: 5px 12px; border-radius: 16px; background: var(--badge-bg, var(--header-soft)); color: var(--badge-text, var(--header-text)); font-weight: 600; flex-shrink: 0; border: none; max-width: 8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 2px; }
     .role-badge:hover { background: var(--header-line); }
     #dashboard-banner { display: none !important; }
     .stat { font-size: calc(12px * var(--fs)); padding: 3px 9px; border-radius: 8px; background: var(--surface-2); color: var(--text-2); font-weight: 500; }
@@ -237,6 +237,15 @@
     .set-row .set-l { font-weight: 600; margin-bottom: 8px; }
     /* B20：版面顏色自訂 */
     .cs-row { padding: 10px 0; border-top: 1px solid var(--border); }
+    .topbar .icon-btn.active { background: var(--header-soft); }
+    .theme-more { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .tpl-chip.on { background: var(--c-kids); border-color: var(--c-kids); color: #fff; }
+    .cl-del { color: #D9837A; }
+    .kw-row { display: flex; align-items: center; gap: 8px; padding: 8px 2px; border-bottom: 1px solid var(--border); }
+    .kw-row .kw-t { flex: 1; min-width: 0; font-size: calc(15px * var(--fs)); }
+    .kw-row button { border: none; background: var(--surface-2); color: var(--text-2); width: 34px; height: 34px; border-radius: 10px; padding: 0; font-size: calc(16px * var(--fs)); }
+    .kw-row button.del { background: var(--danger-soft); color: var(--danger-text); }
+    .g-chip.edit { border-style: dashed; background: transparent; color: var(--text-2); border-color: var(--border-strong); }
     .cs-head { display: flex; align-items: center; gap: 8px; font-size: calc(14px * var(--fs)); font-weight: 600; }
     .cs-cur { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border-strong); }
     .cs-reset { margin-left: auto; border: none; background: none; color: var(--primary); font-size: calc(12.5px * var(--fs)); font-weight: 600; padding: 4px 6px; }
@@ -436,7 +445,10 @@
     /* ========== 8. 彈窗 / 底部面板 ========== */
     .modal { display: none; position: fixed; inset: 0; z-index: 10001; background: rgba(15, 22, 33, .48); justify-content: center; align-items: flex-end; }
     .sheet { background: var(--surface); color: var(--text); width: 100%; max-width: 560px; max-height: 92vh; max-height: 92dvh; overflow-y: auto; border-radius: 20px 20px 0 0; padding: 10px 18px max(18px, env(safe-area-inset-bottom)); animation: sheetUp .22s ease-out; text-align: left; }
-    .sheet-grip { width: 40px; height: 4px; border-radius: 2px; background: var(--border-strong); margin: 0 auto 12px; }
+    .sheet-grip { width: 44px; height: 5px; border-radius: 3px; background: var(--border-strong); margin: 0 auto 12px; position: relative; cursor: pointer; }
+    .sheet-grip::after { content: ''; position: absolute; left: -40px; right: -40px; top: -14px; bottom: -14px; }   /* B21：加大可按、可往下拉的範圍 */
+    .sheet.dragging { animation: none; transition: none; }
+    .sheet.snap { transition: transform .2s ease; }
     .sheet-title { font-size: calc(17px * var(--fs)); font-weight: 700; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
     .sheet-sub { font-size: calc(13px * var(--fs)); color: var(--text-3); margin: 0 0 6px; line-height: 1.5; word-break: break-word; }
     .sec-label { font-size: calc(12px * var(--fs)); color: var(--text-3); font-weight: 600; margin: 14px 0 7px; }
@@ -555,7 +567,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B20）\n' +
+      st.innerText = '主程式沒有啟動（版本 B21）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -574,7 +586,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B20</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B21</div>
     </div>
   </div>
 
@@ -772,6 +784,24 @@
   </div>
 
 
+  <!-- ===== B21：快速關鍵字 ===== -->
+  <div id="kw-sheet" class="modal">
+    <div class="sheet">
+      <div class="sheet-grip"></div>
+      <h3 class="sheet-title" id="kw-title">快速關鍵字</h3>
+      <p class="sheet-sub">顯示在搜尋說明下方，點一下就搜尋。可刪除、調整順序或新增。</p>
+      <div id="kw-list" style="margin-top:8px;"></div>
+      <div class="cl-add">
+        <input type="text" id="kw-input" placeholder="新增關鍵字（可用「、」一次加多個）" enterkeyhint="done" onkeydown="if(event.key==='Enter'){event.preventDefault(); kwAdd();}">
+        <button class="btn btn-sm" onclick="kwAdd()"><i class="ti ti-plus"></i>加入</button>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:16px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="kwReset()"><i class="ti ti-restore"></i>恢復預設</button>
+        <button class="btn" style="flex:1;" onclick="kwSave()">儲存</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== B20：待辦清單 ===== -->
   <div id="cl-sheet" class="modal">
     <div class="sheet tall">
@@ -786,10 +816,11 @@
         <input type="text" id="cl-input" placeholder="新增項目（可用「、」一次加多項）" enterkeyhint="done" onkeydown="if(event.key==='Enter'){event.preventDefault(); clAdd();}">
         <button class="btn btn-sm" onclick="clAdd()"><i class="ti ti-plus"></i>加入</button>
       </div>
-      <div class="sec-label" style="margin-top:14px;">一鍵套用範本</div>
+      <div class="sec-label" style="margin-top:14px;">一鍵套用範本（再按一次＝移除該範本的項目）</div>
       <div class="tpl-chips" id="cl-tpls"></div>
       <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
         <button class="btn btn-sm btn-ghost" onclick="clClearDone()"><i class="ti ti-eraser"></i>清除已完成</button>
+        <button class="btn btn-sm btn-danger-ghost" onclick="clClearAll()"><i class="ti ti-trash"></i>清空全部</button>
         <button class="btn btn-sm btn-ghost" onclick="clUncheckAll()"><i class="ti ti-refresh"></i>全部取消勾選</button>
         <button class="btn btn-sm btn-ghost" id="cl-save-tpl" onclick="clSaveTemplate()"><i class="ti ti-device-floppy"></i>存成範本</button>
       </div>
@@ -834,6 +865,7 @@
         <button class="theme-opt" data-theme="navy" onclick="setTheme('navy')"><span class="sw" style="background:#34506F;"></span>霧藍</button>
         <label class="theme-opt" data-theme="custom" title="自己挑顏色"><span class="sw sw-custom" id="custom-sw"><input type="color" id="custom-color" value="#9CCFC0" oninput="setCustomTheme(this.value)"></span>自訂</label>
       </div>
+      <div class="theme-more" id="theme-more"></div>
       <div class="sec-label" style="margin-top:18px;">版面顏色（只影響這台裝置，可隨時恢復預設）</div>
       <div id="color-settings"></div>
       <div style="display:flex; gap:8px; margin-top:18px;">
@@ -939,6 +971,7 @@
       <header class="topbar">
         <div class="topbar-row">
           <div class="title-wrap"><h1 id="header-main">待辦事項</h1><div id="header-sub"></div></div>
+          <button class="icon-btn mobile-only" id="btn-today" data-nav="today" onclick="navGo('today')" title="今天（早報）" aria-label="今天"><i class="ti ti-sun"></i></button>
           <button class="icon-btn" onclick="openSearch()" title="全站搜尋" aria-label="全站搜尋"><i class="ti ti-search"></i></button>
           <button class="icon-btn" onclick="openNotifications()" title="通知" aria-label="通知"><i class="ti ti-bell"></i><span class="bell-dot" id="bell-dot"></span></button>
           <button id="role-badge" class="role-badge" onclick="openUserSheet()" title="帳號、文字大小、登出">管理員</button>
@@ -1198,11 +1231,22 @@
       if (t === 'mint') root.removeAttribute('data-theme');
       else if (t !== 'custom') root.setAttribute('data-theme', t);
       document.querySelectorAll('.theme-opt').forEach(b => b.classList.toggle('active', b.getAttribute('data-theme') === t));
+      try { renderThemeMore(); } catch (e) {}
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--header-bg').trim());
     }
     function initTheme() { let t = 'mint'; try { t = localStorage.getItem('header_theme') || 'mint'; } catch (e) {} applyTheme(t); try { applyColorOverrides(); } catch (e) {} }
     function setTheme(t) { applyTheme(t); try { localStorage.setItem('header_theme', t); } catch (e) {} }
+    // B21：標題列也提供和版面顏色一樣多的預設色（淺色＋飽和色）
+    const HEADER_PRESETS = [['#D7EFD9', '淺綠'], ['#06C755', 'LINE 綠'], ['#22B04F', '亮綠'], ['#5FB89A', '薄荷'], ['#D6E8F7', '淺藍'], ['#4A90D9', '天藍'], ['#6D9DD1', '霧藍'],
+      ['#E4DDF6', '淺紫'], ['#8C7FD0', '薰衣草'], ['#F8DCE5', '淺粉'], ['#E79AB1', '粉紅'], ['#FBEBC0', '淺黃'], ['#E8B64C', '芥末黃'], ['#F7D9CB', '杏色'], ['#EE8C6F', '珊瑚'], ['#E3E7EC', '淺灰'], ['#8A9AAE', '灰藍']];
+    function renderThemeMore() {
+      const box = document.getElementById('theme-more');
+      if (!box) return;
+      let cur = '', t = 'mint';
+      try { t = localStorage.getItem('header_theme') || 'mint'; cur = (localStorage.getItem('header_custom') || '').toLowerCase(); } catch (e) {}
+      box.innerHTML = HEADER_PRESETS.map(([c, n]) => `<button class="cs-sw${t === 'custom' && cur === c.toLowerCase() ? ' on' : ''}" style="background:${c};" title="${n}" aria-label="${n}" onclick="setCustomTheme('${c}')"></button>`).join('');
+    }
     function setCustomTheme(hex) { try { localStorage.setItem('header_custom', hex); } catch (e) {} setTheme('custom'); }
 
     function initFontScale() {
@@ -1435,17 +1479,18 @@
     };
     // B14：第一格是「今天」；其餘功能收在「更多」
     const TAB_ITEMS = {
-      admin: [['today', 'ti-sun', '今天'], ['tasks', 'ti-checkbox', '待辦'], ['knowledge', 'ti-book', '知識庫'], ['lifelog', 'ti-map-pin', '生活誌'], ['@more', 'ti-dots', '更多']],
-      kids: [['today', 'ti-sun', '今天'], ['kids-tasks', 'ti-heart-handshake', '待辦'], ['housework', 'ti-home', '家務'], ['memos', 'ti-notes', '備忘錄'], ['@more', 'ti-dots', '更多']]
+      // B21：「今天」改放在標題列的 ☀️ 按鈕，底部留給常用功能
+      admin: [['tasks', 'ti-checkbox', '待辦'], ['knowledge', 'ti-book', '知識庫'], ['lifelog', 'ti-map-pin', '生活誌'], ['housework', 'ti-home', '家務'], ['@more', 'ti-dots', '更多']],
+      kids: [['kids-tasks', 'ti-heart-handshake', '待辦'], ['housework', 'ti-home', '家務'], ['lifelog', 'ti-map-pin', '生活誌'], ['memos', 'ti-notes', '備忘錄'], ['kids-completed', 'ti-history', '已完成'], ['@more', 'ti-dots', '更多']]
     };
     const MORE_ITEMS_BY_ROLE = {
       admin: [
-        ['housework', 'ti-home', '家務事', ''], ['memos', 'ti-notes', '備忘錄', ''], ['music', 'ti-music', '音樂輯', ''], ['backup', 'ti-cloud-upload', '備份區', ''],
+        ['memos', 'ti-notes', '備忘錄', ''], ['music', 'ti-music', '音樂輯', ''], ['backup', 'ti-cloud-upload', '備份區', ''], ['@search', 'ti-search', '搜尋', ''],
         ['overdue', 'ti-alert-triangle', '逾期盤點', 'danger'], ['completed', 'ti-history', '近期完成', ''], ['@db', 'ti-table', '資料庫', ''], ['@archive', 'ti-archive', '封存完成', '']
       ],
-      kids: [['lifelog', 'ti-map-pin', '生活誌', ''], ['kids-completed', 'ti-history', '已完成', ''], ['@search', 'ti-search', '搜尋', ''], ['@user', 'ti-text-size', '文字大小', 'muted']]
+      kids: [['@search', 'ti-search', '搜尋', ''], ['@user', 'ti-text-size', '文字大小', 'muted'], ['today', 'ti-sun', '今天', '']]
     };
-    const MORE_MODES_BY_ROLE = { admin: ['housework', 'music', 'memos', 'backup', 'overdue', 'completed'], kids: ['lifelog', 'kids-completed'] };
+    const MORE_MODES_BY_ROLE = { admin: ['music', 'memos', 'backup', 'overdue', 'completed'], kids: [] };
 
     function renderNav() {
       const role = userRole === 'kids' ? 'kids' : 'admin';
@@ -1493,7 +1538,7 @@
       const badge = document.getElementById('role-badge');
       badge.innerText = userName || (userRole === 'kids' ? '家人' : '管理員');   // B14：直接顯示使用者名字
       document.getElementById('btn-attach').style.display = (userRole === 'kids') ? 'none' : '';   // 家人身分隱藏 📎 上傳
-      document.getElementById('btn-cam').style.display = (userRole === 'kids') ? 'none' : '';     // B20：拍照建立待辦（管理員）
+      document.getElementById('btn-cam').style.display = '';     // B21：家人也能拍照（一律建立家庭待辦）
     }
 
     function saveColumnOrder() {
@@ -1590,6 +1635,7 @@
       initBoardSortable();
 
       switchMode('today');   // B14：打開 App 先看「今天」
+      loadQuickKw();         // B21
 
       updateDashboard();
 
@@ -1670,12 +1716,45 @@
         'cal-confirm-modal': closeCalConfirmModal, 'map-select-modal': closeMapModal, 'alarm-modal': closeAlarmModal,
         'hw-modal': closeHwModal, 'hw-manage-modal': closeHwManageModal, 'hw-reminder-modal': closeHwReminderModal,
         'card-menu': closeCardMenu, 'more-sheet': closeMoreSheet, 'font-sheet': closeFontSheet,
-        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto
+        'notif-sheet': closeNotifications, 'search-sheet': closeSearch, 'cl-sheet': closeChecklist, 'photo-sheet': closePhoto, 'kw-sheet': closeKw
       };
       Object.keys(closers).forEach(id => {
         const el = document.getElementById(id);
         el.addEventListener('click', e => { if (e.target === el) closers[id](); });
+        const sheet = el.querySelector('.sheet');
+        if (sheet) enableSheetSwipe(sheet, closers[id]);
       });
+    }
+    // B21：選單上方的橫槓 ── 按一下或往下拉就關閉
+    function enableSheetSwipe(sheet, close) {
+      const grip = sheet.querySelector('.sheet-grip');
+      if (grip) grip.addEventListener('click', e => { e.stopPropagation(); close(); });
+      let y0 = null, dy = 0, t0 = 0;
+      sheet.addEventListener('touchstart', e => {
+        const t = e.touches[0];
+        const top = sheet.getBoundingClientRect().top;
+        const onGrip = grip && (e.target === grip || grip.contains(e.target));
+        if (!onGrip && (t.clientY - top > 56 || sheet.scrollTop > 0)) { y0 = null; return; }
+        if (!onGrip && e.target.closest('input, textarea, select, button, a, label')) { y0 = null; return; }
+        y0 = t.clientY; dy = 0; t0 = Date.now();
+        sheet.classList.add('dragging'); sheet.classList.remove('snap');
+      }, { passive: true });
+      sheet.addEventListener('touchmove', e => {
+        if (y0 === null) return;
+        dy = Math.max(0, e.touches[0].clientY - y0);
+        sheet.style.transform = dy ? `translateY(${dy}px)` : '';
+      }, { passive: true });
+      const end = () => {
+        if (y0 === null) return;
+        const fast = dy > 40 && (Date.now() - t0) < 250;
+        sheet.classList.remove('dragging');
+        y0 = null;
+        if (dy > 90 || fast) { sheet.style.transform = ''; close(); }
+        else { sheet.classList.add('snap'); sheet.style.transform = ''; }
+        dy = 0;
+      };
+      sheet.addEventListener('touchend', end);
+      sheet.addEventListener('touchcancel', end);
     }
 
     // ---------------- 卡片「⋯」選單（手機） ----------------
@@ -2809,19 +2888,19 @@
     const GUIDES = {
       knowledge: { cls: 'know', icon: 'ti-book', title: '知識庫', sub: '收藏好文章，AI 自動分類、寫摘要',
         rows: [
-          { step: '搜尋', icon: 'ti-search', text: '輸入關鍵字，或點下面的分類', chips: [['全部', 'run', true], ['管理', 'run'], ['科技', 'run'], ['AI', 'run']] },
+          { step: '搜尋', icon: 'ti-search', text: '輸入關鍵字，或點下面的分類', kw: 'knowledge', fixed: [['全部', 'run', true]] },
           { step: '收錄', icon: 'ti-link', text: '直接貼上網址按「送出」', note: 'AI 會讀網頁、判斷分類；判斷錯了可按「移至生活誌」' },
           { step: '摘要', icon: 'ti-sparkles', text: '卡片上按「產生 AI 摘要」', note: '舊資料也能補上 3 行重點' }
         ] },
       lifelog: { cls: 'life', icon: 'ti-map-pin', title: '生活誌', sub: '美食、景點、店家，一鍵打電話、導航',
         rows: [
-          { step: '搜尋', icon: 'ti-search', text: '輸入關鍵字，或點下面的分類', chips: [['📍 附近的店', 'near', true], ['全部', 'run'], ['美食', 'run'], ['旅遊', 'run'], ['早餐', 'run']] },
+          { step: '搜尋', icon: 'ti-search', text: '輸入關鍵字，或點下面的分類', kw: 'lifelog', fixed: [['📍 附近的店', 'near', true], ['全部', 'run']] },
           { step: '收錄', icon: 'ti-link', text: '貼上 Google 地圖或店家網址', note: '自動抓店名、電話、地址；點地址可選 Google／Apple 地圖導航' },
           { step: '摘要', icon: 'ti-sparkles', text: '卡片上按「產生 AI 摘要」', note: '快速知道這家店的特色' }
         ] },
       music: { cls: 'music', icon: 'ti-music', title: '音樂輯', sub: '收藏想聽的歌，一鍵播放 YouTube',
         rows: [
-          { step: '搜尋', icon: 'ti-search', text: '輸入「找」＋歌星或歌名', chips: [['找 周杰倫', 'run'], ['找 晴天', 'run']] },
+          { step: '搜尋', icon: 'ti-search', text: '輸入「找」＋歌星或歌名，或點下面的關鍵字', kw: 'music', fixed: [] },
           { step: '收錄', icon: 'ti-plus', text: '輸入「歌星 歌名」按「送出」', chips: [['周杰倫 晴天', 'fill']], note: '會自動找 YouTube 官方版' }
         ] },
       memos: { cls: 'memo', icon: 'ti-notes', title: '備忘錄', sub: '家人共用的重要資訊（證件、尺寸、帳號提示…）',
@@ -2836,12 +2915,69 @@
       let h = `<div class="guide ${g.cls}"><div class="guide-head"><div class="guide-ico"><i class="ti ${g.icon}"></i></div><div><div class="guide-t">${g.title}</div><div class="guide-s">${g.sub}</div></div></div>`;
       g.rows.forEach(r => {
         h += `<div class="guide-row"><span class="guide-step"><i class="ti ${r.icon}"></i>${r.step}</span><div class="guide-d">${r.text}`;
+        if (r.kw) {
+          // B21：快速關鍵字（可編輯，所有裝置共用）
+          const words = quickKwList(r.kw);
+          const chips = r.fixed.concat(words.map(w => [r.kw === 'music' ? '找 ' + w : w, 'run']));
+          h += `<div class="g-chips">${chips.map(c => `<button class="g-chip${c[2] ? ' solid' : ''}" onclick="guideChip(${jsArg(c[0])}, '${c[1]}')">${esc(c[0])}</button>`).join('')}<button class="g-chip edit" onclick="openKw('${r.kw}')"><i class="ti ti-pencil"></i>編輯</button></div>`;
+        }
         if (r.chips) h += `<div class="g-chips">${r.chips.map(c => `<button class="g-chip${c[2] ? ' solid' : ''}" onclick="guideChip(${jsArg(c[0])}, '${c[1]}')">${esc(c[0].trim() || c[0])}${c[1] === 'fill' ? ' …' : ''}</button>`).join('')}</div>`;
         if (r.note) h += `<div class="muted" style="margin-top:4px;">${r.note}</div>`;
         h += `</div></div>`;
       });
       return h + `</div>`;
     }
+    const QUICK_KW_DEFAULTS = { knowledge: ['管理', '科技', 'AI'], lifelog: ['美食', '旅遊', '早餐'], music: ['周杰倫', '晴天'] };
+    const QUICK_KW_NAMES = { knowledge: '知識庫', lifelog: '生活誌', music: '音樂輯' };
+    let quickKw = {};
+    function quickKwList(mode) { return Array.isArray(quickKw[mode]) ? quickKw[mode] : QUICK_KW_DEFAULTS[mode] || []; }
+    function loadQuickKw() {
+      google.script.run.withSuccessHandler(r => {
+        if (!r || typeof r !== 'object') return;
+        quickKw = r;
+        if (GUIDES[currentMode] && document.querySelector('#list-1 .guide')) document.getElementById('list-1').innerHTML = guideHtml(currentMode);
+      }).withFailureHandler(() => {}).getQuickKeywordsApp();
+    }
+    let kwMode = '', kwItems = [];
+    function openKw(mode) {
+      kwMode = mode;
+      kwItems = quickKwList(mode).slice();
+      document.getElementById('kw-title').innerText = `快速關鍵字・${QUICK_KW_NAMES[mode] || ''}`;
+      document.getElementById('kw-input').value = '';
+      renderKw();
+      document.getElementById('kw-sheet').style.display = 'flex';
+    }
+    function closeKw() { document.getElementById('kw-sheet').style.display = 'none'; }
+    function renderKw() {
+      document.getElementById('kw-list').innerHTML = kwItems.length ? kwItems.map((w, i) => `<div class="kw-row"><span class="kw-t">${esc(w)}</span>
+        <button onclick="kwMove(${i}, -1)" ${i === 0 ? 'disabled style="opacity:.35"' : ''} aria-label="往上"><i class="ti ti-arrow-up"></i></button>
+        <button onclick="kwMove(${i}, 1)" ${i === kwItems.length - 1 ? 'disabled style="opacity:.35"' : ''} aria-label="往下"><i class="ti ti-arrow-down"></i></button>
+        <button class="del" onclick="kwItems.splice(${i}, 1); renderKw();" aria-label="刪除"><i class="ti ti-x"></i></button></div>`).join('')
+        : '<div class="t-empty">目前沒有關鍵字，在下面新增</div>';
+    }
+    function kwMove(i, d) { const j = i + d; if (j < 0 || j >= kwItems.length) return; const t = kwItems[i]; kwItems[i] = kwItems[j]; kwItems[j] = t; renderKw(); }
+    function kwAdd() {
+      const inp = document.getElementById('kw-input');
+      String(inp.value).split(/[、,，;；\n]+/).map(x => x.trim()).filter(Boolean).forEach(w => { if (!kwItems.includes(w)) kwItems.push(w.substring(0, 20)); });
+      inp.value = ''; renderKw(); inp.focus();
+    }
+    function kwApply(list) {
+      if (list === null) delete quickKw[kwMode]; else quickKw[kwMode] = list;
+      closeKw();
+      if (currentMode === kwMode && document.querySelector('#list-1 .guide')) document.getElementById('list-1').innerHTML = guideHtml(currentMode);
+    }
+    function kwSave() {
+      const pendingInput = document.getElementById('kw-input').value.trim();
+      if (pendingInput) kwAdd();
+      const list = kwItems.slice();
+      kwApply(list);
+      google.script.run.withSuccessHandler(r => showToast(r && r.ok ? '✅ 快速關鍵字已儲存' : (r && r.message || '⚠️ 儲存失敗'))).withFailureHandler(e => showToast('⚠️ ' + e.message)).setQuickKeywordsApp(kwMode, list);
+    }
+    function kwReset() {
+      kwApply(null);
+      google.script.run.withSuccessHandler(() => showToast('已恢復預設關鍵字')).withFailureHandler(e => showToast('⚠️ ' + e.message)).setQuickKeywordsApp(kwMode, null);
+    }
+
     function guideChip(text, act) {
       if (act === 'near') { findNearby(); return; }   // B20
       const ui = document.getElementById('user-input');
@@ -2856,8 +2992,9 @@
     //  B20：版面顏色自訂
     // ================================================================
     const COLOR_KEYS = {
+      badge: { label: '名字標籤', def: '', defLabel: '跟著標題列', type: 'solid', v: ['--badge-bg', '--badge-text'], kids: true },
       know:  { label: '知識庫', def: '#8C7FD0', type: 'section', v: ['--c-know', '--b-know', '--t-know'] },
-      ll:    { label: '生活誌', def: '#6D9DD1', type: 'section', v: ['--c-ll', '--b-ll', '--t-ll'] },
+      ll:    { label: '生活誌', def: '#6D9DD1', type: 'section', v: ['--c-ll', '--b-ll', '--t-ll'], kids: true },
       music: { label: '音樂輯', def: '#E79AB1', type: 'section', v: ['--c-music', '--b-music', '--t-music'] },
       hw:    { label: '家務完成', def: '#22B04F', type: 'solid', v: ['--hw-done', '--hw-done-text'] }
     };
@@ -2897,13 +3034,13 @@
       const box = document.getElementById('color-settings');
       if (!box) return;
       const ov = getColorOverrides();
-      box.innerHTML = Object.keys(COLOR_KEYS).map(k => {
+      box.innerHTML = Object.keys(COLOR_KEYS).filter(k => userRole !== 'kids' || COLOR_KEYS[k].kids).map(k => {
         const cfg = COLOR_KEYS[k];
-        const cur = ov[k] || cfg.def;
-        const sws = COLOR_PRESETS.map(([c, n]) => `<button class="cs-sw${c.toLowerCase() === cur.toLowerCase() ? ' on' : ''}" style="background:${c};" title="${n}" aria-label="${n}" onclick="setColorOverride('${k}', '${c}')"></button>`).join('');
-        return `<div class="cs-row"><div class="cs-head"><span class="cs-cur" style="background:${cur};"></span>${cfg.label}${ov[k] ? '' : '<span style="font-weight:400; color:var(--text-3); font-size:calc(12px * var(--fs));">（預設）</span>'}
+        const cur = ov[k] || cfg.def || '';
+        const sws = COLOR_PRESETS.map(([c, n]) => `<button class="cs-sw${c.toLowerCase() === String(cur).toLowerCase() ? ' on' : ''}" style="background:${c};" title="${n}" aria-label="${n}" onclick="setColorOverride('${k}', '${c}')"></button>`).join('');
+        return `<div class="cs-row"><div class="cs-head"><span class="cs-cur" style="background:${cur || 'var(--header-soft)'};"></span>${cfg.label}${ov[k] ? '' : `<span style="font-weight:400; color:var(--text-3); font-size:calc(12px * var(--fs));">（預設${cfg.defLabel ? '：' + cfg.defLabel : ''}）</span>`}
           ${ov[k] ? `<button class="cs-reset" onclick="setColorOverride('${k}', '')"><i class="ti ti-restore"></i> 恢復預設</button>` : ''}</div>
-          <div class="cs-sws">${sws}<label class="cs-sw custom" title="自訂顏色"><input type="color" value="${cur}" onchange="setColorOverride('${k}', this.value)"></label></div></div>`;
+          <div class="cs-sws">${sws}<label class="cs-sw custom" title="自訂顏色"><input type="color" value="${cur || '#9CCFC0'}" onchange="setColorOverride('${k}', this.value)"></label></div></div>`;
       }).join('');
     }
 
@@ -2992,7 +3129,8 @@
       document.getElementById('cl-list').innerHTML = clItems.length ? clItems.map((x, i) => `<div class="cl-row${x.d ? ' done' : ''}"><button class="cl-check" onclick="clToggle(${i})" aria-label="勾選"><i class="ti ti-check"></i></button><span class="cl-text" onclick="clToggle(${i})">${esc(x.t)}</span><button class="cl-del" onclick="clDel(${i})" aria-label="刪除"><i class="ti ti-x"></i></button></div>`).join('')
         : '<div class="t-empty">還沒有項目：在下面輸入，或點一個範本一鍵帶入</div>';
       const tpls = taskExtras.templates || [];
-      document.getElementById('cl-tpls').innerHTML = tpls.length ? tpls.map((t, i) => `<button class="tpl-chip" onclick="clApplyTpl(${i})">${esc(t.name)}・${t.items.length}</button>`).join('') : '<span style="color:var(--text-3); font-size:calc(13px * var(--fs));">（試算表「清單範本」分頁會自動建立）</span>';
+      const have = new Set(clItems.map(x => x.t));
+      document.getElementById('cl-tpls').innerHTML = tpls.length ? tpls.map((t, i) => { const on = t.items.length && t.items.every(x => have.has(x)); return `<button class="tpl-chip${on ? ' on' : ''}" onclick="clApplyTpl(${i})">${on ? '✓ ' : ''}${esc(t.name)}・${t.items.length}</button>`; }).join('') : '<span style="color:var(--text-3); font-size:calc(13px * var(--fs));">（試算表「清單範本」分頁會自動建立）</span>';
     }
     function clQueueSave() {
       clearTimeout(clSaveTimer);
@@ -3004,7 +3142,7 @@
       }, 600);
     }
     function clToggle(i) { if (!clItems[i]) return; clItems[i].d = !clItems[i].d; renderChecklist(); clQueueSave(); }
-    function clDel(i) { clItems.splice(i, 1); renderChecklist(); clQueueSave(); }
+    function clDel(i) { if (!clItems[i]) return; clSnapshot(); const t = clItems[i].t; clItems.splice(i, 1); renderChecklist(); clQueueSave(); clUndoToast(`已刪除「${t}」`); }
     function clSplit(text) { return String(text || '').split(/[\n、,，;；]+/).map(x => x.trim()).filter(Boolean); }
     function clAdd() {
       const inp = document.getElementById('cl-input');
@@ -3016,16 +3154,38 @@
       const list = document.getElementById('cl-list'); list.scrollTop = list.scrollHeight;
       inp.focus();
     }
+    let clUndoSnap = null;
+    function clSnapshot() { clUndoSnap = clItems.map(x => ({ t: x.t, d: x.d })); }
+    function clUndoToast(msg) {
+      showToast(msg, { actionLabel: '復原', duration: 6000, onAction: () => { if (!clUndoSnap) return; clItems = clUndoSnap; clUndoSnap = null; renderChecklist(); clQueueSave(); showToast('已復原'); } });
+    }
     function clApplyTpl(i) {
       const t = (taskExtras.templates || [])[i];
       if (!t) return;
+      clSnapshot();
       const have = new Set(clItems.map(x => x.t));
+      if (t.items.length && t.items.every(x => have.has(x))) {
+        // B21：已套用的範本再按一次 → 移除這個範本的項目
+        const rm = new Set(t.items);
+        clItems = clItems.filter(x => !rm.has(x.t));
+        renderChecklist(); clQueueSave();
+        clUndoToast(`已移除「${t.name}」的 ${rm.size} 項`);
+        return;
+      }
       let n = 0;
       t.items.forEach(x => { if (!have.has(x)) { clItems.push({ t: x, d: false }); n++; } });
       renderChecklist(); clQueueSave();
-      showToast(n ? `✅ 已帶入「${t.name}」${n} 項，可再增減` : '這些項目都已經在清單裡');
+      clUndoToast(`✅ 已帶入「${t.name}」${n} 項（按錯可按「復原」，或再點一次範本移除）`);
     }
-    function clClearDone() { const n = clItems.filter(x => x.d).length; if (!n) return; clItems = clItems.filter(x => !x.d); renderChecklist(); clQueueSave(); showToast(`已清除 ${n} 項`); }
+    function clClearAll() {
+      if (!clItems.length) return;
+      if (!confirm(`確定清空這個清單的 ${clItems.length} 個項目嗎？（待辦本身不會刪除）`)) return;
+      clSnapshot();
+      clItems = [];
+      renderChecklist(); clQueueSave();
+      clUndoToast('已清空清單');
+    }
+    function clClearDone() { const n = clItems.filter(x => x.d).length; if (!n) return; clSnapshot(); clItems = clItems.filter(x => !x.d); renderChecklist(); clQueueSave(); clUndoToast(`已清除 ${n} 項已完成`); }
     function clUncheckAll() { clItems.forEach(x => { x.d = false; }); renderChecklist(); clQueueSave(); }
     function clSaveTemplate() {
       if (!clItems.length) { showToast('清單是空的'); return; }
@@ -3133,7 +3293,8 @@
         .photoToTasksApp(dataUrl.split(',')[1], 'image/jpeg');
     }
     function renderPhotoItems() {
-      const cats = [['生活', '生活'], ['工作', '工作'], ['小孩', '家庭']];
+      const cats = userRole === 'kids' ? [['小孩', '家庭']] : [['生活', '生活'], ['工作', '工作'], ['小孩', '家庭']];
+      if (userRole === 'kids') phItems.forEach(x => { x.category = '小孩'; });
       document.getElementById('ph-items').innerHTML = phItems.map((it, i) => `
         <div class="ph-item${it.on ? '' : ' off'}">
           <div class="ph-top"><input type="checkbox" ${it.on ? 'checked' : ''} onchange="phItems[${i}].on=this.checked; renderPhotoItems();" style="width:20px; height:20px;">
@@ -3152,11 +3313,11 @@
       btn.disabled = !n; btn.innerText = n ? `建立 ${n} 筆待辦` : '建立待辦';
       document.getElementById('ph-add').style.display = '';
     }
-    function phAddBlank() { phItems.push({ on: true, title: '', detail: '', category: '生活', dueDate: '', dueTime: '', date: '', time: '09:00' }); document.getElementById('ph-status').style.display = 'none'; renderPhotoItems(); }
+    function phAddBlank() { phItems.push({ on: true, title: '', detail: '', category: userRole === 'kids' ? '小孩' : '生活', dueDate: '', dueTime: '', date: '', time: '09:00' }); document.getElementById('ph-status').style.display = 'none'; renderPhotoItems(); }
     function phCreate() {
       const items = phItems.filter(x => x.on && String(x.title).trim()).map(x => ({
         title: String(x.title).trim() + (String(x.detail || '').trim() ? '（' + String(x.detail).trim() + '）' : ''),
-        category: x.category,
+        category: userRole === 'kids' ? '小孩' : x.category,
         remind: x.date ? x.date.split('-').join('/') + ' ' + (x.time || '09:00') : ''
       }));
       if (!items.length) return;
@@ -3165,7 +3326,8 @@
       google.script.run.withSuccessHandler(r => {
         showToast(r && r.message ? r.message : '✅ 已建立');
         closePhoto();
-        if (r && r.ids && r.ids.length) { pendingFlashId = r.ids[0]; if (currentMode === 'tasks') fetchData(true); else switchMode('tasks'); }
+        const target = userRole === 'kids' ? 'kids-tasks' : 'tasks';
+        if (r && r.ids && r.ids.length) { pendingFlashId = r.ids[0]; if (currentMode === target) fetchData(true); else switchMode(target); }
       }).withFailureHandler(e => { btn.disabled = false; btn.innerText = '建立待辦'; showToast('⚠️ ' + e.message); }).createTasksFromPhotoApp(items);
     }
     function closePhoto() { clearInterval(phTimer); document.getElementById('photo-sheet').style.display = 'none'; }
