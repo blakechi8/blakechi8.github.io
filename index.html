@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B14 版：柔和配色、名字標籤、今天（早報）、通知中心、全站搜尋、AI 摘要（搭配 code.gs B14） -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <!-- B15 版：修正電腦卡在「連線中」、淺色清新標題列（5 色可選）、分類彩色按鈕（搭配 code.gs B15） -->
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
+  <script async src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" onload="window.initBoardSortable && window.initBoardSortable()"></script>
   <style>
     /* ========== 1. 設計變數（淺色 / 深色） ========== */
     :root {
@@ -22,7 +22,9 @@
       --c-work: #5FA98F; --c-life: #6D9DD1; --c-kids: #E3A65B; --c-know: #8C7FD0; --c-music: #D98A9B; --c-memo: #C9A15A;
       --t-work: #3E7F69; --t-life: #2F5E94; --t-kids: #8A5A20; --t-know: #4E4396;
       --b-work: #E7F3EE; --b-life: #EAF1FA; --b-kids: #FBF0E1; --b-know: #EFEDFA;
-      --header-bg: #34506F; --header-text: #ffffff; --header-soft: rgba(255,255,255,.16); --header-line: rgba(255,255,255,.35);
+      /* B15：標題列改淺色清新主題（預設薄荷綠，可在名字面板切換） */
+      --header-bg: #DDF0EA; --header-text: #1F4A40; --header-sub: #4F7268; --header-soft: rgba(31,74,64,.09); --header-line: rgba(31,74,64,.16); --header-strong: #2F7A66;
+      --p-work: #3F8F75; --p-life: #4479B8; --p-kids: #C27B2C;
       --radius: 12px; --shadow: 0 8px 28px rgba(20, 30, 50, .14);
       --toast-bg: #26313D;
     }
@@ -37,9 +39,23 @@
         --c-work: #6FB89E; --c-life: #82AEDD; --c-kids: #E6B271; --c-know: #A497DD; --c-music: #E09EAD; --c-memo: #D4B06E;
         --t-work: #8FD0B8; --t-life: #A4C6EC; --t-kids: #EAC48C; --t-know: #C3B9F0;
         --b-work: #1A3129; --b-life: #1C2A3B; --b-kids: #362A18; --b-know: #29243F;
-        --header-bg: #22344A; --header-soft: rgba(255,255,255,.12); --header-line: rgba(255,255,255,.25);
+        --header-bg: #1D3330; --header-text: #D7EEE7; --header-sub: #9CC2B7; --header-soft: rgba(255,255,255,.10); --header-line: rgba(255,255,255,.18); --header-strong: #6FC2A8;
+        --p-work: #3E8A71; --p-life: #4B7DB8; --p-kids: #B9782E;
         --shadow: 0 8px 28px rgba(0, 0, 0, .5); --toast-bg: #2b3442;
       }
+    }
+
+
+    /* 主題：天空藍 / 薰衣草 / 奶茶 / 霧藍（深色） */
+    :root[data-theme="sky"] { --header-bg: #DCEAF8; --header-text: #1E3D63; --header-sub: #4D6A8C; --header-soft: rgba(30,61,99,.09); --header-line: rgba(30,61,99,.16); --header-strong: #3F6FB5; }
+    :root[data-theme="lavender"] { --header-bg: #E8E4F7; --header-text: #362E6B; --header-sub: #625A92; --header-soft: rgba(54,46,107,.09); --header-line: rgba(54,46,107,.16); --header-strong: #6A5BC2; }
+    :root[data-theme="latte"] { --header-bg: #F3E8DA; --header-text: #553B22; --header-sub: #86684A; --header-soft: rgba(85,59,34,.09); --header-line: rgba(85,59,34,.16); --header-strong: #A86E34; }
+    :root[data-theme="navy"] { --header-bg: #34506F; --header-text: #ffffff; --header-sub: rgba(255,255,255,.82); --header-soft: rgba(255,255,255,.16); --header-line: rgba(255,255,255,.35); --header-strong: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      :root[data-theme="sky"] { --header-bg: #1A2C42; --header-text: #D6E6F7; --header-sub: #97B3D3; --header-soft: rgba(255,255,255,.10); --header-line: rgba(255,255,255,.18); --header-strong: #82AEDD; }
+      :root[data-theme="lavender"] { --header-bg: #262240; --header-text: #E2DDF7; --header-sub: #ACA3D8; --header-soft: rgba(255,255,255,.10); --header-line: rgba(255,255,255,.18); --header-strong: #A497DD; }
+      :root[data-theme="latte"] { --header-bg: #33281D; --header-text: #F1E3D1; --header-sub: #C8AE90; --header-soft: rgba(255,255,255,.10); --header-line: rgba(255,255,255,.18); --header-strong: #E0B07A; }
+      :root[data-theme="navy"] { --header-bg: #22344A; --header-sub: rgba(255,255,255,.8); --header-soft: rgba(255,255,255,.12); --header-line: rgba(255,255,255,.25); }
     }
 
     /* ========== 2. 基本元素 ========== */
@@ -95,13 +111,14 @@
     .nav-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border: none; background: none; border-radius: 10px; color: var(--text-2); font-size: calc(14px * var(--fs)); text-align: left; }
     .nav-item i { font-size: calc(19px * var(--fs)); }
     .nav-item:hover { background: var(--surface-2); color: var(--text); }
-    .nav-item.active { background: var(--primary-soft); color: var(--primary-dark); font-weight: 600; }
+    .nav-item.active { background: var(--header-bg); color: var(--header-text); font-weight: 600; }
+    :root[data-theme="navy"] .nav-item.active { background: var(--primary-soft); color: var(--primary-dark); }
     .sidebar-foot { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
 
     .main { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100%; position: relative; }
-    .topbar { background: var(--header-bg); color: var(--header-text); padding: 10px 14px 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); flex-shrink: 0; }
+    .topbar { background: var(--header-bg); color: var(--header-text); border-bottom: 1px solid var(--header-line); padding: 10px 14px 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); flex-shrink: 0; }
     .title-wrap { flex: 1; min-width: 0; }
-    #header-sub { font-size: calc(12px * var(--fs)); opacity: .82; margin-top: 1px; }
+    #header-sub { font-size: calc(12px * var(--fs)); color: var(--header-sub); margin-top: 1px; }
     #header-sub:empty { display: none; }
     .topbar .icon-btn { color: var(--header-text); position: relative; }
     .topbar .icon-btn:hover { background: var(--header-soft); color: var(--header-text); }
@@ -110,26 +127,34 @@
     .topbar-row { display: flex; align-items: center; gap: 8px; }
     #header-main { font-size: calc(18px * var(--fs)); font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--header-text); }
     .role-badge { font-size: calc(13px * var(--fs)); padding: 5px 12px; border-radius: 16px; background: var(--header-soft); color: var(--header-text); font-weight: 600; flex-shrink: 0; border: none; max-width: 8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 2px; }
-    .role-badge:hover { background: rgba(255,255,255,.26); }
+    .role-badge:hover { background: var(--header-line); }
     #dashboard-banner { display: none !important; }
     .stat { font-size: calc(12px * var(--fs)); padding: 3px 9px; border-radius: 8px; background: var(--surface-2); color: var(--text-2); font-weight: 500; }
     .stat.primary { background: var(--primary-soft); color: var(--primary-dark); }
     .filter-bar { display: none; gap: 6px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
     .filter-bar::-webkit-scrollbar { display: none; }
-    .filter-chip { height: calc(32px * var(--fs)); padding: 0 13px; border-radius: 16px; border: 1px solid var(--header-line); background: transparent; color: var(--header-text); font-size: calc(13px * var(--fs)); white-space: nowrap; flex-shrink: 0; }
-    .filter-chip.active { background: #fff; border-color: #fff; color: var(--header-bg); font-weight: 600; }
+    .filter-chip { height: calc(32px * var(--fs)); padding: 0 14px; border-radius: 16px; border: 1px solid transparent; background: var(--surface); color: var(--text-2); font-size: calc(13px * var(--fs)); font-weight: 600; white-space: nowrap; flex-shrink: 0; transition: background .15s, color .15s; }
+    .filter-chip[data-filter="all"] { border-color: var(--border-strong); }
+    .filter-chip[data-filter="work"] { background: var(--b-work); color: var(--t-work); border-color: var(--c-work); }
+    .filter-chip[data-filter="life"] { background: var(--b-life); color: var(--t-life); border-color: var(--c-life); }
+    .filter-chip[data-filter="kids"] { background: var(--b-kids); color: var(--t-kids); border-color: var(--c-kids); }
+    .filter-chip.active { background: var(--text); border-color: var(--text); color: var(--surface); }
+    .filter-chip[data-filter="work"].active { background: var(--p-work); border-color: var(--p-work); color: #fff; }
+    .filter-chip[data-filter="life"].active { background: var(--p-life); border-color: var(--p-life); color: #fff; }
+    .filter-chip[data-filter="kids"].active { background: var(--p-kids); border-color: var(--p-kids); color: #fff; }
+    :root[data-theme="navy"] .filter-chip[data-filter="all"].active { background: #fff; border-color: #fff; color: var(--header-bg); }
 
     #loading-board-msg { display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; color: var(--text-3); min-height: 180px; }
     .board { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 12px 12px 24px; display: flex; flex-direction: column; gap: 18px; -webkit-overflow-scrolling: touch; }
     #empty-board-msg { display: none; width: 100%; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; background: var(--surface); border-radius: var(--radius); border: 1.5px dashed var(--border-strong); color: var(--text-3); min-height: 200px; text-align: center; }
     .column { display: flex; flex-direction: column; min-width: 0; }
     .column-header { display: flex; align-items: center; gap: 8px; font-size: calc(14px * var(--fs)); font-weight: 700; color: var(--col-text, var(--text-2)); padding: 2px 4px 8px; margin-bottom: 4px; cursor: grab; user-select: none; line-height: 1.5; }
-    .col-work > .column-header::before, .col-life > .column-header::before, .col-kids > .column-header::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--col-color); flex-shrink: 0; }
+    .col-work > .column-header, .col-life > .column-header, .col-kids > .column-header { align-self: flex-start; background: var(--col-pill); color: #fff; border-radius: 14px; padding: 3px 13px; margin: 0 0 10px 2px; font-size: calc(13.5px * var(--fs)); }
     .column-header:empty { display: none; }
     .column-header:active { cursor: grabbing; }
-    .col-work { --col-color: var(--c-work); --col-text: var(--t-work); --strip: var(--c-work); }
-    .col-life { --col-color: var(--c-life); --col-text: var(--t-life); --strip: var(--c-life); }
-    .col-kids { --col-color: var(--c-kids); --col-text: var(--t-kids); --strip: var(--c-kids); }
+    .col-work { --col-color: var(--c-work); --col-text: var(--t-work); --col-pill: var(--p-work); --strip: var(--c-work); }
+    .col-life { --col-color: var(--c-life); --col-text: var(--t-life); --col-pill: var(--p-life); --strip: var(--c-life); }
+    .col-kids { --col-color: var(--c-kids); --col-text: var(--t-kids); --col-pill: var(--p-kids); --strip: var(--c-kids); }
     #board-container[data-mode="knowledge"] { --strip: var(--c-know); }
     #board-container[data-mode="lifelog"] { --strip: var(--c-life); }
     #board-container[data-mode="memos"] .task-card { --strip: var(--c-memo); }
@@ -198,13 +223,18 @@
     .ch-badge.brief { background: var(--warn-soft); color: var(--warn-text); }
     .set-row { padding: 12px 0; border-bottom: 1px solid var(--border); }
     .set-row .set-l { font-weight: 600; margin-bottom: 8px; }
+    .theme-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .theme-opt { display: flex; flex-direction: column; align-items: center; gap: 5px; background: none; border: none; padding: 0; color: var(--text-2); font-size: calc(12px * var(--fs)); min-width: 52px; }
+    .theme-opt .sw { width: calc(40px * var(--fs)); height: calc(40px * var(--fs)); border-radius: 50%; border: 2px solid var(--border); position: relative; }
+    .theme-opt.active .sw { border-color: var(--text); box-shadow: 0 0 0 3px var(--surface) inset; }
+    .theme-opt.active { color: var(--text); font-weight: 700; }
     .search-box { display: flex; gap: 8px; align-items: center; }
     .search-box .btn { flex-shrink: 0; white-space: nowrap; }
     .search-box input { flex: 1; min-width: 0; width: auto; height: calc(44px * var(--fs)); padding: 0 14px; border-radius: 22px; }
     .s-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 10px 0 4px; }
     .s-chips::-webkit-scrollbar { display: none; }
     .s-chip { height: calc(32px * var(--fs)); padding: 0 12px; border-radius: 16px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-2); font-size: calc(13px * var(--fs)); white-space: nowrap; flex-shrink: 0; }
-    .s-chip.on { background: var(--header-bg); border-color: var(--header-bg); color: #fff; font-weight: 600; }
+    .s-chip.on { background: var(--text); border-color: var(--text); color: var(--surface); font-weight: 600; }
     .s-group { font-size: calc(13px * var(--fs)); font-weight: 700; color: var(--text-2); margin: 12px 2px 6px; }
     .s-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 6px; cursor: pointer; position: relative; overflow: hidden; }
     .s-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--strip, var(--border-strong)); }
@@ -637,7 +667,15 @@
         <button class="fs-option" data-fs="1.15" onclick="setFontScale(1.15)"><span style="font-size:18px; font-weight:700;">字</span><span style="font-size:13px;">大</span></button>
         <button class="fs-option" data-fs="1.3" onclick="setFontScale(1.3)"><span style="font-size:21px; font-weight:700;">字</span><span style="font-size:13px;">特大</span></button>
       </div>
-      <div style="display:flex; gap:8px; margin-top:16px;">
+      <div class="sec-label" style="margin-top:18px;">標題列顏色（只影響這台裝置）</div>
+      <div class="theme-row" id="theme-row">
+        <button class="theme-opt" data-theme="mint" onclick="setTheme('mint')"><span class="sw" style="background:#DDF0EA;"></span>薄荷綠</button>
+        <button class="theme-opt" data-theme="sky" onclick="setTheme('sky')"><span class="sw" style="background:#DCEAF8;"></span>天空藍</button>
+        <button class="theme-opt" data-theme="lavender" onclick="setTheme('lavender')"><span class="sw" style="background:#E8E4F7;"></span>薰衣草</button>
+        <button class="theme-opt" data-theme="latte" onclick="setTheme('latte')"><span class="sw" style="background:#F3E8DA;"></span>奶茶</button>
+        <button class="theme-opt" data-theme="navy" onclick="setTheme('navy')"><span class="sw" style="background:#34506F;"></span>霧藍</button>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:18px;">
         <button class="btn btn-danger-ghost" style="flex:1;" onclick="closeFontSheet(); logout();"><i class="ti ti-logout"></i>登出</button>
         <button class="btn" style="flex:1;" onclick="closeFontSheet()">完成</button>
       </div>
@@ -963,6 +1001,19 @@
 
     // ---------------- 文字大小（B11）：手機預設「大」，電腦預設「標準」 ----------------
     let fontScale = 1;
+    // B15：標題列主題（每台裝置各自記住）
+    const THEMES = ['mint', 'sky', 'lavender', 'latte', 'navy'];
+    function applyTheme(t) {
+      if (!THEMES.includes(t)) t = 'mint';
+      if (t === 'mint') document.documentElement.removeAttribute('data-theme');
+      else document.documentElement.setAttribute('data-theme', t);
+      document.querySelectorAll('.theme-opt').forEach(b => b.classList.toggle('active', b.getAttribute('data-theme') === t));
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--header-bg').trim());
+    }
+    function initTheme() { let t = 'mint'; try { t = localStorage.getItem('header_theme') || 'mint'; } catch (e) {} applyTheme(t); }
+    function setTheme(t) { applyTheme(t); try { localStorage.setItem('header_theme', t); } catch (e) {} }
+
     function initFontScale() {
       let saved = null;
       try { saved = parseFloat(localStorage.getItem('font_scale')); } catch (e) {}
@@ -1083,7 +1134,11 @@
     }
 
     // 🐞修正（資安）：移除「?role=admin 免密碼進入」，改為「?key=裝置金鑰」由後端驗證
-    window.onload = function() {
+    let bootStarted = false;
+    function bootApp() {
+      if (bootStarted) return;
+      bootStarted = true;
+      try { initTheme(); } catch (e) {}
       initFontScale();
       // B11：電腦不提供瀏覽器記住密碼（避免同仁用自動填入登入）
       if (!isMobileDevice()) document.getElementById('login-pwd').setAttribute('autocomplete', 'new-password');
@@ -1102,7 +1157,21 @@
         if (key) { loginWithDeviceKey(key); return; }
         fallbackAuth();
       });
-    };
+      // B15：12 秒還在「連線中」就直接顯示登入畫面（網路慢或被擋時不會一直卡住）
+      setTimeout(() => {
+        const ov = document.getElementById('login-overlay');
+        if (ov && ov.classList.contains('checking') && ov.style.display !== 'none') showLogin('連線較慢，請輸入密碼登入（或重新整理）');
+      }, 12000);
+    }
+    // B15：不再等圖示、字型等外部檔案全部下載完才啟動（公司網路擋 CDN 時會卡在「連線中」）
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootApp);
+    else setTimeout(bootApp, 0);
+    window.addEventListener('load', bootApp);
+    // B15：程式發生錯誤時顯示原因，不再白白轉圈
+    window.addEventListener('error', ev => {
+      const ov = document.getElementById('login-overlay');
+      if (ov && ov.classList.contains('checking')) showLogin('載入發生錯誤：' + (ev.message || '未知錯誤') + '，請重新整理');
+    });
 
     function loginWithDeviceKey(key) {
       google.script.run
@@ -1297,6 +1366,19 @@
       }
     }
 
+    // B15：拖曳排序套件改成背景載入，載入後才啟用（不會拖慢開啟速度）
+    function initBoardSortable() {
+      if (!window.Sortable || window._boardSortable || !userRole) return;
+      window._boardSortable = Sortable.create(document.getElementById('board-container'), {
+        animation: 150,
+        handle: '.column-header',
+        delay: 200,
+        delayOnTouchOnly: true,
+        onEnd: function() { saveColumnOrder(); }
+      });
+    }
+    window.initBoardSortable = initBoardSortable;
+
     function showApp() {
       document.getElementById('login-overlay').style.display = 'none';
       document.getElementById('app-container').style.display = 'flex';
@@ -1312,15 +1394,7 @@
         }).getClientConfigApp();
       }
 
-      if (window.Sortable && !window._boardSortable) {
-        window._boardSortable = Sortable.create(document.getElementById('board-container'), {
-          animation: 150,
-          handle: '.column-header',
-          delay: 200,
-          delayOnTouchOnly: true,
-          onEnd: function() { saveColumnOrder(); }
-        });
-      }
+      initBoardSortable();
 
       switchMode('today');   // B14：打開 App 先看「今天」
 
