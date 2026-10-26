@@ -5,31 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#2F6FDB">
   <title>待辦事項</title>
-  <!-- B13 版：同一份檔案可放在 Google 網頁應用程式與 GitHub（搭配 code.gs B12）；修正平板電腦版模式被當成電腦 -->
+  <!-- B14 版：柔和配色、名字標籤、今天（早報）、通知中心、全站搜尋、AI 摘要（搭配 code.gs B14） -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
     /* ========== 1. 設計變數（淺色 / 深色） ========== */
     :root {
       --fs: 1;   /* 字級倍率：標準 1 / 大 1.15 / 特大 1.3（由「文字大小」設定） */
-      --primary: #2F6FDB; --primary-hover: #2560c4; --primary-dark: #185FA5; --primary-soft: #E6F1FB;
-      --bg: #f5f7fa; --surface: #ffffff; --surface-2: #f3f5f8; --border: #e3e8ef; --border-strong: #cfd6e0;
-      --text: #1f2733; --text-2: #5b6573; --text-3: #8a93a1;
-      --danger: #E24B4A; --danger-soft: #FCEBEB; --danger-text: #A32D2D;
-      --success: #1D9E75; --success-soft: #E1F5EE; --success-text: #0F6E56;
-      --warn-soft: #FAEEDA; --warn-text: #854F0B;
-      --c-work: #1D9E75; --c-life: #378ADD; --c-kids: #EF9F27;
+      /* B14 柔和清新配色：霧藍標題列＋低彩度分類色條 */
+      --primary: #3F6FB5; --primary-hover: #355F9C; --primary-dark: #2C4F82; --primary-soft: #E8EFF8;
+      --bg: #F3F5F7; --surface: #ffffff; --surface-2: #F0F3F6; --border: #E1E6EC; --border-strong: #CBD3DC;
+      --text: #26313D; --text-2: #4F5B68; --text-3: #75818E;
+      --danger: #D9645A; --danger-soft: #FBE7E4; --danger-text: #A33A31;
+      --success: #4E9A80; --success-soft: #E7F3EE; --success-text: #2F6B57;
+      --warn-soft: #FBF0E1; --warn-text: #8A5A20;
+      --c-work: #5FA98F; --c-life: #6D9DD1; --c-kids: #E3A65B; --c-know: #8C7FD0; --c-music: #D98A9B; --c-memo: #C9A15A;
+      --t-work: #3E7F69; --t-life: #2F5E94; --t-kids: #8A5A20; --t-know: #4E4396;
+      --b-work: #E7F3EE; --b-life: #EAF1FA; --b-kids: #FBF0E1; --b-know: #EFEDFA;
+      --header-bg: #34506F; --header-text: #ffffff; --header-soft: rgba(255,255,255,.16); --header-line: rgba(255,255,255,.35);
       --radius: 12px; --shadow: 0 8px 28px rgba(20, 30, 50, .14);
-      --toast-bg: #1f2733;
+      --toast-bg: #26313D;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --primary: #4d8ef0; --primary-hover: #6aa2f3; --primary-dark: #9cc3f7; --primary-soft: #1c2f4a;
-        --bg: #12161c; --surface: #1b2028; --surface-2: #232a34; --border: #2a313c; --border-strong: #3a4350;
-        --text: #e6eaf0; --text-2: #aab3bf; --text-3: #7c8694;
-        --danger: #f06664; --danger-soft: #3a1d1e; --danger-text: #ff9b99;
-        --success: #3cc196; --success-soft: #14352b; --success-text: #7fe0bf;
-        --warn-soft: #3a2c14; --warn-text: #f5c26b;
+        --primary: #7FA7DE; --primary-hover: #95B7E6; --primary-dark: #B5CCEE; --primary-soft: #1F2D40;
+        --bg: #14181E; --surface: #1C2129; --surface-2: #242A33; --border: #2C333D; --border-strong: #3A424E;
+        --text: #E4E8ED; --text-2: #B3BCC7; --text-3: #8A939F;
+        --danger: #E88A80; --danger-soft: #3A2220; --danger-text: #F2A79F;
+        --success: #79C2A8; --success-soft: #1A3129; --success-text: #9ED6C1;
+        --warn-soft: #362A18; --warn-text: #EAC48C;
+        --c-work: #6FB89E; --c-life: #82AEDD; --c-kids: #E6B271; --c-know: #A497DD; --c-music: #E09EAD; --c-memo: #D4B06E;
+        --t-work: #8FD0B8; --t-life: #A4C6EC; --t-kids: #EAC48C; --t-know: #C3B9F0;
+        --b-work: #1A3129; --b-life: #1C2A3B; --b-kids: #362A18; --b-know: #29243F;
+        --header-bg: #22344A; --header-soft: rgba(255,255,255,.12); --header-line: rgba(255,255,255,.25);
         --shadow: 0 8px 28px rgba(0, 0, 0, .5); --toast-bg: #2b3442;
       }
     }
@@ -91,36 +99,118 @@
     .sidebar-foot { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
 
     .main { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100%; position: relative; }
-    .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); flex-shrink: 0; }
+    .topbar { background: var(--header-bg); color: var(--header-text); padding: 10px 14px 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); flex-shrink: 0; }
+    .title-wrap { flex: 1; min-width: 0; }
+    #header-sub { font-size: calc(12px * var(--fs)); opacity: .82; margin-top: 1px; }
+    #header-sub:empty { display: none; }
+    .topbar .icon-btn { color: var(--header-text); position: relative; }
+    .topbar .icon-btn:hover { background: var(--header-soft); color: var(--header-text); }
+    .bell-dot { position: absolute; top: 7px; right: 7px; width: 9px; height: 9px; border-radius: 50%; background: #F08A7E; border: 2px solid var(--header-bg); display: none; }
+    .bell-dot.on { display: block; }
     .topbar-row { display: flex; align-items: center; gap: 8px; }
-    #header-main { flex: 1; min-width: 0; font-size: calc(18px * var(--fs)); font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .role-badge { font-size: calc(12px * var(--fs)); padding: 3px 10px; border-radius: 10px; background: var(--primary-soft); color: var(--primary-dark); font-weight: 600; flex-shrink: 0; }
-    .role-badge.kids { background: var(--warn-soft); color: var(--warn-text); }
-    #dashboard-banner { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    #header-main { font-size: calc(18px * var(--fs)); font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--header-text); }
+    .role-badge { font-size: calc(13px * var(--fs)); padding: 5px 12px; border-radius: 16px; background: var(--header-soft); color: var(--header-text); font-weight: 600; flex-shrink: 0; border: none; max-width: 8em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 2px; }
+    .role-badge:hover { background: rgba(255,255,255,.26); }
+    #dashboard-banner { display: none !important; }
     .stat { font-size: calc(12px * var(--fs)); padding: 3px 9px; border-radius: 8px; background: var(--surface-2); color: var(--text-2); font-weight: 500; }
     .stat.primary { background: var(--primary-soft); color: var(--primary-dark); }
     .filter-bar { display: none; gap: 6px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
     .filter-bar::-webkit-scrollbar { display: none; }
-    .filter-chip { height: calc(32px * var(--fs)); padding: 0 13px; border-radius: 16px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-2); font-size: calc(13px * var(--fs)); white-space: nowrap; flex-shrink: 0; }
-    .filter-chip.active { background: var(--text); border-color: var(--text); color: var(--surface); }
+    .filter-chip { height: calc(32px * var(--fs)); padding: 0 13px; border-radius: 16px; border: 1px solid var(--header-line); background: transparent; color: var(--header-text); font-size: calc(13px * var(--fs)); white-space: nowrap; flex-shrink: 0; }
+    .filter-chip.active { background: #fff; border-color: #fff; color: var(--header-bg); font-weight: 600; }
 
     #loading-board-msg { display: none; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; color: var(--text-3); min-height: 180px; }
     .board { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 12px 12px 24px; display: flex; flex-direction: column; gap: 18px; -webkit-overflow-scrolling: touch; }
     #empty-board-msg { display: none; width: 100%; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; background: var(--surface); border-radius: var(--radius); border: 1.5px dashed var(--border-strong); color: var(--text-3); min-height: 200px; text-align: center; }
     .column { display: flex; flex-direction: column; min-width: 0; }
-    .column-header { display: flex; align-items: center; gap: 8px; font-size: calc(13px * var(--fs)); font-weight: 600; color: var(--text-2); padding: 2px 4px 7px; margin-bottom: 8px; border-bottom: 2px solid var(--col-color, var(--border-strong)); cursor: grab; user-select: none; line-height: 1.5; }
+    .column-header { display: flex; align-items: center; gap: 8px; font-size: calc(14px * var(--fs)); font-weight: 700; color: var(--col-text, var(--text-2)); padding: 2px 4px 8px; margin-bottom: 4px; cursor: grab; user-select: none; line-height: 1.5; }
+    .col-work > .column-header::before, .col-life > .column-header::before, .col-kids > .column-header::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--col-color); flex-shrink: 0; }
+    .column-header:empty { display: none; }
     .column-header:active { cursor: grabbing; }
-    .col-work { --col-color: var(--c-work); }
-    .col-life { --col-color: var(--c-life); }
-    .col-kids { --col-color: var(--c-kids); }
+    .col-work { --col-color: var(--c-work); --col-text: var(--t-work); --strip: var(--c-work); }
+    .col-life { --col-color: var(--c-life); --col-text: var(--t-life); --strip: var(--c-life); }
+    .col-kids { --col-color: var(--c-kids); --col-text: var(--t-kids); --strip: var(--c-kids); }
+    #board-container[data-mode="knowledge"] { --strip: var(--c-know); }
+    #board-container[data-mode="lifelog"] { --strip: var(--c-life); }
+    #board-container[data-mode="memos"] .task-card { --strip: var(--c-memo); }
+    #board-container[data-mode="music"] .task-card { --strip: var(--c-music); }
+    #board-container[data-mode="knowledge"] .task-category { background: var(--b-know); color: var(--t-know); }
+    #board-container[data-mode="lifelog"] .task-category { background: var(--b-life); color: var(--t-life); }
     .col-search, .col-housework { --col-color: var(--primary); }
     .col-search > .column-header, .col-housework > .column-header { font-weight: 400; cursor: default; }
     .column-header a { color: var(--primary); }
     .column-body { display: flex; flex-direction: column; gap: 8px; }
 
     /* ========== 5. 卡片 ========== */
-    .task-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; display: flex; gap: 10px; align-items: flex-start; position: relative; overflow: hidden; transition: max-height .35s ease, opacity .35s ease, padding .35s ease, margin .35s ease, border-color .2s; }
+    .task-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 12px 12px 15px; display: flex; gap: 10px; align-items: flex-start; position: relative; overflow: hidden; transition: max-height .35s ease, opacity .35s ease, padding .35s ease, margin .35s ease, border-color .2s; }
+    .task-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--strip, transparent); }
+    .task-card.hw-card::before, .today-card::before { display: none; }
     .task-card.urgent-card { border: 1.5px solid var(--danger); }
+    .remind-line { font-size: calc(13px * var(--fs)); font-weight: 600; color: var(--primary); margin-top: 5px; display: flex; align-items: center; gap: 5px; }
+    .remind-line.overdue { color: var(--danger-text); }
+    .remind-line.past { color: var(--text-3); font-weight: 500; }
+    .recur-chip { background: var(--surface-2); color: var(--text-2); padding: 1px 7px; border-radius: 6px; font-size: calc(11px * var(--fs)); }
+    .ai-sum { background: var(--b-know); color: var(--t-know); border-radius: 10px; padding: 8px 10px; margin-top: 7px; font-size: calc(13px * var(--fs)); line-height: 1.65; }
+    .ai-sum-h { font-weight: 700; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
+    .ai-gen-btn { margin-top: 7px; border: 1px dashed var(--c-know); background: transparent; color: var(--t-know); border-radius: 14px; padding: 4px 11px; font-size: calc(12px * var(--fs)); font-weight: 600; }
+    .flash { animation: flashCard 1.6s ease 2; }
+    @keyframes flashCard { 0%, 100% { box-shadow: none; } 50% { box-shadow: 0 0 0 3px var(--primary-soft), 0 0 0 5px var(--primary); } }
+
+    /* ---------- 今天（B14） ---------- */
+    .today-wrap { display: flex; flex-direction: column; gap: 14px; padding-bottom: 20px; }
+    .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 10px 8px; text-align: center; cursor: pointer; }
+    .tile-n { font-size: calc(22px * var(--fs)); font-weight: 700; line-height: 1.2; }
+    .tile-l { font-size: calc(12px * var(--fs)); color: var(--text-2); margin-top: 2px; }
+    .tile.warn .tile-n { color: var(--danger-text); }
+    .tile.blue .tile-n { color: var(--primary); }
+    .tile.green .tile-n { color: var(--success-text); }
+    .t-sec { font-size: calc(14px * var(--fs)); font-weight: 700; color: var(--text-2); margin: 0 2px 6px; display: flex; align-items: center; gap: 6px; }
+    .t-list { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .t-row { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .t-row:last-child { border-bottom: none; }
+    .t-row:active { background: var(--surface-2); }
+    .t-time { font-weight: 700; color: var(--primary); width: 3.2em; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    .t-row.past .t-time, .t-row.past .t-title { color: var(--text-3); }
+    .t-row.over .t-time { color: var(--danger-text); }
+    .t-title { flex: 1; min-width: 0; font-weight: 500; word-break: break-word; }
+    .t-tag { font-size: calc(11px * var(--fs)); padding: 2px 8px; border-radius: 6px; flex-shrink: 0; font-weight: 600; }
+    .t-tag.work { background: var(--b-work); color: var(--t-work); } .t-tag.life { background: var(--b-life); color: var(--t-life); } .t-tag.kids { background: var(--b-kids); color: var(--t-kids); }
+    .t-empty { padding: 14px; text-align: center; color: var(--text-3); font-size: calc(13px * var(--fs)); }
+    .t-foot { font-size: calc(12px * var(--fs)); color: var(--text-3); text-align: center; line-height: 1.6; }
+
+    /* ---------- 通知中心／搜尋（B14） ---------- */
+    .seg { display: flex; background: var(--surface-2); border-radius: 12px; padding: 3px; gap: 3px; }
+    .seg button { flex: 1; border: none; background: transparent; border-radius: 9px; padding: 7px 4px; font-size: calc(13px * var(--fs)); color: var(--text-2); font-weight: 600; }
+    .seg button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .quota { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; margin: 10px 0; }
+    .quota-bar { height: 8px; background: var(--border); border-radius: 4px; margin-top: 7px; overflow: hidden; }
+    .quota-bar > div { height: 100%; border-radius: 4px; background: var(--success); }
+    .quota-bar > div.hi { background: var(--danger); }
+    .n-row { display: flex; gap: 10px; padding: 11px 2px; border-bottom: 1px solid var(--border); }
+    .n-dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; background: var(--border-strong); }
+    .n-row.unread .n-dot { background: #F08A7E; }
+    .n-title { font-weight: 600; word-break: break-word; }
+    .n-body { font-size: calc(13px * var(--fs)); color: var(--text-2); margin-top: 2px; white-space: pre-line; word-break: break-word; }
+    .n-meta { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .ch-badge { padding: 1px 7px; border-radius: 6px; font-size: calc(11px * var(--fs)); font-weight: 600; background: var(--surface-2); color: var(--text-2); }
+    .ch-badge.line { background: var(--success-soft); color: var(--success-text); }
+    .ch-badge.brief { background: var(--warn-soft); color: var(--warn-text); }
+    .set-row { padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .set-row .set-l { font-weight: 600; margin-bottom: 8px; }
+    .search-box { display: flex; gap: 8px; align-items: center; }
+    .search-box .btn { flex-shrink: 0; white-space: nowrap; }
+    .search-box input { flex: 1; min-width: 0; width: auto; height: calc(44px * var(--fs)); padding: 0 14px; border-radius: 22px; }
+    .s-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 10px 0 4px; }
+    .s-chips::-webkit-scrollbar { display: none; }
+    .s-chip { height: calc(32px * var(--fs)); padding: 0 12px; border-radius: 16px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-2); font-size: calc(13px * var(--fs)); white-space: nowrap; flex-shrink: 0; }
+    .s-chip.on { background: var(--header-bg); border-color: var(--header-bg); color: #fff; font-weight: 600; }
+    .s-group { font-size: calc(13px * var(--fs)); font-weight: 700; color: var(--text-2); margin: 12px 2px 6px; }
+    .s-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 6px; cursor: pointer; position: relative; overflow: hidden; }
+    .s-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--strip, var(--border-strong)); }
+    .s-item .s-t { font-weight: 600; word-break: break-word; }
+    .s-item .s-s { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 2px; }
+    .sheet.tall { min-height: 70vh; min-height: 70dvh; }
     .task-card.collapsing { max-height: 0 !important; opacity: 0; padding-top: 0; padding-bottom: 0; margin-top: -8px; border-width: 0; }
     .task-card.fading { opacity: .4; pointer-events: none; }
     .check-btn { width: calc(26px * var(--fs)); height: calc(26px * var(--fs)); margin-top: 1px; border-radius: 50%; border: 2px solid var(--border-strong); background: var(--surface); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: transparent; font-size: calc(15px * var(--fs)); padding: 0; transition: all .2s; }
@@ -139,7 +229,7 @@
     .task-meta { font-size: calc(12px * var(--fs)); color: var(--text-3); margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
     .task-header-left:empty { display: none; }
     .cat-label { font-weight: 600; }
-    .cat-work { color: var(--c-work); } .cat-life { color: var(--c-life); } .cat-kids { color: var(--c-kids); }
+    .cat-work { color: var(--t-work); } .cat-life { color: var(--t-life); } .cat-kids { color: var(--t-kids); }
     .urgent-badge { background: var(--danger-soft); color: var(--danger-text); padding: 1px 7px; border-radius: 6px; font-size: calc(11px * var(--fs)); font-weight: 700; }
     .task-note { font-size: calc(13px * var(--fs)); color: var(--text-2); background: var(--surface-2); padding: 8px 10px; border-radius: 8px; margin-top: 6px; word-break: break-word; line-height: 1.6; }
     .card-actions { display: flex; gap: 1px; align-items: center; flex-shrink: 0; margin: -4px -4px 0 0; }
@@ -535,18 +625,53 @@
     </div>
   </div>
 
-  <!-- ===== 文字大小 ===== -->
+  <!-- ===== 使用者面板（名字、文字大小、登出） ===== -->
   <div id="font-sheet" class="modal">
     <div class="sheet">
       <div class="sheet-grip"></div>
-      <h3 class="sheet-title"><i class="ti ti-text-size" style="color:var(--primary)"></i>文字大小</h3>
-      <p class="sheet-sub">只影響這台裝置，設定會自動記住。</p>
+      <h3 class="sheet-title" id="user-sheet-name">使用者</h3>
+      <p class="sheet-sub" id="user-sheet-role"></p>
+      <div class="sec-label" style="margin-top:10px;">文字大小（只影響這台裝置）</div>
       <div style="display:flex; gap:8px; margin-top:12px;">
         <button class="fs-option" data-fs="1" onclick="setFontScale(1)"><span style="font-size:15px; font-weight:700;">字</span><span style="font-size:13px;">標準</span></button>
         <button class="fs-option" data-fs="1.15" onclick="setFontScale(1.15)"><span style="font-size:18px; font-weight:700;">字</span><span style="font-size:13px;">大</span></button>
         <button class="fs-option" data-fs="1.3" onclick="setFontScale(1.3)"><span style="font-size:21px; font-weight:700;">字</span><span style="font-size:13px;">特大</span></button>
       </div>
-      <button class="btn btn-block btn-ghost" style="margin-top:16px;" onclick="closeFontSheet()">完成</button>
+      <div style="display:flex; gap:8px; margin-top:16px;">
+        <button class="btn btn-danger-ghost" style="flex:1;" onclick="closeFontSheet(); logout();"><i class="ti ti-logout"></i>登出</button>
+        <button class="btn" style="flex:1;" onclick="closeFontSheet()">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 通知中心（B14） ===== -->
+  <div id="notif-sheet" class="modal">
+    <div class="sheet tall">
+      <div class="sheet-grip"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 class="sheet-title" style="margin:0;"><i class="ti ti-bell" style="color:var(--primary)"></i>通知</h3>
+        <button class="btn btn-sm btn-ghost" onclick="closeNotifications()">關閉</button>
+      </div>
+      <div id="notif-quota"></div>
+      <div class="seg" id="notif-seg" style="display:none; margin-bottom:6px;">
+        <button class="on" data-seg="list" onclick="setNotifSeg('list')">通知紀錄</button>
+        <button data-seg="settings" onclick="setNotifSeg('settings')">通知設定</button>
+      </div>
+      <div id="notif-list"></div>
+      <div id="notif-settings" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- ===== 全站搜尋（B14） ===== -->
+  <div id="search-sheet" class="modal">
+    <div class="sheet tall">
+      <div class="sheet-grip"></div>
+      <div class="search-box">
+        <input type="search" id="search-input" placeholder="搜尋待辦、知識、生活誌、備忘錄…" enterkeyhint="search" oninput="onSearchInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); runSearch();}">
+        <button class="btn btn-sm btn-ghost" onclick="closeSearch()">取消</button>
+      </div>
+      <div class="s-chips" id="search-chips"></div>
+      <div id="search-results"><div class="t-empty">輸入關鍵字開始搜尋</div></div>
     </div>
   </div>
 
@@ -614,10 +739,10 @@
     <div class="main">
       <header class="topbar">
         <div class="topbar-row">
-          <h1 id="header-main">待辦事項</h1>
-          <button class="icon-btn" onclick="openFontSheet()" title="文字大小" aria-label="文字大小"><i class="ti ti-text-size"></i></button>
-          <span id="role-badge" class="role-badge">管理員</span>
-          <button class="icon-btn mobile-only" onclick="logout()" title="登出" aria-label="登出"><i class="ti ti-logout"></i></button>
+          <div class="title-wrap"><h1 id="header-main">待辦事項</h1><div id="header-sub"></div></div>
+          <button class="icon-btn" onclick="openSearch()" title="全站搜尋" aria-label="全站搜尋"><i class="ti ti-search"></i></button>
+          <button class="icon-btn" onclick="openNotifications()" title="通知" aria-label="通知"><i class="ti ti-bell"></i><span class="bell-dot" id="bell-dot"></span></button>
+          <button id="role-badge" class="role-badge" onclick="openUserSheet()" title="帳號、文字大小、登出">管理員</button>
         </div>
         <div id="dashboard-banner">
           <span class="stat primary" id="stat-pending">讀取數據中...</span>
@@ -683,7 +808,7 @@
   <script>
     // ================================================================
     //  B12 版：雙模式（Google / GitHub）・文字大小・電腦閒置鎖定・大檔分段上傳
-    //  需搭配 code.gs B12（含 verifyDeviceKeyApp 裝置金鑰登入；若未更新 code.gs 會自動改用密碼登入）
+    //  需搭配 code.gs B14（含 verifyDeviceKeyApp 裝置金鑰登入；若未更新 code.gs 會自動改用密碼登入）
     // ================================================================
     // ================================================================
     //  B12：同一份網頁可放兩個地方
@@ -767,10 +892,11 @@
     const CHUNK_THRESHOLD = 20 * 1024 * 1024;    // B11：超過 20MB 自動改用分段上傳（不再有 30MB 上限）
     const CHUNK_SIZE = 8 * 1024 * 1024;          // 每段 8MB（必須是 256KB 的倍數）
     const TASK_MODES = ['tasks', 'overdue', 'completed'];
-    const POLL_MODES = ['tasks', 'kids-tasks', 'overdue', 'completed', 'kids-completed', 'housework'];
+    const POLL_MODES = ['today', 'tasks', 'kids-tasks', 'overdue', 'completed', 'kids-completed', 'housework'];
 
     let currentMode = 'tasks';
     let userRole = 'admin';
+    let userName = '';
     let syncInterval = null;
     let currentHouseworkDate = "";
     let isShowingSearchResults = false;
@@ -855,6 +981,11 @@
       refreshClamps(document.getElementById('board-container'));
     }
     function openFontSheet() { applyFontScale(fontScale); document.getElementById('font-sheet').style.display = 'flex'; }
+    function openUserSheet() {
+      document.getElementById('user-sheet-name').innerText = userName || '使用者';
+      document.getElementById('user-sheet-role').innerText = (userRole === 'kids' ? '家人帳號' : '管理員帳號') + (isMobileDevice() ? '・這台裝置會記住登入' : '・電腦閒置 10 分鐘自動鎖定');
+      openFontSheet();
+    }
     function closeFontSheet() { document.getElementById('font-sheet').style.display = 'none'; }
 
     // ---------------- 裝置判斷（🐞修正：iPad 會偽裝成 Mac） ----------------
@@ -886,8 +1017,9 @@
       return authData;
     }
 
-    function setAuth(role) {
-      const data = { role: role, expiry: Date.now() + (30 * 24 * 60 * 60 * 1000) };
+    function setAuth(role, name) {
+      userName = name || (role === 'kids' ? '家人' : '管理員');
+      const data = { role: role, name: userName, expiry: Date.now() + (30 * 24 * 60 * 60 * 1000) };
       try {
         if (isMobileDevice()) localStorage.setItem('app_auth_data', JSON.stringify(data));
         else sessionStorage.setItem('app_auth_data', JSON.stringify(data));
@@ -927,7 +1059,7 @@
       google.script.run
         .withSuccessHandler(function(res) {
           if (res && res.isValid) {
-            setAuth(res.role);
+            setAuth(res.role, res.name);
             userRole = res.role;
             showApp();
           } else {
@@ -976,7 +1108,7 @@
       google.script.run
         .withSuccessHandler(function(res) {
           if (res && res.isValid) {
-            setAuth(res.role);
+            setAuth(res.role, res.name);
             userRole = res.role;
             showApp();
           } else {
@@ -1014,12 +1146,13 @@
 
     function fallbackAuth(msg) {
       const auth = checkAuth();
-      if (auth) { userRole = auth.role; showApp(); }
+      if (auth) { userRole = auth.role; userName = auth.name || (auth.role === 'kids' ? '家人' : '管理員'); showApp(); }
       else showLogin(msg);
     }
 
     // ---------------- 導覽（側邊選單 / 底部分頁 / 更多） ----------------
     const MODE_TITLES = {
+      'today': '今天',
       'tasks': '待辦事項', 'overdue': '逾期盤點', 'completed': '近期完成',
       'knowledge': '知識庫', 'lifelog': '生活誌', 'music': '音樂輯',
       'housework': '家務事', 'memos': '備忘錄', 'backup': '備份區',
@@ -1027,25 +1160,31 @@
     };
     const NAV_GROUPS = {
       admin: [
+        { group: '總覽', items: [['today', 'ti-sun', '今天']] },
         { group: '待辦', items: [['tasks', 'ti-checkbox', '未完成'], ['overdue', 'ti-alert-triangle', '逾期盤點'], ['completed', 'ti-history', '近期完成']] },
         { group: '收錄', items: [['knowledge', 'ti-book', '知識庫'], ['lifelog', 'ti-map-pin', '生活誌'], ['music', 'ti-music', '音樂輯']] },
         { group: '家庭', items: [['housework', 'ti-home', '家務事'], ['memos', 'ti-notes', '備忘錄']] },
         { group: '工具', items: [['backup', 'ti-cloud-upload', '備份區'], ['@db', 'ti-table', '記事資料庫'], ['@archive', 'ti-archive', '封存完成事項']] }
       ],
       kids: [
+        { group: '總覽', items: [['today', 'ti-sun', '今天']] },
         { group: '家庭', items: [['kids-tasks', 'ti-heart-handshake', '家庭待辦'], ['housework', 'ti-home', '家務事'], ['kids-completed', 'ti-history', '家庭已完成']] },
         { group: '收錄', items: [['lifelog', 'ti-map-pin', '生活誌'], ['memos', 'ti-notes', '備忘錄']] }
       ]
     };
+    // B14：第一格是「今天」；其餘功能收在「更多」
     const TAB_ITEMS = {
-      admin: [['tasks', 'ti-checkbox', '待辦'], ['knowledge', 'ti-book', '知識庫'], ['lifelog', 'ti-map-pin', '生活誌'], ['housework', 'ti-home', '家務'], ['@more', 'ti-dots', '更多']],
-      kids: [['kids-tasks', 'ti-heart-handshake', '家庭待辦'], ['housework', 'ti-home', '家務'], ['lifelog', 'ti-map-pin', '生活誌'], ['memos', 'ti-notes', '備忘錄'], ['kids-completed', 'ti-history', '已完成']]
+      admin: [['today', 'ti-sun', '今天'], ['tasks', 'ti-checkbox', '待辦'], ['knowledge', 'ti-book', '知識庫'], ['lifelog', 'ti-map-pin', '生活誌'], ['@more', 'ti-dots', '更多']],
+      kids: [['today', 'ti-sun', '今天'], ['kids-tasks', 'ti-heart-handshake', '待辦'], ['housework', 'ti-home', '家務'], ['memos', 'ti-notes', '備忘錄'], ['@more', 'ti-dots', '更多']]
     };
-    const MORE_ITEMS = [
-      ['music', 'ti-music', '音樂輯', ''], ['memos', 'ti-notes', '備忘錄', ''], ['backup', 'ti-cloud-upload', '備份區', ''], ['overdue', 'ti-alert-triangle', '逾期盤點', 'danger'],
-      ['completed', 'ti-history', '近期完成', ''], ['@db', 'ti-table', '資料庫', ''], ['@archive', 'ti-archive', '封存完成', ''], ['@logout', 'ti-logout', '登出', 'muted']
-    ];
-    const MORE_MODES = ['music', 'memos', 'backup', 'overdue', 'completed'];
+    const MORE_ITEMS_BY_ROLE = {
+      admin: [
+        ['housework', 'ti-home', '家務事', ''], ['memos', 'ti-notes', '備忘錄', ''], ['music', 'ti-music', '音樂輯', ''], ['backup', 'ti-cloud-upload', '備份區', ''],
+        ['overdue', 'ti-alert-triangle', '逾期盤點', 'danger'], ['completed', 'ti-history', '近期完成', ''], ['@db', 'ti-table', '資料庫', ''], ['@archive', 'ti-archive', '封存完成', '']
+      ],
+      kids: [['lifelog', 'ti-map-pin', '生活誌', ''], ['kids-completed', 'ti-history', '已完成', ''], ['@search', 'ti-search', '搜尋', ''], ['@user', 'ti-text-size', '文字大小', 'muted']]
+    };
+    const MORE_MODES_BY_ROLE = { admin: ['housework', 'music', 'memos', 'backup', 'overdue', 'completed'], kids: ['lifelog', 'kids-completed'] };
 
     function renderNav() {
       const role = userRole === 'kids' ? 'kids' : 'admin';
@@ -1061,13 +1200,13 @@
       document.getElementById('tab-bar').innerHTML = TAB_ITEMS[role].map(([key, icon, label]) =>
         `<button class="tab-item" data-nav="${key}" onclick="navGo('${key}')"><i class="ti ${icon}"></i><span>${label}</span></button>`).join('');
 
-      document.getElementById('more-grid').innerHTML = MORE_ITEMS.map(([key, icon, label, cls]) =>
+      document.getElementById('more-grid').innerHTML = MORE_ITEMS_BY_ROLE[role].map(([key, icon, label, cls]) =>
         `<button class="more-item ${cls}" data-nav="${key}" onclick="navGo('${key}')"><span class="more-icon"><i class="ti ${icon}"></i></span>${label}</button>`).join('');
     }
 
     function setActiveNav(mode) {
       document.querySelectorAll('[data-nav]').forEach(el => el.classList.toggle('active', el.getAttribute('data-nav') === mode));
-      if (userRole !== 'kids' && MORE_MODES.includes(mode)) {
+      if (MORE_MODES_BY_ROLE[userRole === 'kids' ? 'kids' : 'admin'].includes(mode)) {
         const moreTab = document.querySelector('#tab-bar [data-nav="@more"]');
         if (moreTab) moreTab.classList.add('active');
       }
@@ -1079,6 +1218,8 @@
       if (key === '@db') { if (DB_URL) window.open(DB_URL, '_blank'); else showToast('⏳ 讀取資料庫連結中，請稍後再試'); return; }
       if (key === '@archive') { triggerArchive(); return; }
       if (key === '@logout') { logout(); return; }
+      if (key === '@search') { openSearch(); return; }
+      if (key === '@user') { openUserSheet(); return; }
       switchMode(key);
     }
 
@@ -1089,13 +1230,8 @@
     function applyRoleUI() {
       renderNav();
       const badge = document.getElementById('role-badge');
-      if (userRole === 'kids') {
-        badge.innerText = '家人'; badge.classList.add('kids');
-        document.getElementById('btn-attach').style.display = 'none';    // 家人身分隱藏 📎 上傳
-      } else {
-        badge.innerText = '管理員'; badge.classList.remove('kids');
-        document.getElementById('btn-attach').style.display = '';
-      }
+      badge.innerText = userName || (userRole === 'kids' ? '家人' : '管理員');   // B14：直接顯示使用者名字
+      document.getElementById('btn-attach').style.display = (userRole === 'kids') ? 'none' : '';   // 家人身分隱藏 📎 上傳
     }
 
     function saveColumnOrder() {
@@ -1186,8 +1322,7 @@
         });
       }
 
-      if (userRole === 'kids') switchMode('kids-tasks');
-      else switchMode('tasks');
+      switchMode('today');   // B14：打開 App 先看「今天」
 
       updateDashboard();
 
@@ -1230,8 +1365,12 @@
         if (!isAppVisible()) return;
         if (isShowingSearchResults) return;
         if (POLL_MODES.includes(currentMode)) fetchData(true);
+        pollTick++;
+        if (pollTick % 4 === 0) loadNotifications(true);   // 約每分鐘檢查一次新通知
       }, POLL_INTERVAL);
+      loadNotifications(true);
     }
+    let pollTick = 0;
 
     // ---------------- 提示訊息（含「復原」按鈕） ----------------
     let toastTimer = null;
@@ -1263,7 +1402,8 @@
       const closers = {
         'cal-confirm-modal': closeCalConfirmModal, 'map-select-modal': closeMapModal, 'alarm-modal': closeAlarmModal,
         'hw-modal': closeHwModal, 'hw-manage-modal': closeHwManageModal, 'hw-reminder-modal': closeHwReminderModal,
-        'card-menu': closeCardMenu, 'more-sheet': closeMoreSheet, 'font-sheet': closeFontSheet
+        'card-menu': closeCardMenu, 'more-sheet': closeMoreSheet, 'font-sheet': closeFontSheet,
+        'notif-sheet': closeNotifications, 'search-sheet': closeSearch
       };
       Object.keys(closers).forEach(id => {
         const el = document.getElementById(id);
@@ -1503,8 +1643,8 @@
       let currentTitle = "";
       let editInput = titleDiv.querySelector('.edit-input');
       if (editInput) currentTitle = editInput.value.trim();
-      else currentTitle = titleDiv.innerText.replace(/^急件\s*/, '').replace('🔥 急件', '').trim();
-      const rawForParse = currentTitle;
+      else currentTitle = titleDiv.getAttribute('data-raw') ? decodeURIComponent(titleDiv.getAttribute('data-raw')) : titleDiv.innerText.replace(/^急件\s*/, '').replace('🔥 急件', '').trim();
+      const rawForParse = currentTitle + (card.getAttribute('data-remind') ? ' 鬧鐘 ' + card.getAttribute('data-remind') : '');
 
       currentTitle = currentTitle.replace(/\[🔁.*?\]/g, '').replace(/鬧鐘\s*\d{4}\/\d{1,2}\/\d{1,2}\s*\d{1,2}[:：]\d{1,2}/g, '').replace(/鬧鐘\s*\d{1,2}[:：]\d{1,2}/g, '').replace(/取消提醒/g, '').trim();
 
@@ -2033,6 +2173,8 @@
 
       if (emptyMsg) emptyMsg.style.display = 'none';
       document.getElementById('header-main').innerText = MODE_TITLES[mode] || '待辦事項';
+      document.getElementById('header-sub').innerText = '';
+      board.setAttribute('data-mode', mode);
       document.getElementById('filter-bar').style.display = (TASK_MODES.includes(mode) && userRole === 'admin') ? 'flex' : 'none';
       board.classList.toggle('single', !TASK_MODES.includes(mode));
       board.scrollTop = 0;
@@ -2040,6 +2182,18 @@
 
       if (mode !== 'backup') document.querySelectorAll('#list-1 .upload-dropzone-banner').forEach(el => el.remove());
 
+      if (mode === 'today') {
+        col2.style.display = 'none'; col3.style.display = 'none'; col1.style.display = 'none';
+        loadingMsg.style.display = 'flex';
+        col1.className = 'column col-today';
+        header1.innerText = '';
+        document.getElementById('list-1').innerHTML = '';
+        setTodayHeader();
+        targetInput.placeholder = userRole === 'kids' ? '輸入家庭待辦' : '輸入待辦、網址或指令';
+        showActionButtons();
+        fetchData();
+        return;
+      }
       if (mode === 'housework') {
         col2.style.display = 'none'; col3.style.display = 'none'; col1.style.display = 'none';
         loadingMsg.style.display = 'flex';
@@ -2115,6 +2269,240 @@
         header1.innerText = '生活已完成';
       }
       fetchData();
+    }
+
+    // ================================================================
+    //  B14：今天（早報）、通知中心、全站搜尋、AI 摘要
+    // ================================================================
+    const WEEK = '日一二三四五六';
+    function ymdLocal(d) { return d.getFullYear() + '/' + pad2(d.getMonth() + 1) + '/' + pad2(d.getDate()); }
+    function dayLabel(dateStr) {
+      const t = new Date(); const y = new Date(Date.now() - 86400000); const tm = new Date(Date.now() + 86400000);
+      if (dateStr === ymdLocal(t)) return '今天';
+      if (dateStr === ymdLocal(tm)) return '明天';
+      if (dateStr === ymdLocal(y)) return '昨天';
+      const p = dateStr.split('/'); return `${parseInt(p[1], 10)}/${parseInt(p[2], 10)}`;
+    }
+    function remindLineHtml(dateStr, hm, isDoneView) {
+      const when = new Date(dateStr.replace(/\//g, '-') + 'T' + hm + ':00');
+      const past = when < new Date();
+      const cls = isDoneView ? 'past' : (past ? 'overdue' : '');
+      const label = (past && !isDoneView ? '已逾期・' : '') + dayLabel(dateStr) + ' ' + hm;
+      return `<div class="remind-line ${cls}"><i class="ti ti-alarm"></i>${esc(label)}</div>`;
+    }
+
+    function setTodayHeader() {
+      const h = new Date().getHours();
+      const greet = h < 11 ? '早安' : (h < 18 ? '午安' : '晚安');
+      const d = new Date();
+      document.getElementById('header-main').innerText = `${greet}，${userName || ''}`;
+      document.getElementById('header-sub').innerText = `${d.getMonth() + 1}月${d.getDate()}日（${WEEK[d.getDay()]}）`;
+    }
+
+    function catKeyOf(c) { return c === '工作' ? 'work' : (c === '小孩' ? 'kids' : 'life'); }
+    function catNameOf(c) { return c === '小孩' ? '家庭' : (c || '生活'); }
+
+    function renderToday(ov) {
+      if (currentMode !== 'today' || !ov) return;
+      document.getElementById('loading-board-msg').style.display = 'none';
+      setTodayHeader();
+      const tasksMode = userRole === 'kids' ? 'kids-tasks' : 'tasks';
+      const hw = ov.housework || { done: 0, total: 0, mine: [] };
+      let h = `<div class="today-wrap">`;
+      h += `<div class="tiles">
+        <div class="tile" onclick="navGo('${tasksMode}')"><div class="tile-n">${ov.counts.pending}</div><div class="tile-l">待辦</div></div>
+        <div class="tile blue" onclick="document.getElementById('today-rem').scrollIntoView({behavior:'smooth'})"><div class="tile-n">${ov.counts.todayReminders}</div><div class="tile-l">今天提醒</div></div>
+        <div class="tile ${ov.counts.overdue ? 'warn' : ''}" onclick="navGo('${userRole === 'kids' ? 'kids-tasks' : 'overdue'}')"><div class="tile-n">${ov.counts.overdue}</div><div class="tile-l">逾期</div></div>
+        <div class="tile green" onclick="navGo('housework')"><div class="tile-n">${hw.done}<span style="font-size:.6em; color:var(--text-3);">/${hw.total}</span></div><div class="tile-l">家務</div></div>
+      </div>`;
+
+      h += `<div id="today-rem"><div class="t-sec"><i class="ti ti-clock"></i>今天的提醒</div><div class="t-list">`;
+      if (!ov.reminders.length) h += `<div class="t-empty">今天沒有排定的提醒</div>`;
+      ov.reminders.forEach(r => {
+        h += `<div class="t-row ${r.past ? 'past' : ''}" onclick="goToItem('task', ${jsArg(r.id)})"><span class="t-time">${esc(r.time)}</span><span class="t-title">${r.urgent ? '<span class="urgent-badge">急件</span> ' : ''}${esc(r.title)}${r.recur ? ` <span class="recur-chip">🔁 ${esc(r.recur.replace(/,/g, '、'))}</span>` : ''}</span><span class="t-tag ${catKeyOf(r.category)}">${esc(catNameOf(r.category))}</span></div>`;
+      });
+      h += `</div></div>`;
+
+      const notes = [];
+      (ov.overdue || []).forEach(r => notes.push(`<div class="t-row over" onclick="goToItem('task', ${jsArg(r.id)})"><span class="t-time">${esc(dayLabel(r.date))}</span><span class="t-title">${esc(r.title)}</span><span class="t-tag ${catKeyOf(r.category)}">${esc(catNameOf(r.category))}</span></div>`));
+      if (ov.knowledge && ov.knowledge.unread) notes.push(`<div class="t-row" onclick="goSearchIn('knowledge', '全部')"><i class="ti ti-book" style="color:var(--c-know); font-size:1.2em;"></i><span class="t-title">知識庫 ${ov.knowledge.unread} 篇未讀${ov.knowledge.addedYesterday ? `（昨天新增 ${ov.knowledge.addedYesterday} 篇）` : ''}</span><i class="ti ti-chevron-right" style="color:var(--text-3);"></i></div>`);
+      if (notes.length) h += `<div><div class="t-sec" style="color:var(--danger-text);"><i class="ti ti-alert-circle"></i>需要注意</div><div class="t-list">${notes.join('')}</div></div>`;
+
+      if (hw.total) {
+        const mine = hw.mine || [];
+        h += `<div><div class="t-sec"><i class="ti ti-home"></i>${mine.length ? '我的家務' : '今天的家務'}</div><div class="t-list">`;
+        if (mine.length) mine.forEach(m => { h += `<div class="t-row" onclick="navGo('housework')"><i class="ti ${m.done ? 'ti-circle-check' : 'ti-circle'}" style="color:${m.done ? 'var(--success)' : 'var(--text-3)'}; font-size:1.25em;"></i><span class="t-title" style="${m.done ? 'color:var(--text-3); text-decoration:line-through;' : ''}">${esc(m.item)}</span><span class="t-tag kids">${esc(m.label)}</span></div>`; });
+        else h += `<div class="t-row" onclick="navGo('housework')"><span class="t-title">已完成 ${hw.done} / ${hw.total} 項</span><i class="ti ti-chevron-right" style="color:var(--text-3);"></i></div>`;
+        h += `</div></div>`;
+      }
+      if (userRole !== 'kids') h += `<div class="t-foot">這一頁就是每天 08:00 的早報，內容隨時更新；<br>早報也會留在右上角 🔔 通知中心，關掉 App 重開也不會不見。</div>`;
+      h += `</div>`;
+      const list1 = document.getElementById('list-1');
+      if (!list1.querySelector('.edit-input')) list1.innerHTML = h;
+      document.getElementById('col-1').style.display = 'flex';
+    }
+
+    // 從搜尋 / 今天 跳到某一筆資料
+    let pendingFlashId = '';
+    function flashPendingCard() {
+      if (!pendingFlashId) return;
+      const card = document.querySelector(`.task-card[data-id="${cssEsc(pendingFlashId)}"]`);
+      if (!card) return;
+      pendingFlashId = '';
+      if (currentFilter !== 'all' && TASK_MODES.includes(currentMode)) setTaskFilter('all');
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.add('flash');
+      setTimeout(() => card.classList.remove('flash'), 3400);
+    }
+    function goToItem(group, id, extra) {
+      closeSearch();
+      if (group === 'task') {
+        pendingFlashId = String(id);
+        const target = userRole === 'kids' ? ((extra && extra.done) ? 'kids-completed' : 'kids-tasks') : ((extra && extra.done) ? 'completed' : 'tasks');
+        if (currentMode === target) { fetchData(); flashPendingCard(); } else switchMode(target);
+        return;
+      }
+      const map = { knowledge: 'knowledge', life: 'lifelog', memo: 'memos', music: 'music' };
+      goSearchIn(map[group], group === 'memo' || group === 'music' ? (extra && extra.title) : id);
+    }
+    function goSearchIn(mode, keyword) {
+      closeSearch();
+      switchMode(mode);
+      const ui = document.getElementById('user-input');
+      ui.value = String(keyword || '').substring(0, 40);
+      sendMessage();
+    }
+
+    // ---------------- 通知中心 ----------------
+    let notifData = null;
+    let notifMaxTs = 0;
+    function seenTs() { try { return parseInt(localStorage.getItem('notif_seen_ts') || '0', 10) || 0; } catch (e) { return 0; } }
+    function loadNotifications(isBackground) {
+      if (!isAppVisible()) return;
+      google.script.run.withSuccessHandler(data => {
+        if (!data) return;
+        const prevMax = notifMaxTs;
+        notifData = data;
+        const items = data.items || [];
+        notifMaxTs = items.reduce((m, x) => Math.max(m, x.ts || 0), 0);
+        const unread = items.some(x => (x.ts || 0) > seenTs());
+        document.getElementById('bell-dot').classList.toggle('on', unread);
+        // 網頁提醒：App 開著時有新通知就跳出提示
+        if (isBackground && prevMax && notifMaxTs > prevMax) {
+          const fresh = items.filter(x => x.ts > prevMax);
+          if (fresh.length) showToast('🔔 ' + fresh[0].title + (fresh.length > 1 ? `（另有 ${fresh.length - 1} 則）` : ''), { actionLabel: '查看', onAction: openNotifications, duration: 6000 });
+        }
+        if (document.getElementById('notif-sheet').style.display === 'flex') renderNotifications();
+      }).withFailureHandler(() => {}).getNotificationsApp(userRole, 60);
+    }
+    function openNotifications() {
+      document.getElementById('notif-sheet').style.display = 'flex';
+      document.getElementById('notif-seg').style.display = userRole === 'kids' ? 'none' : 'flex';
+      setNotifSeg('list');
+      if (notifData) renderNotifications(); else document.getElementById('notif-list').innerHTML = '<div class="t-empty">讀取中…</div>';
+      loadNotifications(false);
+    }
+    function closeNotifications() {
+      document.getElementById('notif-sheet').style.display = 'none';
+      if (notifMaxTs) { try { localStorage.setItem('notif_seen_ts', String(notifMaxTs)); } catch (e) {} }
+      document.getElementById('bell-dot').classList.remove('on');
+      if (notifData) renderNotifications();
+    }
+    function setNotifSeg(seg) {
+      document.querySelectorAll('#notif-seg button').forEach(b => b.classList.toggle('on', b.getAttribute('data-seg') === seg));
+      document.getElementById('notif-list').style.display = seg === 'list' ? '' : 'none';
+      document.getElementById('notif-settings').style.display = seg === 'settings' ? '' : 'none';
+      if (seg === 'settings') renderNotifSettings();
+    }
+    function renderNotifications() {
+      const d = notifData || { items: [] };
+      const q = d.quota;
+      let qh = '';
+      if (q) {
+        if (q.limit) {
+          const used = q.used || 0, pct = Math.min(100, Math.round(used / q.limit * 100));
+          qh = `<div class="quota"><div style="display:flex; justify-content:space-between; font-size:calc(13px * var(--fs));"><b>LINE 本月用量</b><span>${used} / ${q.limit} 則・剩 ${Math.max(0, q.limit - used)} 則</span></div>
+            <div class="quota-bar"><div class="${pct >= Math.round(q.saverRatio * 100) ? 'hi' : ''}" style="width:${pct}%"></div></div>
+            <div style="font-size:calc(12px * var(--fs)); color:${q.saverOn ? 'var(--danger-text)' : 'var(--text-3)'}; margin-top:6px;">${q.saverOn ? `已達 ${Math.round(q.saverRatio * 100)}%：除了急件，提醒都改成只在網頁顯示` : `達 ${Math.round(q.saverRatio * 100)}% 後，除了急件都會改成只在網頁顯示`}</div></div>`;
+        } else qh = `<div class="quota" style="font-size:calc(13px * var(--fs)); color:var(--text-3);">暫時讀不到 LINE 本月用量</div>`;
+      }
+      document.getElementById('notif-quota').innerHTML = qh;
+      const seen = seenTs();
+      const items = d.items || [];
+      document.getElementById('notif-list').innerHTML = items.length ? items.map(x => {
+        const isBrief = x.type === '早報';
+        const badge = isBrief ? '<span class="ch-badge brief">早報</span>' : (x.channel.indexOf('LINE') >= 0 ? `<span class="ch-badge line">LINE${x.count ? '・' + x.count + ' 則' : ''}</span>` : '<span class="ch-badge">網頁</span>');
+        const extra = (x.result && !/^(已顯示於網頁|LINE 已送出|已產生)$/.test(x.result)) ? `<span>${esc(x.result)}</span>` : '';
+        return `<div class="n-row ${x.ts > seen ? 'unread' : ''}" ${isBrief ? `onclick="closeNotifications(); navGo('today');" style="cursor:pointer;"` : ''}><span class="n-dot"></span><div style="flex:1; min-width:0;">
+          <div class="n-title">${esc(x.title)}</div>${x.body ? `<div class="n-body">${esc(x.body)}</div>` : ''}
+          <div class="n-meta"><span>${esc(x.time.substring(5, 16))}</span>${badge}<span>${esc(x.type)}</span>${extra}</div></div></div>`;
+      }).join('') : '<div class="t-empty">目前沒有通知</div>';
+    }
+    function renderNotifSettings() {
+      const st = (notifData && notifData.settings) || { task: 'both', housework: 'both' };
+      const opt = (key, val, label) => `<button class="${st[key] === val ? 'on' : ''}" onclick="saveNotifSetting('${key}', '${val}')">${label}</button>`;
+      const row = (key, title, desc) => `<div class="set-row"><div class="set-l">${title}</div><div class="seg">${opt(key, 'both', 'LINE＋網頁')}${opt(key, 'web', '只在網頁')}${opt(key, 'off', '關閉')}</div><div style="font-size:calc(12px * var(--fs)); color:var(--text-3); margin-top:6px;">${desc}</div></div>`;
+      document.getElementById('notif-settings').innerHTML =
+        row('task', '待辦提醒', '設定提醒時間的待辦。急件在節省模式下仍會送 LINE。') +
+        row('housework', '家務提醒', '送到家人群組，一次會依群組人數扣多則。') +
+        `<div class="set-row"><div class="set-l">每日早報</div><div style="font-size:calc(13px * var(--fs)); color:var(--text-2);">每天 08:00 在「今天」頁與通知中心產生，只在網頁顯示，不使用 LINE 則數。</div></div>`;
+    }
+    function saveNotifSetting(key, val) {
+      if (!notifData) notifData = { items: [] };
+      notifData.settings = Object.assign({ task: 'both', housework: 'both' }, notifData.settings || {}, { [key]: val });
+      renderNotifSettings();
+      google.script.run.withSuccessHandler(r => showToast(r && r.message ? r.message : '✅ 已儲存')).withFailureHandler(e => showToast('⚠️ 儲存失敗：' + e.message)).setNotifySettingsApp(notifData.settings);
+    }
+
+    // ---------------- 全站搜尋 ----------------
+    let searchTimer = null, searchData = null, searchFilter = 'all';
+    const S_GROUPS = [['task', '待辦', 'var(--c-work)'], ['knowledge', '知識', 'var(--c-know)'], ['life', '生活誌', 'var(--c-life)'], ['memo', '備忘錄', 'var(--c-memo)'], ['music', '歌單', 'var(--c-music)']];
+    function openSearch() {
+      closeMoreSheet();
+      document.getElementById('search-sheet').style.display = 'flex';
+      setTimeout(() => document.getElementById('search-input').focus(), 80);
+    }
+    function closeSearch() { document.getElementById('search-sheet').style.display = 'none'; }
+    function onSearchInput() { clearTimeout(searchTimer); searchTimer = setTimeout(runSearch, 450); }
+    function runSearch() {
+      const kw = document.getElementById('search-input').value.trim();
+      if (!kw) { document.getElementById('search-results').innerHTML = '<div class="t-empty">輸入關鍵字開始搜尋</div>'; document.getElementById('search-chips').innerHTML = ''; return; }
+      document.getElementById('search-results').innerHTML = '<div class="t-empty">搜尋中…</div>';
+      google.script.run.withSuccessHandler(res => {
+        if (!res || document.getElementById('search-input').value.trim() !== kw) return;
+        searchData = res; searchFilter = 'all'; renderSearch();
+      }).withFailureHandler(e => { document.getElementById('search-results').innerHTML = `<div class="t-empty">⚠️ ${esc(e.message)}</div>`; }).searchAllApp(kw, userRole);
+    }
+    function setSearchFilter(f) { searchFilter = f; renderSearch(); }
+    function renderSearch() {
+      const g = (searchData && searchData.groups) || {};
+      const groups = S_GROUPS.filter(([k]) => (g[k] || []).length);
+      document.getElementById('search-chips').innerHTML = `<button class="s-chip ${searchFilter === 'all' ? 'on' : ''}" onclick="setSearchFilter('all')">全部 ${searchData ? searchData.total : 0}</button>` +
+        groups.map(([k, label]) => `<button class="s-chip ${searchFilter === k ? 'on' : ''}" onclick="setSearchFilter('${k}')">${label} ${g[k].length}</button>`).join('');
+      if (!groups.length) { document.getElementById('search-results').innerHTML = '<div class="t-empty">找不到符合的資料</div>'; return; }
+      let h = '';
+      groups.filter(([k]) => searchFilter === 'all' || searchFilter === k).forEach(([k, label, color]) => {
+        h += `<div class="s-group">${label}</div>`;
+        g[k].forEach(it => {
+          const extra = jsArg(JSON.stringify({ done: !!it.done, title: it.title }));
+          h += `<div class="s-item" style="--strip:${color}" onclick="goToItem('${k}', ${jsArg(it.id)}, JSON.parse(${extra}))"><div style="flex:1; min-width:0;"><div class="s-t">${esc(it.title)}</div><div class="s-s">${esc(it.sub || '')}・#${esc(it.id)}</div></div><i class="ti ti-chevron-right" style="color:var(--text-3);"></i></div>`;
+        });
+      });
+      document.getElementById('search-results').innerHTML = h;
+    }
+
+    // ---------------- AI 摘要 ----------------
+    function summaryHtml(id, type, summary) {
+      if (summary) return `<div class="ai-sum"><div class="ai-sum-h"><i class="ti ti-sparkles"></i>AI 摘要</div>${esc(summary).replace(/\n/g, '<br>')}</div>`;
+      if (userRole !== 'admin') return '';
+      return `<button class="ai-gen-btn" onclick="genSummary(${jsArg(id)}, ${jsArg(type)}, this)"><i class="ti ti-sparkles"></i> 產生 AI 摘要</button>`;
+    }
+    function genSummary(id, type, btn) {
+      btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader-2"></i> AI 閱讀中…';
+      google.script.run.withSuccessHandler(r => {
+        if (r && r.ok) { btn.outerHTML = summaryHtml(id, type, r.summary); }
+        else { btn.disabled = false; btn.innerHTML = '<i class="ti ti-sparkles"></i> 產生 AI 摘要'; showToast(r && r.message ? r.message : '⚠️ 產生失敗'); }
+      }).withFailureHandler(e => { btn.disabled = false; btn.innerHTML = '<i class="ti ti-sparkles"></i> 產生 AI 摘要'; showToast('⚠️ ' + e.message); }).generateSummaryApp(id, type);
     }
 
     // ---------------- 待辦篩選（全部 / 工作 / 生活 / 家庭） ----------------
@@ -2216,7 +2604,8 @@
         if (!isBackground) showToast("⚠️ 讀取失敗，稍後自動重試...");
       };
 
-      if (currentMode === 'tasks') google.script.run.withSuccessHandler(renderTasks).withFailureHandler(onFail).getTasksForApp();
+      if (currentMode === 'today') google.script.run.withSuccessHandler(renderToday).withFailureHandler(onFail).getTodayOverviewApp(userRole, userName);
+      else if (currentMode === 'tasks') google.script.run.withSuccessHandler(renderTasks).withFailureHandler(onFail).getTasksForApp();
       else if (currentMode === 'overdue') google.script.run.withSuccessHandler(renderTasks).withFailureHandler(onFail).getOverdueTasksApp();
       else if (currentMode === 'completed') google.script.run.withSuccessHandler(renderTasks).withFailureHandler(onFail).getCompletedTasksApp();
       else if (currentMode === 'kids-tasks') google.script.run.withSuccessHandler(renderKidsTasks).withFailureHandler(onFail).getKidsTasksApp();
@@ -2377,7 +2766,7 @@
 
       const titleDiv = card.querySelector('.task-title');
       if (titleDiv.querySelector('.edit-input')) return;
-      let currentTitle = titleDiv.innerText.replace(/^急件\s*/, '').replace('🔥 急件', '').trim();
+      let currentTitle = (type !== 'knowledge' && type !== 'lifelog' && titleDiv.getAttribute('data-raw')) ? decodeURIComponent(titleDiv.getAttribute('data-raw')) : titleDiv.innerText.replace(/^急件\s*/, '').replace('🔥 急件', '').trim();
       titleDiv.setAttribute('data-original', encodeURIComponent(currentTitle));
       const saveCall = `event.stopPropagation(); saveItem(${idArg}, ${typeArg}, this.closest('.task-title').querySelector('textarea.edit-input'))`;
       const cancelBtn = `<button class="btn btn-sm btn-ghost" onclick="event.stopPropagation(); cancelTitleEdit(this)">取消</button>`;
@@ -2578,7 +2967,8 @@
               if (badge) badge.remove();
               if (fireIcon) fireIcon.style.color = '';
             }
-            targetContainer.innerHTML = `<span class="title-text">${esc(rawTitle)}</span>`;
+            targetContainer.innerHTML = `<span class="title-text">${esc(rawTitle.replace(/\[🔁.*?\]\s*/g, '').trim())}</span>`;
+            targetContainer.setAttribute('data-raw', encodeURIComponent(rawTitle));
 
             if (type === 'lifelog' && (newPhoneVal !== undefined || newLocVal !== undefined)) {
               let extraDiv = card.querySelector('.life-extra-info');
@@ -2593,16 +2983,30 @@
           }
 
           if (['tasks', 'overdue', 'kids-tasks', 'kids-completed'].includes(type)) {
+            // B14：提醒時間以「⏰ 今天 08:00」一行顯示
+            const oldRem = card.querySelector('.remind-line');
             let noteDiv = card.querySelector('.task-note');
-            if (res.newTimeStr) {
+            const rm = String(res.newTimeStr || '').match(/提醒設定於[:：]?\s*(\d{4}\/\d{2}\/\d{2})\s(\d{2}:\d{2})/);
+            if (rm) {
+              const tmp = document.createElement('div'); tmp.innerHTML = remindLineHtml(rm[1], rm[2], false);
+              const line = tmp.firstElementChild;
+              if (oldRem) oldRem.replaceWith(line);
+              else if (noteDiv && noteDiv.innerText.includes('提醒設定於')) noteDiv.replaceWith(line);
+              else (card.querySelector('.card-main') || card).appendChild(line);
+              card.setAttribute('data-remind', rm[1] + ' ' + rm[2]);
+            } else if (res.newTimeStr) {
               if (noteDiv) noteDiv.innerHTML = noteToHtml(res.newTimeStr);
               else {
                 let newNote = document.createElement('div');
                 newNote.className = 'task-note';
                 newNote.innerHTML = noteToHtml(res.newTimeStr);
-                (card.querySelector('.card-main') || card).appendChild(newNote);   // 🐞修正：放進卡片內容區，不會跑版
+                (card.querySelector('.card-main') || card).appendChild(newNote);
               }
-            } else if (noteDiv && noteDiv.innerText.includes('提醒設定於')) noteDiv.remove();
+            } else {
+              if (oldRem) oldRem.remove();
+              if (noteDiv && noteDiv.innerText.includes('提醒設定於')) noteDiv.remove();
+              card.setAttribute('data-remind', '');
+            }
           }
 
           let titleEl = card.querySelector('.task-title');
@@ -2679,26 +3083,31 @@
       if (isCompletedView) { btnLabel = '還原'; actionCmd = '還原 ' + task.id; }
 
       let noteHtml = '';
+      const remindM = String(task.note || '').match(/提醒設定於[:：]?\s*(\d{4}\/\d{2}\/\d{2})\s(\d{2}:\d{2})/);
       if (task.type === 'url') noteHtml = `<div class="task-note"><a class="card-link" href="${esc(safeUrl(task.note))}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i> 開啟網頁</a></div>`;
+      else if (remindM) noteHtml = remindLineHtml(remindM[1], remindM[2], isCompletedView);   // B14：提醒時間改成好讀的一行
       else if (task.note) noteHtml = `<div class="task-note">${noteToHtml(task.note)}</div>`;
 
       const displayTitle = String(task.name == null ? '' : task.name);
       const isTaskUrgent = displayTitle.includes('[⭐重要]');
       const rawTitle = cleanTitle(displayTitle);
+      const recurM = rawTitle.match(/\[🔁(.*?)\]/);
+      const shownTitle = rawTitle.replace(/\[🔁.*?\]\s*/g, '').trim();
       const catKey = task.category === '工作' ? 'work' : (task.category === '小孩' ? 'kids' : 'life');
       const catLabel = task.category === '小孩' ? '家庭' : (task.category || '生活');
       const dataHash = encodeURIComponent(rawTitle + (task.note || '') + task.category + isTaskUrgent + (task.time || ''));
       const idArg = jsArg(task.id), modeArg = jsArg(mode);
 
       return `
-        <div class="task-card${isTaskUrgent ? ' urgent-card' : ''}" data-id="${esc(task.id)}" data-hash="${esc(dataHash)}">
+        <div class="task-card${isTaskUrgent ? ' urgent-card' : ''}" data-id="${esc(task.id)}" data-hash="${esc(dataHash)}" data-remind="${remindM ? esc(remindM[1] + ' ' + remindM[2]) : ''}">
           <button class="check-btn${isCompletedView ? ' restore' : ''}" onclick="executeAction(${jsArg(actionCmd)}, this)" title="${btnLabel}" aria-label="${btnLabel}"><i class="ti ${isCompletedView ? 'ti-arrow-back-up' : 'ti-check'}"></i></button>
           <div class="card-main">
-            <div class="task-title clampable"><span class="title-text">${esc(rawTitle)}</span></div>
+            <div class="task-title clampable" data-raw="${esc(encodeURIComponent(rawTitle))}"><span class="title-text">${esc(shownTitle)}</span></div>
             <button class="more-toggle" onclick="toggleExpand(this)">展開全文</button>
             <div class="task-meta">
               <span class="task-header-left">${isTaskUrgent ? '<span class="urgent-badge">急件</span>' : ''}</span>
               <span class="cat-label cat-${catKey}">${esc(catLabel)}</span>
+              ${recurM ? `<span class="recur-chip">🔁 ${esc(recurM[1].replace(/,/g, '、'))}</span>` : ''}
               <span>#${esc(task.id)}</span>
             </div>
             ${noteHtml}
@@ -2765,6 +3174,7 @@
       lastTaskCounts = { work: count2, life: count1, kids: userRole === 'admin' ? count3 : 0 };
       updateFilterCounts();
       applyTaskFilter();
+      flashPendingCard();
     }
 
     function renderKidsTasks(tasks) {
@@ -2783,6 +3193,7 @@
         if (emptyMsg) emptyMsg.style.display = 'none';
       }
       refreshClamps(document.getElementById('list-1'));
+      flashPendingCard();
     }
 
     function renderMemos(items, isLatest = false) {
@@ -2817,7 +3228,7 @@
       let html1 = '';
       (items || []).forEach(res => {
         const idArg = jsArg(res.id);
-        const dataHash = encodeURIComponent(res.title + res.url + res.mainCategory + res.subCategory);
+        const dataHash = encodeURIComponent(res.title + res.url + res.mainCategory + res.subCategory + (res.summary || ''));
         html1 += `
           <div class="task-card" data-id="${esc(res.id)}" data-hash="${esc(dataHash)}">
             <div class="card-main">
@@ -2833,6 +3244,7 @@
               <div class="task-title clampable" style="cursor:pointer; margin-top:6px;" onclick="if(!this.querySelector('.edit-input')) editItem(${idArg}, 'knowledge', this)"><span class="title-text">${esc(res.title)}</span></div>
               <button class="more-toggle" onclick="toggleExpand(this)">展開全文</button>
               <div class="meta-time">發布時間：${esc(res.publishDate)}</div>
+              ${summaryHtml(res.id, 'knowledge', res.summary)}
               <div class="task-note" data-raw-url="${esc(res.url || '')}">${buildUrlNoteInner(res.id, 'knowledge', res.url)}</div>
               ${confirmBtn(isLatest)}
             </div>
@@ -2850,7 +3262,7 @@
         const idArg = jsArg(res.id);
         const phoneVal = (res.phone && String(res.phone).trim() !== '') ? String(res.phone).trim() : '無';
         const locVal = (res.location && String(res.location).trim() !== '') ? String(res.location).trim() : '無';
-        const dataHash = encodeURIComponent(res.title + res.url + res.mainCategory + res.subCategory + phoneVal + locVal);
+        const dataHash = encodeURIComponent(res.title + res.url + res.mainCategory + res.subCategory + phoneVal + locVal + (res.summary || ''));
         html1 += `
           <div class="task-card" data-id="${esc(res.id)}" data-hash="${esc(dataHash)}">
             <div class="card-main">
@@ -2866,6 +3278,7 @@
               <div class="task-title clampable" style="cursor:pointer; margin-top:6px;" onclick="if(!this.querySelector('.edit-input')) editItem(${idArg}, 'lifelog', this)"><span class="title-text">${esc(res.title)}</span></div>
               <button class="more-toggle" onclick="toggleExpand(this)">展開全文</button>
               <div class="life-extra-info" data-phone="${esc(phoneVal)}" data-location="${esc(locVal)}">${buildLifeExtraHtml(res.id, phoneVal, locVal)}</div>
+              ${summaryHtml(res.id, 'lifelog', res.summary)}
               <div class="task-note" data-raw-url="${esc(res.url || '')}">${buildUrlNoteInner(res.id, 'lifelog', res.url)}</div>
               ${confirmBtn(isLatest)}
             </div>
@@ -3041,7 +3454,7 @@
         let searchKeyword = "";
 
         if (!isMigrateCmd) {
-          if (currentMode === 'kids-tasks' || currentMode === 'kids-completed') {
+          if (currentMode === 'kids-tasks' || currentMode === 'kids-completed' || (currentMode === 'today' && userRole === 'kids')) {
             if (!text.match(/^(完成|還原|刪除|已讀|取消完成)/) && !text.startsWith("小孩") && !text.startsWith("備忘錄")) text = '小孩 ' + text;
           } else if (currentMode === 'housework') {
             if (text.match(/^(找|搜尋)\s+/i)) {
