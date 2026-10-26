@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2F6FDB">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="待辦">
+  <title>待辦事項</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <style>
+    html, body { margin: 0; height: 100%; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; }
+    @media (prefers-color-scheme: dark) { html, body { background: #12161c; color: #e6eaf0; } }
+    /* 外框避開瀏海與 iPhone/iPad 底部手勢列 */
+    #wrap { position: fixed; inset: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); box-sizing: border-box; }
+    #app { width: 100%; height: 100%; border: 0; display: block; }
+    #splash, #setup { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; }
+    #setup { display: none; }
+    .logo { width: 72px; height: 72px; border-radius: 20px; }
+    .spin { width: 28px; height: 28px; border: 3px solid #E6F1FB; border-top-color: #2F6FDB; border-radius: 50%; animation: s .8s linear infinite; }
+    @keyframes s { to { transform: rotate(360deg); } }
+    input { width: 100%; max-width: 320px; height: 46px; font-size: 16px; border: 1px solid #cfd6e0; border-radius: 12px; padding: 0 12px; box-sizing: border-box; text-align: center; }
+    button { height: 44px; border: none; border-radius: 22px; padding: 0 22px; font-size: 15px; font-weight: 600; background: #2F6FDB; color: #fff; }
+    button.ghost { background: transparent; color: #2F6FDB; }
+    .muted { font-size: 13px; color: #8a93a1; max-width: 320px; line-height: 1.6; }
+    #msg { font-size: 13px; color: #A32D2D; min-height: 18px; }
+  </style>
+</head>
+<body>
+  <div id="splash"><img class="logo" src="icon-192.png" alt=""><div class="spin"></div><div class="muted">載入中…</div></div>
+
+  <div id="setup">
+    <img class="logo" src="icon-192.png" alt="">
+    <h2 style="margin:0;">設定這台裝置</h2>
+    <div class="muted">請貼上這台裝置專屬的「裝置金鑰」（32 碼），只需要設定一次。</div>
+    <input id="keyInput" placeholder="貼上裝置金鑰" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div id="msg"></div>
+    <button onclick="saveKey()">儲存並開啟</button>
+    <button class="ghost" onclick="openApp('')">沒有金鑰，改用密碼登入</button>
+  </div>
+
+  <div id="wrap" style="display:none;"><iframe id="app" title="待辦事項" allow="clipboard-write; microphone; geolocation"></iframe></div>
+
+  <script>
+    // ▼▼▼ 請把下面網址換成您 GAS「網頁應用程式」的網址（結尾是 /exec）▼▼▼
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyqWf1hw_3YKlwALjq9Y-5v2Y1Bu0bb7ijBtmFZRwafd3AvRZt8zQ-Uz6Qj3wBAabFZ/exec';
+    // ▲▲▲ 只需要改這一行 ▲▲▲
+
+    const KEY_RE = /^[a-f0-9]{32}$/i;
+    const store = {
+      get() { try { return localStorage.getItem('device_key') || ''; } catch (e) { return ''; } },
+      set(v) { try { localStorage.setItem('device_key', v); } catch (e) {} },
+      clear() { try { localStorage.removeItem('device_key'); } catch (e) {} }
+    };
+
+    function openApp(key) {
+      document.getElementById('setup').style.display = 'none';
+      document.getElementById('splash').style.display = 'flex';
+      const src = GAS_URL + (key ? ('?key=' + encodeURIComponent(key)) : '');
+      const frame = document.getElementById('app');
+      frame.onload = () => {
+        document.getElementById('splash').style.display = 'none';
+        document.getElementById('wrap').style.display = 'block';
+      };
+      frame.src = src;
+      setTimeout(() => {   // 保險：8 秒後一定顯示
+        document.getElementById('splash').style.display = 'none';
+        document.getElementById('wrap').style.display = 'block';
+      }, 8000);
+    }
+
+    function showSetup(msg) {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('setup').style.display = 'flex';
+      document.getElementById('msg').innerText = msg || '';
+    }
+
+    function saveKey() {
+      const v = document.getElementById('keyInput').value.trim().replace(/^.*key=/i, '');
+      if (!KEY_RE.test(v)) { document.getElementById('msg').innerText = '格式不正確，請確認是 32 碼的金鑰'; return; }
+      store.set(v.toLowerCase());
+      openApp(v.toLowerCase());
+    }
+
+    (function start() {
+      if (GAS_URL.includes('請貼上')) { showSetup('外殼尚未設定 GAS 網址（請修改 index.html 的 GAS_URL）'); return; }
+      const params = new URLSearchParams(location.search);
+      if (params.get('reset') === '1') store.clear();
+      const urlKey = (params.get('key') || '').trim();
+      if (KEY_RE.test(urlKey)) store.set(urlKey.toLowerCase());
+      const key = store.get();
+      if (key) openApp(key);
+      else showSetup();
+    })();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>
