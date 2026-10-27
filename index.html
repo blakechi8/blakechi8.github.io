@@ -575,6 +575,15 @@
     .more-item.danger .more-icon { background: var(--danger-soft); color: var(--danger-text); }
     .more-item.muted .more-icon { background: var(--surface-2); color: var(--text-2); }
     .more-item.active .more-icon { background: var(--primary); color: #fff; }
+    /* B30：左右滑動換頁 */
+    @keyframes pageInL { from { transform: translateX(42px); opacity: .35; } to { transform: none; opacity: 1; } }
+    @keyframes pageInR { from { transform: translateX(-42px); opacity: .35; } to { transform: none; opacity: 1; } }
+    @keyframes pageBump { 0%, 100% { transform: none; } 40% { transform: translateX(var(--bump, 14px)); } }
+    .board.page-in-l { animation: pageInL .22s ease-out; }
+    .board.page-in-r { animation: pageInR .22s ease-out; }
+    .board.page-bump { animation: pageBump .28s ease-out; }
+    #swipe-hint { position: fixed; top: 50%; z-index: 70; transform: translateY(-50%); background: rgba(20,28,36,.82); color: #fff; border-radius: 999px; padding: 8px 14px; font-size: calc(14px * var(--fs)); font-weight: 700; display: none; align-items: center; gap: 6px; pointer-events: none; }
+    #swipe-hint.on { display: flex; }
     @keyframes sheetUp { from { transform: translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
 
     /* 鬧鐘滾輪 */
@@ -689,7 +698,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B29b</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B30</div>
     </div>
   </div>
 
@@ -1033,6 +1042,7 @@
         <button class="btn btn-sm btn-ghost" style="margin-top:10px;" onclick="resetNavOrder()"><i class="ti ti-restore"></i>恢復預設順序</button>
         <div class="sec-label" style="margin-top:18px;">精簡版面（只影響這台裝置）</div>
         <label class="tg-row"><span>往下捲動時自動隱藏下方選單<br><small style="color:var(--text-3);">隱藏後點最下面的「︿ 選單」或往上捲就會出現</small></span><input type="checkbox" id="pref-navhide" onchange="setLayoutPref('nav_autohide', this.checked)"></label>
+        <label class="tg-row"><span>左右滑動切換頁面<br><small style="color:var(--text-3);">順序跟底部選單一樣；往左滑到下一頁、往右滑回上一頁</small></span><input type="checkbox" id="pref-swipe" onchange="setLayoutPref('swipe_nav', this.checked)"></label>
         <label class="tg-row"><span>收合輸入框左邊的按鈕<br><small style="color:var(--text-3);">點 ⊕ 再選上傳、語音、拍照</small></span><input type="checkbox" id="pref-compact" onchange="setLayoutPref('compact_input', this.checked)"></label>
       </div>
       <div class="sec-label" style="margin-top:18px;">版面顏色（只影響這台裝置，可隨時恢復預設）</div>
@@ -1201,6 +1211,7 @@
       </div>
 
       <nav class="tabbar" id="tab-bar"></nav>
+      <div id="swipe-hint"></div>
       <button id="nav-peek" onclick="navShow(true)" aria-label="顯示下方選單"><span class="peek-bar"></span><i class="ti ti-chevron-up"></i>選單</button>
     </div>
   </div>
@@ -1450,7 +1461,7 @@
     function openFontSheet() { applyFontScale(fontScale); document.getElementById('font-sheet').style.display = 'flex'; }
     function openUserSheet() {
       try { renderColorSettings(); renderNavOrder(); renderThemeMore(); loadBackupStatus(); } catch (e) {}
-      try { document.getElementById('pref-navhide').checked = layoutPref('nav_autohide'); document.getElementById('pref-compact').checked = layoutPref('compact_input'); } catch (e) {}
+      try { document.getElementById('pref-navhide').checked = layoutPref('nav_autohide'); document.getElementById('pref-compact').checked = layoutPref('compact_input'); document.getElementById('pref-swipe').checked = layoutPref('swipe_nav'); } catch (e) {}
       document.getElementById('user-sheet-name').innerText = userName || '使用者';
       document.getElementById('user-sheet-role').innerText = (userRole === 'kids' ? '家人帳號' : '管理員帳號') + (isMobileDevice() ? '・這台裝置會記住登入' : '・電腦閒置 10 分鐘自動鎖定');
       openFontSheet();
@@ -1833,6 +1844,67 @@
       _tY = y; _tX = x; _tLock = Date.now() + 250;
     }, { passive: true, capture: true });
     document.addEventListener('touchend', () => { _tY = null; }, { passive: true, capture: true });
+    // ---------------- B30：左右滑動切換頁面（順序跟著自訂的底部選單） ----------------
+    let _sw = null;
+    function swipeNavOn() { return isMobileDevice() && layoutPref('swipe_nav') && (window.innerWidth || 390) < 900; }
+    function swipePages() { return getNavOrder().filter(k => k[0] !== '@'); }
+    function swipeBlocked(el) {
+      for (let n = el; n && n !== document.body; n = n.parentElement) {
+        if (n.matches && n.matches('input, textarea, select, [contenteditable="true"], .edit-input, .modal, #sort-bar, .filter-bar, .s-chips')) return true;
+        if (n.scrollWidth > n.clientWidth + 4) { const ox = getComputedStyle(n).overflowX; if (ox === 'auto' || ox === 'scroll') return true; }   // 可以左右捲動的區塊（分類列等）
+      }
+      return false;
+    }
+    document.addEventListener('touchstart', ev => {
+      _sw = null;
+      if (!swipeNavOn() || !ev.touches || ev.touches.length !== 1) return;
+      const t = ev.touches[0], w = window.innerWidth || 390;
+      if (!ev.target.closest || !ev.target.closest('#board-container')) return;
+      if (t.clientX < 24 || t.clientX > w - 24) return;   // 螢幕最邊緣留給手機的「返回」手勢
+      if (swipeBlocked(ev.target)) return;
+      _sw = { x: t.clientX, y: t.clientY, t: Date.now(), x1: t.clientX, y1: t.clientY };
+    }, { passive: true, capture: true });
+    document.addEventListener('touchmove', ev => {
+      if (!_sw || !ev.touches || !ev.touches[0]) return;
+      _sw.x1 = ev.touches[0].clientX; _sw.y1 = ev.touches[0].clientY;
+      const dx = _sw.x1 - _sw.x, dy = _sw.y1 - _sw.y;
+      if (Math.abs(dy) > 40 && Math.abs(dy) > Math.abs(dx)) { _sw = null; hideSwipeHint(); return; }   // 變成上下捲動就放棄
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.8) showSwipeHint(dx < 0 ? 1 : -1);
+    }, { passive: true, capture: true });
+    document.addEventListener('touchend', () => {
+      const s = _sw; _sw = null; hideSwipeHint();
+      if (!s || taskDragging) return;
+      try { if (String(window.getSelection() || '').length) return; } catch (e) {}
+      const dx = s.x1 - s.x, dy = s.y1 - s.y;
+      if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.8 || Date.now() - s.t > 900) return;
+      swipeGo(dx < 0 ? 1 : -1);
+    }, { passive: true, capture: true });
+    document.addEventListener('touchcancel', () => { _sw = null; hideSwipeHint(); }, { passive: true, capture: true });
+    function swipeTarget(dir) {
+      const pages = swipePages(), i = pages.indexOf(currentMode);
+      if (i < 0) return pages[0] || null;
+      const j = i + dir;
+      return (j >= 0 && j < pages.length) ? pages[j] : null;
+    }
+    function showSwipeHint(dir) {
+      const h = document.getElementById('swipe-hint'); if (!h) return;
+      const k = swipeTarget(dir);
+      h.innerHTML = k ? (dir > 0 ? `${esc(NAV_DEFS[k][1])} <i class="ti ti-chevron-right"></i>` : `<i class="ti ti-chevron-left"></i> ${esc(NAV_DEFS[k][1])}`) : (dir > 0 ? '已經是最後一頁' : '已經是第一頁');
+      h.style.left = dir > 0 ? '' : '12px'; h.style.right = dir > 0 ? '12px' : '';
+      h.classList.add('on');
+    }
+    function hideSwipeHint() { const h = document.getElementById('swipe-hint'); if (h) h.classList.remove('on'); }
+    function swipeGo(dir) {
+      const board = document.getElementById('board-container');
+      const k = swipeTarget(dir);
+      board.classList.remove('page-in-l', 'page-in-r', 'page-bump');
+      void board.offsetWidth;
+      if (!k) { board.style.setProperty('--bump', (dir > 0 ? -14 : 14) + 'px'); board.classList.add('page-bump'); return; }
+      navGo(k);
+      board.classList.add(dir > 0 ? 'page-in-l' : 'page-in-r');
+      setTimeout(() => board.classList.remove('page-in-l', 'page-in-r', 'page-bump'), 400);
+    }
+
     // 滑鼠滾輪（觸控筆電、平板接鍵盤）也一樣
     document.addEventListener('wheel', ev => {
       if (!navAutoHide() || !ev.target.closest || !ev.target.closest('#board-container') || Math.abs(ev.deltaY) < 8) return;
