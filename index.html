@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#2F6FDB">
+  <meta name="theme-color" content="#B5DFD1">
   <title>待辦事項</title>
   <!-- B28 版：收錄頁排序、標題與來源拆分、網址背景收錄（可同時做別的事）；B27：手機分享網址直接收錄（Share Target）；B26：地址改台灣格式、標題列圖示靠緊、「今天」改名「今日重點」；B25：Google 地圖店家補抓電話地址、距離與電話地址圖示更醒目；B24：家務規則按鈕配色、家務提醒狀態檢查、LINE 卡片 4 種樣式、每週自動備份、清單即時同步、重複待辦自動產生下一次；B23：家務工具按鈕配色、LINE 每月重新計算說明、稍後提醒、離線也能看；B22：底部選單自訂順序且只排一列、標題列色票合併＋手機調色盤、備忘錄快速關鍵字；B21：今天移到標題列、家人分頁重排、名字標籤與標題列更多顏色、清單可移除範本與復原、家人拍照、快速關鍵字可編輯、選單往下拉關閉；B20：顏色自訂、待辦置頂＋拖曳排序、清單與範本、附近的店、拍照建立待辦（搭配 code.gs B20）；B19：收錄頁使用說明面板、歌星標籤改梅紫色、家務完成改綠色；B18：按鈕清新配色、電腦版卡片不壓扁、摘要讀秒與條列對齊、搜尋筆數移到第二行；B17：修正電腦版（Google 網頁）正規表示式被誤刪造成無法啟動；B16：開機診斷與版本號、AI 摘要改暖色、標題列加深＋自訂顏色（搭配 code.gs B15） -->
   <link rel="stylesheet" media="print" onload="this.media='all'" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" onerror="this.onerror=null; this.href='https://unpkg.com/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css';">
@@ -475,7 +475,10 @@
     #sort-bar .lbl { font-size: calc(12px * var(--fs)); color: var(--text-3); flex-shrink: 0; }
     .sort-chip { flex-shrink: 0; height: calc(30px * var(--fs)); padding: 0 12px; border-radius: 15px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-2); font-size: calc(12.5px * var(--fs)); font-weight: 600; }
     .sort-chip.on { background: var(--text); border-color: var(--text); color: var(--surface); }
-    #job-dock { display: none; position: fixed; right: 12px; bottom: calc(150px + env(safe-area-inset-bottom)); z-index: 9500; background: var(--surface); border: 1.5px solid var(--c-know); color: var(--t-know); border-radius: 22px; padding: 8px 14px; box-shadow: var(--shadow); font-size: calc(13px * var(--fs)); font-weight: 700; align-items: center; gap: 6px; cursor: pointer; }
+    /* B31：背景收錄改成標題列上的小標籤，不再浮在內容上擋住按鈕 */
+    #job-dock { display: none; flex-shrink: 0; background: var(--surface); border: 1.5px solid var(--c-know); color: var(--t-know); border-radius: 999px; padding: 4px 10px; font-size: calc(12px * var(--fs)); font-weight: 700; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap; margin-right: 2px; }
+    #job-dock .jd-time { font-weight: 600; opacity: .8; }
+    @media (max-width: 480px) { #job-dock .jd-time { display: none; } #job-dock { padding: 4px 8px; } }
     #job-dock.on { display: inline-flex; }
     #job-dock.done { border-color: var(--hw-done); color: var(--success-text); }
     #job-dock i.spin { display: inline-block; animation: spin 1s linear infinite; }
@@ -526,8 +529,10 @@
     /* B30b：目前所在頁面更明顯：圖示加上實心色塊、文字加粗變色，換頁時跳一下 */
     .tab-item { position: relative; }
     .tab-item i { display: inline-flex; align-items: center; justify-content: center; width: calc(52px * var(--fs)); height: calc(30px * var(--fs)); border-radius: 999px; transition: background .2s, color .2s; }
-    .tab-item.active i { background: var(--primary); color: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.16); }
-    .tab-item.active span { color: var(--primary); font-weight: 800; }
+    /* B31：選取色改成跟標題列同一色系（薄荷綠等），清新不突兀；換標題列顏色會自動跟著變 */
+    .tab-item.active i { background: var(--header-bg); color: var(--header-text); box-shadow: inset 0 0 0 1px var(--header-line); }
+    .tab-item.active span { color: var(--primary); color: color-mix(in srgb, var(--header-bg) 30%, var(--text)); font-weight: 800; }
+    .tab-item .more-badge { border-color: var(--header-line) !important; color: var(--header-text) !important; background: var(--header-bg) !important; }
     .tab-item.pop i { animation: tabPop .32s ease-out; }
     @keyframes tabPop { 0% { transform: scale(.7); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
     .tab-item .more-badge { position: absolute; top: 3px; left: calc(50% + 16px * var(--fs)); min-width: 16px; height: 16px; border-radius: 8px; background: var(--surface); color: var(--primary); border: 1px solid var(--primary); font-size: 10px; line-height: 14px; font-weight: 800; padding: 0 3px; }
@@ -661,7 +666,6 @@
       .input-area { padding: 10px 16px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
       #toast { bottom: 88px; }
       .upload-mini-widget { bottom: 80px; }
-      #job-dock { bottom: 90px; }
       .modal { align-items: center; padding: 20px; }
       .sheet { border-radius: 18px; max-width: 440px; padding: 22px; }
       .sheet-grip { display: none; }
@@ -706,7 +710,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B30b</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B31</div>
     </div>
   </div>
 
@@ -908,14 +912,13 @@
 
 
   <!-- ===== B28：背景收錄中的網址 ===== -->
-  <div id="job-dock" onclick="openJobSheet()"></div>
   <div id="job-sheet" class="modal">
     <div class="sheet">
       <div class="sheet-grip"></div>
       <h3 class="sheet-title">🔄 背景收錄</h3>
       <p class="sheet-sub">網址在背景辨識，您可以繼續輸入待辦、搜尋或再貼其他網址。關掉 App 也會繼續完成。</p>
       <div id="job-list"></div>
-      <button class="btn btn-ghost" style="width:100%; margin-top:12px;" onclick="closeJobSheet()">關閉</button>
+      <button class="btn btn-ghost" style="width:100%; margin-top:12px;" onclick="closeJobSheetUser()">關閉</button>
     </div>
   </div>
 
@@ -1158,6 +1161,7 @@
       <header class="topbar">
         <div class="topbar-row">
           <div class="title-wrap"><h1 id="header-main">待辦事項</h1><div id="header-sub"></div></div>
+          <button id="job-dock" onclick="openJobSheet()" title="背景收錄"></button>
           <button class="icon-btn mobile-only" id="btn-today" data-nav="today" onclick="navGo('today')" title="今日重點（早報）" aria-label="今日重點"><i class="ti ti-sun"></i></button>
           <button class="icon-btn" onclick="openSearch()" title="全站搜尋" aria-label="全站搜尋"><i class="ti ti-search"></i></button>
           <button class="icon-btn" onclick="openNotifications()" title="通知" aria-label="通知"><i class="ti ti-bell"></i><span class="bell-dot" id="bell-dot"></span></button>
@@ -3534,7 +3538,9 @@
       if (job.target && currentMode === job.target && !busy) showLatestResult(job.target);
       else if (job.target) showToast(msg.split('\n')[0], { actionLabel: '查看', duration: 7000, onAction: () => showLatestResult(job.target) });
       else { showToast(msg.split('\n')[0]); if (TASK_MODES.includes(currentMode) || currentMode === 'today') fetchData(true); }
-      setTimeout(() => { const i = urlJobs.indexOf(job); if (i >= 0 && job.state !== 'run') { urlJobs.splice(i, 1); renderJobs(); } }, 90000);
+      // B31：完成 20 秒後自動收起標籤（清單視窗開著時等關掉再收）
+      const autoClear = () => { if (document.getElementById('job-sheet').style.display === 'flex') { setTimeout(autoClear, 5000); return; } const i = urlJobs.indexOf(job); if (i >= 0 && job.state !== 'run') { urlJobs.splice(i, 1); renderJobs(); } };
+      setTimeout(autoClear, 20000);
     }
     function showLatestResult(target) {
       if (currentMode !== target) switchMode(target);
@@ -3545,6 +3551,7 @@
       if (isK) google.script.run.withSuccessHandler(res => renderKnowledge(res, true)).getKnowledgeApp('@latest');
       else google.script.run.withSuccessHandler(res => renderLifeLog(res, true)).getLifeLogApp('@latest');
       closeJobSheet();
+      clearFinishedJobs(target);   // B31：看過的結果就從標籤移除
     }
     function cancelUrlJob(id) {
       const job = urlJobs.find(j => j.id === id);
@@ -3561,10 +3568,11 @@
       if (run.length) {
         const oldest = Math.min.apply(null, run.map(j => j.start));
         dock.className = 'on';
-        dock.innerHTML = `<i class="ti ti-loader-2 spin"></i>收錄中 ${run.length} 個・${fmtSec(Date.now() - oldest)}`;
+        dock.innerHTML = `<i class="ti ti-loader-2 spin"></i>收錄中 ${run.length}<span class="jd-time">・${fmtSec(Date.now() - oldest)}</span>`;
       } else {
         dock.className = 'on done';
-        dock.innerHTML = `<i class="ti ti-circle-check"></i>收錄完成 ${urlJobs.filter(j => j.state === 'ok').length} 個`;
+        const nOk = urlJobs.filter(j => j.state === 'ok').length, nBad = urlJobs.length - nOk;
+        dock.innerHTML = nOk ? `<i class="ti ti-circle-check"></i>完成 ${nOk}${nBad ? `<span class="jd-time">・失敗 ${nBad}</span>` : ''}` : `<i class="ti ti-alert-circle"></i>失敗 ${nBad}`;
         clearInterval(jobTicker); jobTicker = null;
       }
       if (document.getElementById('job-sheet').style.display === 'flex') renderJobList();
@@ -3580,6 +3588,12 @@
     }
     function openJobSheet() { renderJobList(); document.getElementById('job-sheet').style.display = 'flex'; }
     function closeJobSheet() { const el = document.getElementById('job-sheet'); if (el) el.style.display = 'none'; }
+    function closeJobSheetUser() { closeJobSheet(); clearFinishedJobs(); }   // 按「關閉」＝已看過，完成的就收起來
+    function clearFinishedJobs(target) {
+      const before = urlJobs.length;
+      for (let i = urlJobs.length - 1; i >= 0; i--) { const j = urlJobs[i]; if (j.state !== 'run' && (!target || j.target === target)) urlJobs.splice(i, 1); }
+      if (urlJobs.length !== before) renderJobs();
+    }
 
     // ================================================================
     //  B27：手機「分享」→ 待辦 App（Chrome 分享選單直接收錄網址）
