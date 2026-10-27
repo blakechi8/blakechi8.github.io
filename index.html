@@ -523,6 +523,14 @@
     .tab-item { border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-width: 0; font-size: calc(12px * var(--fs)); color: var(--text-3); padding: 5px 0; min-height: 50px; }
     .tab-item i { font-size: calc(23px * var(--fs)); }
     .tab-item.active { color: var(--primary); font-weight: 600; }
+    /* B30b：目前所在頁面更明顯：圖示加上實心色塊、文字加粗變色，換頁時跳一下 */
+    .tab-item { position: relative; }
+    .tab-item i { display: inline-flex; align-items: center; justify-content: center; width: calc(52px * var(--fs)); height: calc(30px * var(--fs)); border-radius: 999px; transition: background .2s, color .2s; }
+    .tab-item.active i { background: var(--primary); color: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.16); }
+    .tab-item.active span { color: var(--primary); font-weight: 800; }
+    .tab-item.pop i { animation: tabPop .32s ease-out; }
+    @keyframes tabPop { 0% { transform: scale(.7); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+    .tab-item .more-badge { position: absolute; top: 3px; left: calc(50% + 16px * var(--fs)); min-width: 16px; height: 16px; border-radius: 8px; background: var(--surface); color: var(--primary); border: 1px solid var(--primary); font-size: 10px; line-height: 14px; font-weight: 800; padding: 0 3px; }
     .tab-item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
     .fs-option { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 6px; border: 1.5px solid var(--border-strong); border-radius: 14px; background: var(--surface); color: var(--text); }
     .fs-option.active { border-color: var(--primary); background: var(--primary-soft); color: var(--primary-dark); }
@@ -698,7 +706,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B30</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B30b</div>
     </div>
   </div>
 
@@ -1706,11 +1714,25 @@
       buildTabAndMore();   // B22：底部選單依使用者自訂順序、只排一列
     }
 
+    let _lastActiveNav = '';
     function setActiveNav(mode) {
       document.querySelectorAll('[data-nav]').forEach(el => el.classList.toggle('active', el.getAttribute('data-nav') === mode));
-      if (navMoreModes.includes(mode)) {
-        const moreTab = document.querySelector('#tab-bar [data-nav="@more"]');
-        if (moreTab) moreTab.classList.add('active');
+      const moreTab = document.querySelector('#tab-bar [data-nav="@more"]');
+      if (moreTab) {
+        if (navMoreModes.includes(mode) && NAV_DEFS[mode]) {
+          // B30b：目前頁面放在「更多」裡時，「更多」那一格直接顯示該頁的圖示與名稱（右上角小 ⋯ 表示還是可以點開更多）
+          moreTab.innerHTML = `<i class="ti ${NAV_DEFS[mode][0]}"></i><span>${esc(NAV_DEFS[mode][1])}</span><b class="more-badge">⋯</b>`;
+          moreTab.classList.add('active');
+          moreTab.setAttribute('aria-label', NAV_DEFS[mode][1] + '（點開更多）');
+        } else if (moreTab.querySelector('.more-badge')) {
+          moreTab.innerHTML = '<i class="ti ti-dots"></i><span>更多</span>';
+          moreTab.removeAttribute('aria-label');
+        }
+      }
+      if (mode !== _lastActiveNav) {
+        _lastActiveNav = mode;
+        const act = document.querySelector('#tab-bar .tab-item.active');
+        if (act) { act.classList.remove('pop'); void act.offsetWidth; act.classList.add('pop'); setTimeout(() => act.classList.remove('pop'), 400); }
       }
     }
 
