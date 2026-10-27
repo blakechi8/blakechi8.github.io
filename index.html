@@ -527,6 +527,22 @@
     .fs-option { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 6px; border: 1.5px solid var(--border-strong); border-radius: 14px; background: var(--surface); color: var(--text); }
     .fs-option.active { border-color: var(--primary); background: var(--primary-soft); color: var(--primary-dark); }
     body.kb-open .tabbar { display: none; }
+    /* B29：手機精簡版面（下方選單捲動自動隱藏、輸入框按鈕收合） */
+    body.nav-hide .tabbar { display: none; }
+    #nav-peek { display: none; width: 100%; border: none; border-top: 1px solid var(--border); background: var(--surface); color: var(--primary); font-size: calc(12px * var(--fs)); font-weight: 700; align-items: center; justify-content: center; gap: 4px; padding: 3px 0 max(4px, env(safe-area-inset-bottom)); flex-shrink: 0; }
+    #nav-peek i { font-size: calc(16px * var(--fs)); }
+    #nav-peek .peek-bar { width: 34px; height: 4px; border-radius: 4px; background: var(--primary); opacity: .45; margin-right: 4px; }
+    body.nav-hide #nav-peek { display: flex; }
+    body.kb-open #nav-peek { display: none; }
+    .input-area { position: relative; }
+    #expand-btn.compact { color: var(--primary); background: var(--primary-soft); }
+    #attach-pop { display: none; position: absolute; left: 8px; bottom: calc(100% + 6px); z-index: 60; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 8px 24px rgba(20,30,40,.18); padding: 6px; min-width: 190px; }
+    #attach-pop.on { display: block; animation: sheetUp .16s ease-out; }
+    #attach-pop button { display: flex; align-items: center; gap: 12px; width: 100%; border: none; background: none; padding: 11px 12px; border-radius: 12px; font-size: calc(15px * var(--fs)); color: var(--text); text-align: left; }
+    #attach-pop button:active { background: var(--surface-2); }
+    #attach-pop button i { font-size: calc(22px * var(--fs)); color: var(--primary); }
+    .tg-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 2px; border-bottom: 1px dashed var(--border); font-size: calc(14px * var(--fs)); }
+    .tg-row input { width: 22px; height: 22px; accent-color: var(--primary); flex-shrink: 0; }
 
     /* ========== 8. 彈窗 / 底部面板 ========== */
     .modal { display: none; position: fixed; inset: 0; z-index: 10001; background: rgba(15, 22, 33, .48); justify-content: center; align-items: flex-end; }
@@ -654,7 +670,7 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B28）\n' +
+      st.innerText = '主程式沒有啟動（版本 B29）\n' +
         (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
@@ -673,7 +689,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B28</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B29</div>
     </div>
   </div>
 
@@ -1015,6 +1031,9 @@
         <div class="theme-cur" style="margin-top:2px;">用 ↑↓ 調整；虛線以上顯示在底部，其餘放在「更多」</div>
         <div id="nav-order" style="margin-top:6px;"></div>
         <button class="btn btn-sm btn-ghost" style="margin-top:10px;" onclick="resetNavOrder()"><i class="ti ti-restore"></i>恢復預設順序</button>
+        <div class="sec-label" style="margin-top:18px;">精簡版面（只影響這台裝置）</div>
+        <label class="tg-row"><span>往下捲動時自動隱藏下方選單<br><small style="color:var(--text-3);">隱藏後點最下面的「︿ 選單」或往上捲就會出現</small></span><input type="checkbox" id="pref-navhide" onchange="setLayoutPref('nav_autohide', this.checked)"></label>
+        <label class="tg-row"><span>收合輸入框左邊的按鈕<br><small style="color:var(--text-3);">點 ⊕ 再選上傳、語音、拍照</small></span><input type="checkbox" id="pref-compact" onchange="setLayoutPref('compact_input', this.checked)"></label>
       </div>
       <div class="sec-label" style="margin-top:18px;">版面顏色（只影響這台裝置，可隨時恢復預設）</div>
       <div id="color-settings"></div>
@@ -1175,12 +1194,14 @@
           <button class="icon-btn" id="btn-cam" onclick="document.getElementById('photo-input').click()" title="拍照建立待辦（繳費單、通知單）" aria-label="拍照建立待辦"><i class="ti ti-camera"></i></button>
           <input type="file" id="photo-input" accept="image/*" style="display:none;" onchange="onPhotoPicked(this)">
         </div>
-        <button class="icon-btn" id="expand-btn" style="display:none;" onclick="showActionButtons()" aria-label="顯示附加功能"><i class="ti ti-circle-plus"></i></button>
+        <button class="icon-btn" id="expand-btn" style="display:none;" onclick="onExpandBtn()" aria-label="顯示附加功能" title="附加功能"><i class="ti ti-circle-plus"></i></button>
+        <div id="attach-pop" role="menu"></div>
         <textarea id="user-input" class="user-input" rows="1" placeholder="輸入待辦、網址或指令..." oninput="autoResizeInput(this)" onfocus="hideActionButtons()"></textarea>
         <button class="btn" id="send-btn" onclick="sendMessage()">送出</button>
       </div>
 
       <nav class="tabbar" id="tab-bar"></nav>
+      <button id="nav-peek" onclick="navShow(true)" aria-label="顯示下方選單"><span class="peek-bar"></span><i class="ti ti-chevron-up"></i>選單</button>
     </div>
   </div>
 
@@ -1429,6 +1450,7 @@
     function openFontSheet() { applyFontScale(fontScale); document.getElementById('font-sheet').style.display = 'flex'; }
     function openUserSheet() {
       try { renderColorSettings(); renderNavOrder(); renderThemeMore(); loadBackupStatus(); } catch (e) {}
+      try { document.getElementById('pref-navhide').checked = layoutPref('nav_autohide'); document.getElementById('pref-compact').checked = layoutPref('compact_input'); } catch (e) {}
       document.getElementById('user-sheet-name').innerText = userName || '使用者';
       document.getElementById('user-sheet-role').innerText = (userRole === 'kids' ? '家人帳號' : '管理員帳號') + (isMobileDevice() ? '・這台裝置會記住登入' : '・電腦閒置 10 分鐘自動鎖定');
       openFontSheet();
@@ -1684,6 +1706,7 @@
     function navGo(key) {
       if (key === '@more') { openMoreSheet(); return; }
       closeMoreSheet();
+      navShow(true);   // B29：換頁時把下方選單叫回來
       if (key === '@db') { if (DB_URL) window.open(DB_URL, '_blank'); else showToast('⏳ 讀取資料庫連結中，請稍後再試'); return; }
       if (key === '@archive') { triggerArchive(); return; }
       if (key === '@logout') { logout(); return; }
@@ -1702,6 +1725,7 @@
       badge.innerText = userName || (userRole === 'kids' ? '家人' : '管理員');   // B14：直接顯示使用者名字
       document.getElementById('btn-attach').style.display = (userRole === 'kids') ? 'none' : '';   // 家人身分隱藏 📎 上傳
       document.getElementById('btn-cam').style.display = '';     // B21：家人也能拍照（一律建立家庭待辦）
+      applyCompactLayout();   // B29
     }
 
     function saveColumnOrder() {
@@ -1729,14 +1753,80 @@
       if (isUploadingFiles && document.getElementById('upload-progress-modal').style.display === 'flex') {
         minimizeUploadModal();
       }
+      closeAttachPop();
       document.getElementById('action-buttons').style.display = 'none';
       document.getElementById('expand-btn').style.display = 'flex';
     }
 
+    function onExpandBtn() { if (compactInput()) toggleAttachPop(); else showActionButtons(); }
     function showActionButtons() {
+      if (compactInput()) { document.getElementById('action-buttons').style.display = 'none'; document.getElementById('expand-btn').style.display = 'flex'; return; }
       document.getElementById('action-buttons').style.display = 'flex';
       document.getElementById('expand-btn').style.display = 'none';
     }
+
+    // ---------------- B29：手機精簡版面 ----------------
+    function layoutPref(k) {
+      let v = null;
+      try { v = localStorage.getItem('pref_' + k); } catch (e) {}
+      if (v === '1') return true;
+      if (v === '0') return false;
+      return isMobileDevice() && (window.innerWidth || 390) < 720;   // 預設：手機開啟、平板關閉
+    }
+    function setLayoutPref(k, on) {
+      try { localStorage.setItem('pref_' + k, on ? '1' : '0'); } catch (e) {}
+      applyCompactLayout();
+      showToast(on ? '✅ 已開啟' : '已關閉');
+    }
+    function compactInput() { return isMobileDevice() && layoutPref('compact_input'); }
+    function navAutoHide() { return isMobileDevice() && layoutPref('nav_autohide'); }
+    function applyCompactLayout() {
+      const ab = document.getElementById('action-buttons'), eb = document.getElementById('expand-btn');
+      if (!ab || !eb) return;
+      closeAttachPop();
+      if (compactInput()) { ab.style.display = 'none'; eb.style.display = 'flex'; eb.classList.add('compact'); eb.setAttribute('aria-label', '附加功能：上傳、語音、拍照'); }
+      else {
+        eb.classList.remove('compact');
+        const ui = document.getElementById('user-input');
+        const typing = ui && (ui.value.trim() !== '' || document.activeElement === ui);
+        ab.style.display = typing ? 'none' : 'flex'; eb.style.display = typing ? 'flex' : 'none';
+      }
+      if (!navAutoHide()) navShow(true);
+    }
+    function toggleAttachPop() {
+      const pop = document.getElementById('attach-pop');
+      if (pop.classList.contains('on')) { closeAttachPop(); return; }
+      const btns = [...document.querySelectorAll('#action-buttons .icon-btn')].filter(b => getComputedStyle(b).display !== 'none');
+      pop.innerHTML = btns.map(b => `<button type="button" data-for="${b.id}"><i class="${b.querySelector('i').className}"></i>${esc(b.getAttribute('aria-label') || b.title || '')}</button>`).join('');
+      pop.querySelectorAll('button').forEach(x => x.onclick = (ev) => { ev.stopPropagation(); closeAttachPop(); const t = document.getElementById(x.dataset.for); if (t) t.click(); });
+      pop.classList.add('on');
+      document.getElementById('expand-btn').querySelector('i').className = 'ti ti-x';
+    }
+    function closeAttachPop() {
+      const pop = document.getElementById('attach-pop');
+      if (!pop) return;
+      pop.classList.remove('on');
+      const i = document.querySelector('#expand-btn i'); if (i) i.className = 'ti ti-circle-plus';
+    }
+    document.addEventListener('click', ev => {
+      const pop = document.getElementById('attach-pop');
+      if (pop && pop.classList.contains('on') && !ev.target.closest('#attach-pop') && !ev.target.closest('#expand-btn')) closeAttachPop();
+    }, true);
+    function navShow(on) {
+      document.body.classList.toggle('nav-hide', !on);
+    }
+    const _scrollY = new WeakMap();
+    document.addEventListener('scroll', ev => {
+      const el = ev.target;
+      if (!el || !el.closest || !el.closest('#board-container')) return;
+      const y = el.scrollTop, last = _scrollY.has(el) ? _scrollY.get(el) : y;
+      _scrollY.set(el, y);
+      if (!navAutoHide()) return;
+      if (y < 30) { navShow(true); return; }
+      if (el.scrollHeight - el.clientHeight < 160) return;   // 內容不多就不隱藏
+      if (y - last > 12) navShow(false);
+      else if (last - y > 18) navShow(true);
+    }, true);
 
     function autoResizeInput(el) {
       el.style.height = 'auto';
@@ -1744,7 +1834,8 @@
       el.style.height = Math.min(el.scrollHeight + 2, maxH) + 'px';
       el.style.overflowY = (el.scrollHeight + 2 > maxH) ? 'auto' : 'hidden';   // 🐞B11：內容沒超過時不顯示捲軸
       if (el.id === 'user-input') {
-        if (el.value.trim() !== "") {
+        if (compactInput()) { if (el.value.trim() === "") el.style.height = ''; }
+        else if (el.value.trim() !== "") {
           document.getElementById('action-buttons').style.display = 'none';
           document.getElementById('expand-btn').style.display = 'flex';
         } else {
@@ -1933,7 +2024,14 @@
         const b = document.createElement('button');
         b.className = 'menu-item' + (el.getAttribute('data-act') === 'delete' ? ' danger' : '');
         b.innerHTML = `<i class="ti ${esc(el.getAttribute('data-icon'))}"></i><span>${esc(el.getAttribute('data-label'))}</span>`;
-        b.onclick = () => { closeCardMenu(); el.click(); };
+        const cid = card.getAttribute('data-id'), act = el.getAttribute('data-act');
+        b.onclick = () => {
+          closeCardMenu();
+          // B29：選單開著時清單剛好自動更新（卡片被換掉）→ 改找畫面上最新的那張卡片，避免按了沒反應
+          let t = el;
+          if (!el.isConnected && cid) { const c = [...document.querySelectorAll('.task-card')].find(x => x.getAttribute('data-id') === cid); if (c) t = c.querySelector('.card-actions [data-act="' + act + '"]') || el; }
+          if (t.isConnected) t.click(); else showToast('⚠️ 清單剛更新，請再點一次');
+        };
         list.appendChild(b);
       });
       document.getElementById('card-menu').style.display = 'flex';
@@ -4295,12 +4393,36 @@
         else { btn.disabled = false; btn.innerHTML = '<i class="ti ti-refresh"></i>補抓電話地址'; }
       }).withFailureHandler(e => { btn.disabled = false; btn.innerHTML = '<i class="ti ti-refresh"></i>補抓電話地址'; showToast('⚠️ ' + e.message); }).refreshLifeInfoApp(id);
     }
+    // B29：電話統一成台灣常見寫法（02-1234-5678、04-2622-6534、0911-123456、037-123-456、0800-123-456）
+    function twPhoneDigits_(d) {
+      if (/^09\d{8}$/.test(d)) return d.slice(0, 4) + '-' + d.slice(4);
+      if (/^080[09]\d{6}$/.test(d)) return d.slice(0, 4) + '-' + d.slice(4, 7) + '-' + d.slice(7);
+      if (/^08(26|36)\d{5}$/.test(d)) return d.slice(0, 4) + '-' + d.slice(4);
+      if (/^0(37|89|82)\d{6}$/.test(d)) return d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
+      if (/^049\d{7}$/.test(d)) return d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
+      if (/^0[2-8]\d{8}$/.test(d)) return d.slice(0, 2) + '-' + d.slice(2, 6) + '-' + d.slice(6);
+      if (/^0[2-8]\d{7}$/.test(d)) return d.slice(0, 2) + '-' + d.slice(2, 5) + '-' + d.slice(5);
+      return '';
+    }
+    function fmtTwPhone_(s) {
+      s = String(s == null ? '' : s).trim();
+      if (!s || s === '無') return s;
+      return s.replace(/(\+886[\s-]*|[(（]\s*0?\d{1,4}\s*[)）][\s-]*)?\d[\d\s-]{5,13}\d/g, function (m) {
+        let d = m.replace(/^\+886/, '0').replace(/\D/g, '');
+        if (/^886/.test(d)) d = '0' + d.slice(3);
+        if (/^[2-9]/.test(d) && /^\+886/.test(m) === false && /^[(（]/.test(m) === false && d.length >= 7 && d.length <= 9 && !/^9/.test(d)) return m;   // 沒區碼的號碼不亂改
+        if (d.charAt(0) !== '0') d = '0' + d;
+        return twPhoneDigits_(d) || m;
+      });
+    }
     function buildLifeExtraHtml(id, phoneVal, locVal) {
       const idArg = jsArg(id);
       let phoneHtml = '';
       if (phoneVal && phoneVal !== '無') {
-        let cleanTel = String(phoneVal).replace(/[^\d+\-#*,;]/g, '');
-        phoneHtml = `<span><i class="ti ti-phone lic ph"></i><a href="tel:${esc(cleanTel)}" target="_top" title="撥打電話">${esc(phoneVal)}</a></span>`;
+        const shown = fmtTwPhone_(phoneVal);   // B29：顯示成台灣常見寫法
+        const first = (shown.match(/\+?\d[\d-]{5,}\d(#\d+)?/) || [shown])[0];
+        let cleanTel = String(first).replace(/[^\d+\-#*,;]/g, '');
+        phoneHtml = `<span><i class="ti ti-phone lic ph"></i><a href="tel:${esc(cleanTel)}" target="_top" title="撥打電話">${esc(shown)}</a></span>`;
       } else {
         phoneHtml = `<span class="muted" onclick="if(!this.closest('.task-card').querySelector('.edit-input')) editItem(${idArg}, 'lifelog', this)" title="點此補填電話"><i class="ti ti-phone lic ph"></i>電話：無</span>`;
       }
