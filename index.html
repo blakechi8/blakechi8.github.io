@@ -689,7 +689,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B29</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B29b</div>
     </div>
   </div>
 
@@ -1815,18 +1815,29 @@
     function navShow(on) {
       document.body.classList.toggle('nav-hide', !on);
     }
-    const _scrollY = new WeakMap();
-    document.addEventListener('scroll', ev => {
-      const el = ev.target;
-      if (!el || !el.closest || !el.closest('#board-container')) return;
-      const y = el.scrollTop, last = _scrollY.has(el) ? _scrollY.get(el) : y;
-      _scrollY.set(el, y);
-      if (!navAutoHide()) return;
-      if (y < 30) { navShow(true); return; }
-      if (el.scrollHeight - el.clientHeight < 160) return;   // 內容不多就不隱藏
-      if (y - last > 12) navShow(false);
-      else if (last - y > 18) navShow(true);
-    }, true);
+    // B29b：改用「手指滑動方向」判斷（不再看捲動位置）
+    //   原因：選單一藏起來，畫面變高 → 瀏覽器自動調整捲動位置；清單每 15 秒自動更新也會讓位置跳回頂端，
+    //   這些都被誤判成「往上捲」而把選單叫回來，看起來就像只藏過一次。
+    let _tY = null, _tX = null, _tLock = 0;
+    document.addEventListener('touchstart', ev => {
+      if (!ev.touches || ev.touches.length !== 1 || !ev.target.closest || !ev.target.closest('#board-container')) { _tY = null; return; }
+      _tY = ev.touches[0].clientY; _tX = ev.touches[0].clientX;
+    }, { passive: true, capture: true });
+    document.addEventListener('touchmove', ev => {
+      if (_tY === null || !ev.touches || ev.touches.length !== 1 || !navAutoHide()) return;
+      const y = ev.touches[0].clientY, x = ev.touches[0].clientX, dy = y - _tY, dx = x - _tX;
+      if (Math.abs(dy) < 28 || Math.abs(dy) < Math.abs(dx) * 1.2) return;   // 太短或是左右滑就不算
+      if (Date.now() < _tLock) return;
+      if (dy < 0) navShow(false);   // 手指往上推 = 往下看內容 → 藏起來
+      else navShow(true);           // 手指往下拉 = 往回看 → 叫出來
+      _tY = y; _tX = x; _tLock = Date.now() + 250;
+    }, { passive: true, capture: true });
+    document.addEventListener('touchend', () => { _tY = null; }, { passive: true, capture: true });
+    // 滑鼠滾輪（觸控筆電、平板接鍵盤）也一樣
+    document.addEventListener('wheel', ev => {
+      if (!navAutoHide() || !ev.target.closest || !ev.target.closest('#board-container') || Math.abs(ev.deltaY) < 8) return;
+      navShow(ev.deltaY < 0);
+    }, { passive: true, capture: true });
 
     function autoResizeInput(el) {
       el.style.height = 'auto';
