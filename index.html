@@ -126,6 +126,67 @@
     #header-sub:empty { display: none; }
     .topbar .icon-btn { color: var(--header-text); position: relative; }
     .topbar .icon-btn:hover { background: var(--header-soft); color: var(--header-text); }
+    /* B34：月曆 */
+    .col-calendar { max-width: 1280px; }
+    .calw { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 14px; align-items: start; }
+    .cal-box, .cal-day { background: var(--surface); border-radius: 14px; padding: 12px; border: 1px solid var(--border); }
+    .cal-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+    .cal-head .m { font-size: calc(18px * var(--fs)); font-weight: 800; }
+    .cal-head .nv { display: flex; gap: 6px; }
+    .cal-head button { border: 1px solid var(--border); background: var(--surface); border-radius: 10px; height: calc(34px * var(--fs)); min-width: 34px; padding: 0 10px; font-size: calc(14px * var(--fs)); font-weight: 700; color: var(--text-2); }
+    .cal-head .tdy { color: var(--t-work); border-color: #BFE0D2; }
+    .cal-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .cal-filters button { border-radius: 999px; padding: 3px 11px; font-size: calc(12.5px * var(--fs)); font-weight: 700; border: 1.5px solid var(--border); background: var(--surface); color: var(--text-2); }
+    .cal-filters button.on { background: var(--text); border-color: var(--text); color: var(--surface); }
+    .cal-dow, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    .cal-dow div { text-align: center; font-size: calc(12px * var(--fs)); color: var(--text-3); font-weight: 700; padding: 2px 0 6px; }
+    .cal-dow div:first-child, .cal-dow div:last-child { color: var(--danger); }
+    .cal-grid { gap: 4px; }
+    .cal-cell { position: relative; min-height: calc(94px * var(--fs)); border-radius: 10px; background: var(--surface-2); padding: 4px; cursor: pointer; border: 2px solid transparent; overflow: hidden; min-width: 0; }
+    .cal-cell.other { opacity: .42; }
+    .cal-cell.hol { background: color-mix(in srgb, var(--danger) 7%, var(--surface-2)); }
+    .cal-cell.sel { border-color: var(--primary); background: var(--surface); }
+    .cal-cell .n { font-size: calc(13px * var(--fs)); font-weight: 800; color: var(--text-2); display: inline-flex; align-items: center; justify-content: center; width: calc(24px * var(--fs)); height: calc(24px * var(--fs)); border-radius: 50%; }
+    .cal-cell.wk .n, .cal-cell.hol .n { color: var(--danger); }
+    .cal-cell.today .n { background: var(--header-bg); color: var(--header-text); box-shadow: inset 0 0 0 1.5px var(--header-line); }
+    .cal-cell .hn { font-size: calc(10.5px * var(--fs)); color: var(--danger); font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cal-cell .hwn { position: absolute; top: 6px; right: 5px; font-size: calc(10.5px * var(--fs)); font-weight: 800; color: #1B7A3A; background: #E3F6E9; border-radius: 6px; padding: 0 4px; line-height: 1.5; }
+    .cal-ev { display: block; font-size: calc(11.5px * var(--fs)); line-height: 1.35; padding: 1px 4px; border-radius: 5px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+    .cal-ev.w { background: var(--b-work); color: var(--t-work); } .cal-ev.l { background: var(--b-life); color: var(--t-life); } .cal-ev.f { background: var(--b-kids); color: var(--t-kids); }
+    .cal-ev.done { opacity: .5; text-decoration: line-through; }
+    .cal-ev.over { box-shadow: inset 3px 0 0 var(--danger); }
+    .cal-more { font-size: calc(10.5px * var(--fs)); color: var(--text-3); font-weight: 700; padding-left: 3px; }
+    .cal-legend { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; font-size: calc(11.5px * var(--fs)); color: var(--text-2); }
+    .cal-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: -1px; }
+    .cal-day .dt { font-size: calc(17px * var(--fs)); font-weight: 800; }
+    .cal-day .ds { color: var(--text-3); font-size: calc(12.5px * var(--fs)); margin-left: 6px; font-weight: 600; }
+    .cal-day .hb { margin-top: 6px; display: inline-block; font-size: calc(12px * var(--fs)); font-weight: 800; color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); padding: 2px 9px; border-radius: 999px; }
+    .cal-day .hwb { margin: 8px 0 2px; padding: 7px 10px; background: #EAF8EF; border-radius: 10px; font-size: calc(13px * var(--fs)); color: #1B7A3A; font-weight: 700; }
+    .cal-it { display: flex; gap: 10px; align-items: flex-start; padding: 9px 2px; border-bottom: 1px solid var(--border); }
+    .cal-it:last-of-type { border-bottom: none; }
+    .cal-it .t { width: calc(44px * var(--fs)); flex-shrink: 0; font-size: calc(13px * var(--fs)); font-weight: 800; color: var(--text-2); }
+    .cal-it .c { flex: 1; min-width: 0; }
+    .cal-it .c b { display: block; font-size: calc(14.5px * var(--fs)); font-weight: 700; line-height: 1.45; word-break: break-word; }
+    .cal-it.done .c b { color: var(--text-3); text-decoration: line-through; font-weight: 500; }
+    .cal-tag { display: inline-block; font-size: calc(11px * var(--fs)); font-weight: 800; padding: 1px 7px; border-radius: 999px; margin: 3px 4px 0 0; }
+    .cal-tag.w { background: var(--b-work); color: var(--t-work); } .cal-tag.l { background: var(--b-life); color: var(--t-life); } .cal-tag.f { background: var(--b-kids); color: var(--t-kids); }
+    .cal-tag.r { background: #F0ECFA; color: #6A4FB3; } .cal-tag.o { background: var(--danger-soft); color: var(--danger); } .cal-tag.a { background: var(--surface-2); color: var(--text-3); } .cal-tag.u { background: #FFF1E0; color: #B25E00; }
+    .cal-chk { width: calc(24px * var(--fs)); height: calc(24px * var(--fs)); border-radius: 50%; border: 2px solid var(--border-strong); background: var(--surface); color: transparent; flex-shrink: 0; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: calc(14px * var(--fs)); }
+    .cal-it.done .cal-chk { background: var(--hw-done); border-color: var(--hw-done); color: #fff; }
+    .cal-empty { color: var(--text-3); font-size: calc(14px * var(--fs)); padding: 16px 0; text-align: center; }
+    .cal-add { width: 100%; margin-top: 10px; border: 1.5px dashed color-mix(in srgb, var(--primary) 45%, transparent); background: var(--primary-soft); color: var(--primary); border-radius: 12px; padding: 10px; font-size: calc(14px * var(--fs)); font-weight: 800; }
+    .cal-loading { position: absolute; top: 14px; right: 120px; font-size: 12px; color: var(--text-3); }
+    @media (max-width: 900px) {
+      .calw { grid-template-columns: 1fr; gap: 10px; }
+      .cal-box { padding: 8px 6px; }
+      .cal-grid { gap: 3px; }
+      .cal-cell { min-height: calc(62px * var(--fs)); padding: 2px 2px 3px; border-radius: 8px; }
+      .cal-cell .n { width: calc(22px * var(--fs)); height: calc(22px * var(--fs)); font-size: calc(12px * var(--fs)); }
+      .cal-cell .hn { font-size: calc(9px * var(--fs)); text-align: center; }
+      .cal-cell .hwn { display: none; }
+      .cal-ev { font-size: calc(9.5px * var(--fs)); padding: 0 2px; border-radius: 3px; margin-top: 1px; letter-spacing: -.3px; }
+      .cal-more { font-size: calc(9px * var(--fs)); text-align: center; padding: 0; }
+    }
     /* B33：標題列小動物（範本 B 雙向遊行）。走在所有文字與按鈕「後面」，不影響點按 */
     .topbar { position: relative; isolation: isolate; }
     .crit-lane { position: absolute; left: 0; right: 0; bottom: 0; top: 0; z-index: -1; pointer-events: none; overflow: hidden; }
@@ -751,7 +812,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B33c</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B34</div>
     </div>
   </div>
 
@@ -1085,6 +1146,14 @@
         <div style="display:flex; gap:8px; margin-top:8px;">
           <button class="btn btn-sm tint-green" onclick="backupNow(this)"><i class="ti ti-cloud-upload"></i>立即備份</button>
           <button class="btn btn-sm tint-blue" onclick="openBackupFolder()"><i class="ti ti-folder"></i>開啟備份資料夾</button>
+        </div>
+      </div>
+      <div id="archive-sec" style="display:none;">
+        <div class="sec-label" style="margin-top:18px;">封存完成事項（移到試算表「Archive」分頁，月曆仍看得到）</div>
+        <label class="tg-row"><span>每月 1 日自動封存<br><small style="color:var(--text-3);">凌晨 3 點後，把所有「已完成」的待辦移到 Archive</small></span><input type="checkbox" id="pref-autoarc" onchange="setAutoArchive(this.checked)"></label>
+        <div class="bk-box" id="arc-box" style="margin-top:8px;">讀取中…</div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button class="btn btn-sm tint-green" onclick="archiveNow(this)"><i class="ti ti-archive"></i>立即封存</button>
         </div>
       </div>
       <div class="mobile-only">
@@ -1515,7 +1584,7 @@
     }
     function openFontSheet() { applyFontScale(fontScale); document.getElementById('font-sheet').style.display = 'flex'; }
     function openUserSheet() {
-      try { renderColorSettings(); renderNavOrder(); renderThemeMore(); loadBackupStatus(); } catch (e) {}
+      try { renderColorSettings(); renderNavOrder(); renderThemeMore(); loadBackupStatus(); loadArchiveStatus(); } catch (e) {}
       try { document.getElementById('pref-navhide').checked = layoutPref('nav_autohide'); document.getElementById('pref-compact').checked = layoutPref('compact_input'); document.getElementById('pref-swipe').checked = layoutPref('swipe_nav'); document.getElementById('pref-crit').checked = crittersOn(); } catch (e) {}
       document.getElementById('user-sheet-name').innerText = userName || '使用者';
       document.getElementById('user-sheet-role').innerText = (userRole === 'kids' ? '家人帳號' : '管理員帳號') + (isMobileDevice() ? '・這台裝置會記住登入' : '・電腦閒置 10 分鐘自動鎖定');
@@ -1715,18 +1784,18 @@
       'tasks': '待辦事項', 'overdue': '逾期盤點', 'completed': '近期完成',
       'knowledge': '知識庫', 'lifelog': '生活誌', 'music': '音樂輯',
       'housework': '家務事', 'memos': '備忘錄', 'backup': '備份區',
-      'kids-tasks': '家庭待辦', 'kids-completed': '家庭已完成'
+      'kids-tasks': '家庭待辦', 'kids-completed': '家庭已完成', 'calendar': '月曆'
     };
     const NAV_GROUPS = {
       admin: [
-        { group: '總覽', items: [['today', 'ti-sun', '今日重點']] },
+        { group: '總覽', items: [['today', 'ti-sun', '今日重點'], ['calendar', 'ti-calendar-month', '月曆']] },
         { group: '待辦', items: [['tasks', 'ti-checkbox', '未完成'], ['overdue', 'ti-alert-triangle', '逾期盤點'], ['completed', 'ti-history', '近期完成']] },
         { group: '收錄', items: [['knowledge', 'ti-book', '知識庫'], ['lifelog', 'ti-map-pin', '生活誌'], ['music', 'ti-music', '音樂輯']] },
         { group: '家庭', items: [['housework', 'ti-home', '家務事'], ['memos', 'ti-notes', '備忘錄']] },
         { group: '工具', items: [['backup', 'ti-cloud-upload', '備份區'], ['@db', 'ti-table', '記事資料庫'], ['@archive', 'ti-archive', '封存完成事項']] }
       ],
       kids: [
-        { group: '總覽', items: [['today', 'ti-sun', '今日重點']] },
+        { group: '總覽', items: [['today', 'ti-sun', '今日重點'], ['calendar', 'ti-calendar-month', '月曆']] },
         { group: '家庭', items: [['kids-tasks', 'ti-heart-handshake', '家庭待辦'], ['housework', 'ti-home', '家務事'], ['kids-completed', 'ti-history', '家庭已完成']] },
         { group: '收錄', items: [['lifelog', 'ti-map-pin', '生活誌'], ['memos', 'ti-notes', '備忘錄']] }
       ]
@@ -1847,6 +1916,156 @@
     }
 
 
+
+    // ---------------- B34：月曆檢視 ----------------
+    const calSt = { ym: '', sel: '', filter: 'all', data: null, loading: false };
+    const CAL_WD = '日一二三四五六', CAL_CATN = { w: '工作', l: '生活', f: '家庭' };
+    function calPad(n) { return ('0' + n).slice(-2); }
+    function calTodayKey() { const d = new Date(); return `${d.getFullYear()}-${calPad(d.getMonth() + 1)}-${calPad(d.getDate())}`; }
+    function renderCalendarShell() {
+      if (!calSt.ym) { const t = calTodayKey(); calSt.ym = t.slice(0, 7); calSt.sel = t; }
+      const kids = userRole === 'kids';
+      const f = kids ? [['all', '全部'], ['f', '家庭'], ['h', '家務']] : [['all', '全部'], ['w', '工作'], ['l', '生活'], ['f', '家庭'], ['h', '家務']];
+      if (!f.some(x => x[0] === calSt.filter)) calSt.filter = 'all';
+      document.getElementById('list-1').innerHTML = `<div class="calw">
+        <div class="cal-box">
+          <div class="cal-head"><div class="m" id="cal-m"></div><div class="nv"><button onclick="calMove(-1)" aria-label="上個月">‹</button><button class="tdy" onclick="calToday()">今天</button><button onclick="calMove(1)" aria-label="下個月">›</button></div></div>
+          <div class="cal-filters">${f.map(x => `<button data-f="${x[0]}" class="${calSt.filter === x[0] ? 'on' : ''}" onclick="calFilter('${x[0]}')">${x[1]}</button>`).join('')}</div>
+          <div class="cal-dow">${[...CAL_WD].map(x => `<div>${x}</div>`).join('')}</div>
+          <div class="cal-grid" id="cal-grid"><div class="cal-empty" style="grid-column:1/-1;">讀取中…</div></div>
+          <div class="cal-legend">${kids ? '' : '<span><i style="background:var(--t-work)"></i>工作</span><span><i style="background:var(--t-life)"></i>生活</span>'}<span><i style="background:var(--t-kids)"></i>家庭</span><span><i style="background:var(--danger)"></i>逾期／國定假日</span><span>🔁 重複</span><span class="dk">🧹N＝家務完成 N 項</span></div>
+        </div>
+        <div class="cal-day" id="cal-day"></div>
+      </div>`;
+      const g = document.querySelector('.calw .cal-box');
+      let sx = null, sy = null;
+      g.addEventListener('touchstart', e => { if (e.touches.length === 1) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; } }, { passive: true });
+      g.addEventListener('touchend', e => {
+        if (sx === null) return;
+        const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) calMove(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    }
+    function loadCalendar(isBackground) {
+      if (currentMode !== 'calendar') return;
+      if (!document.getElementById('cal-grid')) renderCalendarShell();
+      const ym = calSt.ym;
+      calSt.loading = true;
+      if (!isBackground) renderCalendar();
+      google.script.run.withSuccessHandler(r => {
+        calSt.loading = false;
+        if (!r || r.ym !== calSt.ym || currentMode !== 'calendar') return;
+        calSt.data = r; renderCalendar();
+      }).withFailureHandler(e => {
+        calSt.loading = false;
+        if (!isBackground) { const gEl = document.getElementById('cal-grid'); if (gEl && !calSt.data) gEl.innerHTML = `<div class="cal-empty" style="grid-column:1/-1;">⚠️ 讀取失敗${/is not a function|not found|找不到/.test(String(e && e.message)) ? '：請先更新 code.gs（B34）' : '，請稍後再試'}</div>`; }
+      }).getCalendarApp(ym, userRole === 'kids');
+    }
+    function calVisible(e) { return calSt.filter === 'all' || calSt.filter === e.cat; }
+    function renderCalendar() {
+      const gEl = document.getElementById('cal-grid'); if (!gEl) return;
+      const [Y, M] = calSt.ym.split('-').map(Number);
+      document.getElementById('cal-m').textContent = `${Y} 年 ${M} 月`;
+      const d = (calSt.data && calSt.data.ym === calSt.ym) ? calSt.data : null;
+      if (!d) { gEl.innerHTML = '<div class="cal-empty" style="grid-column:1/-1;">讀取中…</div>'; renderCalDay(); return; }
+      const narrow = (window.innerWidth || 390) <= 900, maxEv = narrow ? 2 : 3;
+      const first = new Date(Y, M - 1, 1), start = new Date(Y, M - 1, 1 - first.getDay());
+      const weeks = Math.ceil((first.getDay() + new Date(Y, M, 0).getDate()) / 7);
+      const today = calTodayKey();
+      let html = '';
+      for (let i = 0; i < weeks * 7; i++) {
+        const dt = new Date(start); dt.setDate(start.getDate() + i);
+        const k = `${dt.getFullYear()}-${calPad(dt.getMonth() + 1)}-${calPad(dt.getDate())}`;
+        const hol = d.holidays[k];
+        const list = calSt.filter === 'h' ? [] : d.events.filter(e => e.d === k && calVisible(e));
+        const hwN = (calSt.filter === 'all' || calSt.filter === 'h') ? (d.hw[k] || 0) : 0;
+        const cls = ['cal-cell', dt.getMonth() !== M - 1 ? 'other' : '', (dt.getDay() === 0 || dt.getDay() === 6) ? 'wk' : '', hol ? 'hol' : '', k === today ? 'today' : '', k === calSt.sel ? 'sel' : ''].join(' ');
+        const evs = list.slice(0, maxEv).map(e => `<span class="cal-ev ${e.cat}${e.done ? ' done' : ''}${e.over ? ' over' : ''}">${e.recur ? '🔁' : ''}${esc(e.title)}</span>`).join('');
+        const more = list.length > maxEv ? `<div class="cal-more">+${list.length - maxEv}</div>` : '';
+        html += `<div class="${cls}" data-k="${k}" onclick="calPick('${k}')"><span class="n">${dt.getDate()}</span>${hwN ? `<span class="hwn">🧹${hwN}</span>` : ''}${hol ? `<div class="hn">${esc(hol)}</div>` : ''}${evs}${more}</div>`;
+      }
+      gEl.innerHTML = html;
+      renderCalDay();
+    }
+    function renderCalDay() {
+      const box = document.getElementById('cal-day'); if (!box) return;
+      const k = calSt.sel, dt = new Date(k + 'T00:00:00'), d = calSt.data;
+      const ok = d && d.ym === calSt.ym;
+      const list = !ok || calSt.filter === 'h' ? [] : d.events.filter(e => e.d === k && calVisible(e));
+      const hol = ok ? d.holidays[k] : '';
+      const hwN = ok && (calSt.filter === 'all' || calSt.filter === 'h') ? (d.hw[k] || 0) : 0;
+      const isToday = k === calTodayKey();
+      const yr = String(dt.getFullYear());
+      const noHolData = ok && d.holidayYears && !d.holidayYears.includes(yr);
+      box.innerHTML = `<div><span class="dt">${dt.getMonth() + 1} 月 ${dt.getDate()} 日（${CAL_WD[dt.getDay()]}）</span><span class="ds">${isToday ? '今天・' : ''}${ok ? list.length + ' 項' : ''}</span></div>
+        ${hol ? `<span class="hb">🎌 ${esc(hol)}</span>` : ''}
+        ${hwN ? `<div class="hwb">🧹 家務完成 ${hwN} 項</div>` : ''}
+        ${!ok ? '<div class="cal-empty">讀取中…</div>' : list.length ? list.map((e, i) => {
+          const canChk = !e.archived && !e.next;
+          return `<div class="cal-it${e.done ? ' done' : ''}"><div class="t">${e.t}</div><div class="c"><b>${e.urgent ? '⭐ ' : ''}${esc(e.title)}</b><span class="cal-tag ${e.cat}">${CAL_CATN[e.cat]}</span>${e.recur ? `<span class="cal-tag r">🔁 ${esc(e.recur)}</span>` : ''}${e.over ? '<span class="cal-tag o">已逾期</span>' : ''}${e.archived ? '<span class="cal-tag a">已封存</span>' : ''}${e.next ? '<span class="cal-tag a">之後的重複</span>' : ''}<span class="cal-tag a">#${esc(e.id)}</span></div>${canChk ? `<button class="cal-chk" onclick="calToggle('${esc(e.id)}', ${e.done ? 'true' : 'false'}, this)" aria-label="${e.done ? '取消完成' : '完成'}"><i class="ti ti-check"></i></button>` : ''}</div>`;
+        }).join('') : `<div class="cal-empty">${calSt.filter === 'h' ? (hwN ? '這天的家務明細請到「家務」頁查看' : '這天沒有家務紀錄') : '這天沒有排定時間的事項'}</div>`}
+        ${noHolData ? `<div class="cal-more" style="margin-top:6px;">${yr} 年的國定假日尚未公布</div>` : ''}
+        <button class="cal-add" onclick="calAddOn('${k}')"><i class="ti ti-plus"></i> 在 ${dt.getMonth() + 1}/${dt.getDate()} 新增待辦</button>`;
+    }
+    function calPick(k) {
+      calSt.sel = k;
+      if (k.slice(0, 7) !== calSt.ym) { calSt.ym = k.slice(0, 7); loadCalendar(false); return; }
+      renderCalendar();
+      if ((window.innerWidth || 390) <= 900) { const b = document.getElementById('cal-day'); if (b) setTimeout(() => b.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50); }
+    }
+    function calMove(n) {
+      const [Y, M] = calSt.ym.split('-').map(Number);
+      const nd = new Date(Y, M - 1 + n, 1);
+      calSt.ym = `${nd.getFullYear()}-${calPad(nd.getMonth() + 1)}`;
+      const t = calTodayKey();
+      calSt.sel = t.slice(0, 7) === calSt.ym ? t : calSt.ym + '-01';
+      loadCalendar(false);
+    }
+    function calToday() { const t = calTodayKey(); calSt.sel = t; if (calSt.ym !== t.slice(0, 7)) { calSt.ym = t.slice(0, 7); loadCalendar(false); } else renderCalendar(); }
+    function calFilter(f) { calSt.filter = f; document.querySelectorAll('.cal-filters button').forEach(b => b.classList.toggle('on', b.dataset.f === f)); renderCalendar(); }
+    function calToggle(id, wasDone, btn) {
+      btn.disabled = true;
+      const ev = calSt.data && calSt.data.events.filter(e => e.id === id && !e.next);
+      (ev || []).forEach(e => { e.done = !wasDone; if (e.done) e.over = false; });
+      renderCalendar();
+      google.script.run.withSuccessHandler(res => { showToast(res); loadCalendar(true); updateDashboard(); })
+        .withFailureHandler(() => { showToast('⚠️ 更新失敗，請重試'); loadCalendar(true); })
+        .processAppMessage((wasDone ? '取消完成 ' : '完成 ') + id);
+    }
+    function calAddOn(k) {
+      const dt = new Date(k + 'T00:00:00');
+      const inp = document.getElementById('user-input');
+      inp.value = `${dt.getMonth() + 1}/${dt.getDate()} 9點 `;
+      try { inp.dispatchEvent(new Event('input')); } catch (e) {}
+      inp.focus();
+      try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {}
+      showToast('✏️ 已帶入日期，時間可以改，接著輸入事項後送出');
+    }
+    // ---- 封存設定（管理員） ----
+    function loadArchiveStatus() {
+      const sec = document.getElementById('archive-sec'); if (!sec) return;
+      if (userRole !== 'admin') { sec.style.display = 'none'; return; }
+      sec.style.display = '';
+      google.script.run.withSuccessHandler(renderArchiveStatus)
+        .withFailureHandler(() => { document.getElementById('arc-box').innerText = '需要更新 code.gs（B34）才能使用'; }).getArchiveStatusApp();
+    }
+    function renderArchiveStatus(r) {
+      if (!r) return;
+      document.getElementById('pref-autoarc').checked = !!r.on;
+      document.getElementById('arc-box').innerHTML = `${r.on ? `下次自動封存：<b>${esc(r.next)}</b>` : '自動封存：<b>已關閉</b>'}<br>目前待封存（已完成）：<b>${r.pending}</b> 筆` +
+        (r.last ? `<br>上次封存：${esc(r.last.time)}（${esc(r.last.how || '')}，${r.last.count || 0} 筆）` : '<br>還沒有封存紀錄');
+    }
+    function setAutoArchive(on) {
+      google.script.run.withSuccessHandler(r => { renderArchiveStatus(r); showToast(on ? '✅ 已開啟：每月 1 日自動封存' : '已關閉自動封存'); })
+        .withFailureHandler(e => showToast('⚠️ ' + e.message)).setAutoArchiveApp(!!on);
+    }
+    function archiveNow(btn) {
+      if (!confirm('確定要把所有「已完成」的待辦移到 Archive 分頁嗎？（月曆仍看得到）')) return;
+      btn.disabled = true;
+      google.script.run.withSuccessHandler(r => { btn.disabled = false; showToast(r.msg); renderArchiveStatus(r.status); if (TASK_MODES.includes(currentMode) || currentMode === 'calendar') fetchData(true); })
+        .withFailureHandler(e => { btn.disabled = false; showToast('⚠️ ' + e.message); }).runArchiveNowApp();
+    }
+    window.addEventListener('resize', () => { if (currentMode === 'calendar') renderCalendar(); });
     // ---------------- B33：標題列小動物（範本 B 雙向遊行；原創角色） ----------------
     const CRIT = {
   sheep: { name: '雲朵羊', desc: '軟綿綿，最愛打招呼', svg: `
@@ -2100,7 +2319,7 @@
     function swipePages() { return getNavOrder().filter(k => k[0] !== '@'); }
     function swipeBlocked(el) {
       for (let n = el; n && n !== document.body; n = n.parentElement) {
-        if (n.matches && n.matches('input, textarea, select, [contenteditable="true"], .edit-input, .modal, #sort-bar, .filter-bar, .s-chips')) return true;
+        if (n.matches && n.matches('input, textarea, select, [contenteditable="true"], .edit-input, .modal, #sort-bar, .filter-bar, .s-chips, .calw')) return true;
         if (n.scrollWidth > n.clientWidth + 4) { const ox = getComputedStyle(n).overflowX; if (ox === 'auto' || ox === 'scroll') return true; }   // 可以左右捲動的區塊（分類列等）
       }
       return false;
@@ -3155,6 +3374,17 @@
         fetchData();
         return;
       }
+      if (mode === 'calendar') {   // B34：月曆
+        col2.style.display = 'none'; col3.style.display = 'none'; col1.style.display = 'flex';
+        loadingMsg.style.display = 'none';
+        col1.className = 'column col-calendar';
+        header1.innerText = '';
+        targetInput.placeholder = userRole === 'kids' ? '輸入家庭待辦（例：11/25 9點 繳同意書）' : '輸入待辦（例：11/25 9點 繳費）';
+        showActionButtons();
+        renderCalendarShell();
+        loadCalendar(false);
+        return;
+      }
       if (mode === 'housework') {
         col2.style.display = 'none'; col3.style.display = 'none'; col1.style.display = 'none';
         loadingMsg.style.display = 'flex';
@@ -3977,11 +4207,11 @@
       housework: ['ti-home', '家務'], memos: ['ti-notes', '備忘錄'], backup: ['ti-cloud-upload', '備份區'], '@db': ['ti-table', '資料庫'],
       overdue: ['ti-alert-triangle', '逾期盤點', 'danger'], completed: ['ti-history', '近期完成'], '@archive': ['ti-archive', '封存完成'],
       '@search': ['ti-search', '搜尋'], today: ['ti-sun', '今日重點'], 'kids-tasks': ['ti-heart-handshake', '待辦'], 'kids-completed': ['ti-history', '已完成'],
-      '@user': ['ti-text-size', '文字大小', 'muted']
+      '@user': ['ti-text-size', '文字大小', 'muted'], calendar: ['ti-calendar-month', '月曆']
     };
     const NAV_DEFAULT_ORDER = {
-      admin: ['tasks', 'knowledge', 'lifelog', 'music', 'housework', 'memos', 'backup', '@db', 'overdue', 'completed', '@archive', '@search', 'today'],
-      kids: ['kids-tasks', 'housework', 'lifelog', 'memos', 'kids-completed', '@search', '@user', 'today']
+      admin: ['tasks', 'knowledge', 'lifelog', 'music', 'housework', 'memos', 'backup', '@db', 'overdue', 'completed', '@archive', '@search', 'today', 'calendar'],
+      kids: ['kids-tasks', 'housework', 'lifelog', 'memos', 'kids-completed', '@search', '@user', 'today', 'calendar']   // B34：月曆先放最後（在「更多」裡），原本底部不變
     };
     function navRole() { return userRole === 'kids' ? 'kids' : 'admin'; }
     function getNavOrder() {
@@ -4492,6 +4722,7 @@
       else if (currentMode === 'kids-tasks') fetchTasksWithExtras('getKidsTasksApp', renderKidsTasks, onFail);
       else if (currentMode === 'kids-completed') google.script.run.withSuccessHandler(renderKidsTasks).withFailureHandler(onFail).getCompletedKidsTasksApp();
       else if (currentMode === 'housework') google.script.run.withSuccessHandler(keep('housework', renderHouseworkList)).withFailureHandler(onFail).getHouseworkTodayApp();
+      else if (currentMode === 'calendar') loadCalendar(true);   // B34
 
       if (isBackground) updateDashboard();
     }
