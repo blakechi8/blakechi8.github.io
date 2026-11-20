@@ -785,7 +785,8 @@
   <script>
     /* B16：開機診斷（獨立的小程式；主程式就算出錯也會執行，15 秒沒啟動就把原因顯示在畫面上） */
     window.__bootErrs = [];
-    window.addEventListener('error', function (e) { window.__bootErrs.push((e && e.message ? e.message : '錯誤') + (e && e.lineno ? '（第 ' + e.lineno + ' 行）' : '')); });
+    window.__bootLines = [];
+    window.addEventListener('error', function (e) { window.__bootErrs.push((e && e.message ? e.message : '錯誤') + (e && e.lineno ? '（第 ' + e.lineno + ' 行，第 ' + (e.colno || 0) + ' 字）' : '')); if (e && e.lineno) window.__bootLines.push(e.lineno); });
     setTimeout(function () {
       var ov = document.getElementById('login-overlay');
       if (!ov || ov.className.indexOf('checking') < 0 || ov.style.display === 'none') return;
@@ -793,8 +794,18 @@
       if (!st) return;
       st.style.color = '#A33A31';
       st.style.lineHeight = '1.6';
-      st.innerText = '主程式沒有啟動（版本 B29）\n' +
-        (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) +
+      // B34a：多顯示「檔案是否完整」與出錯那一行的內容，方便判斷原因
+      var whole = !!document.getElementById('eof-marker');
+      var near = '';
+      try {
+        if (window.__bootLines.length) {
+          var L = document.documentElement.outerHTML.split('\n'), n = window.__bootLines[0];
+          near = '\n附近內容：' + [n - 1, n, n + 1].map(function (k) { return (L[k - 1] || '').trim().slice(0, 70); }).filter(Boolean).join(' ⏎ ');
+        }
+      } catch (x) {}
+      st.innerText = '主程式沒有啟動（版本 B34a）\n' +
+        (whole ? '' : '⚠️ 檔案不完整：Index.html 貼上時可能被截斷，請重新全選貼上\n') +
+        (window.__bootErrs.length ? '錯誤：' + window.__bootErrs.slice(0, 3).join('；') : (window.__mainScriptLoaded ? '主程式已載入但沒有回應' : '主程式沒有載入')) + near +
         '\n請按 Ctrl＋Shift＋R 重新整理；仍不行請截圖這個畫面';
     }, 15000);
   </script>
@@ -812,7 +823,7 @@
         <div id="login-msg"></div>
         <button id="login-key-link" type="button" onclick="promptDeviceKey()" style="display:none; margin-top:6px; border:none; background:none; color:var(--primary); font-size: calc(13px * var(--fs)); font-weight:600;">改用裝置金鑰登入</button>
       </div>
-      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B34</div>
+      <div style="margin-top:14px; font-size:11px; color:var(--text-3);">版本 B34a</div>
     </div>
   </div>
 
@@ -6103,5 +6114,6 @@
       input.value = '';
     }
   </script>
+  <div id="eof-marker" hidden></div>
 </body>
 </html>
