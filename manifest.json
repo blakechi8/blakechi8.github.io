@@ -10,32 +10,12 @@
   "background_color": "#F4F6F8",
   "theme_color": "#B5DFD1",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
-  "share_target": {
-    "action": "./",
-    "method": "GET",
-    "params": {
-      "title": "share_title",
-      "text": "share_text",
-      "url": "share_url"
-    }
-  }
+  "shortcuts": [
+    { "name": "新筆記", "short_name": "新筆記", "url": "./?note=new", "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "錄音筆記", "short_name": "錄音筆記", "url": "./?note=rec", "icons": [{ "src": "icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ]
 }
